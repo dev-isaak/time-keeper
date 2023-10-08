@@ -1,10 +1,18 @@
 <script setup>
-import { RouterLink } from 'vue-router'
-import { ref } from 'vue'
+import { ref, computed } from 'vue';
 import AccountIcon from '@/components/icons/AccountIcon.vue'
 import MenuIcon from '@/components/icons/MenuIcon.vue'
+import { getAuth, signOut } from "firebase/auth"
+import { useAuthStore } from '@/stores/auth.js'
+import UserButton from '@/components/navbar/UserButton.vue'
 
+const auth = getAuth()
+const authStore = useAuthStore()
 const drawer = ref(false)
+
+const isLogedIn = computed(() => {
+  return authStore.jwt
+})
 </script>
 
 <template>
@@ -19,9 +27,7 @@ const drawer = ref(false)
         </v-toolbar-title>
         <v-spacer>
         </v-spacer>
-        <v-btn :to="{ name: 'login' }">
-          <AccountIcon />
-        </v-btn>
+        <UserButton />
         </v-app-bar>
         <v-navigation-drawer location="left" v-model="drawer" temporary>
           <v-list class="d-flex flex-column mt-6 mx-6">

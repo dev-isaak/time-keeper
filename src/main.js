@@ -3,6 +3,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
+import { initializeApp } from "firebase/app"
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 // Vuetify
 import 'vuetify/styles'
@@ -15,9 +17,23 @@ const vuetify = createVuetify({
   directives,
 })
 
-const app = createApp(App)
+//Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDWEX1Pjm1btrSEiodyXJfO89GiQXQG7S8",
+  authDomain: "time-keeper-2ac5d.firebaseapp.com",
+  projectId: "time-keeper-2ac5d",
+  storageBucket: "time-keeper-2ac5d.appspot.com",
+  messagingSenderId: "591286989751",
+  appId: "1:591286989751:web:09166cbaeda785bd10ee32"
+}
 
-app.use(createPinia())
+const firebase = initializeApp(firebaseConfig)
+const app = createApp(App)
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
+
+app.use(firebase)
+app.use(pinia)
 app.use(router)
 app.use(vuetify)
 app.mount('#app')

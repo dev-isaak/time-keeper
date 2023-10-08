@@ -3,10 +3,16 @@ import { defineProps } from 'vue'
 
 defineProps({
   text: String,
+  color: String,
 })
 
 </script>
 
 <template>
-  <v-btn variant="elevated" color="#90A4AE">{{ text }}</v-btn>
+  <v-btn variant="elevated" :color="color">
+    {{ text }}
+    <template v-slot:append>
+      <slot></slot>
+    </template>
+  </v-btn>
 </template>

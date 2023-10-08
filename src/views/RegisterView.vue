@@ -1,7 +1,12 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import MainTemplate from '@/templates/MainTemplate.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
+import { useAuthStore } from '@/stores/auth.js'
+
+const router = useRouter()
+const authStore = useAuthStore()
 
 const name = ref('')
 const lastname = ref('')
@@ -9,6 +14,14 @@ const email = ref('')
 const emailRepeat = ref('')
 const password = ref('')
 const passwordRepeat = ref('')
+
+
+const handleRegister = async() => {
+  const isRegistered = await authStore.registerUser(email.value, password.value)
+  if (isRegistered){
+    router.push('/user-main')
+  }
+}
 </script>
 
 <template>
@@ -26,15 +39,16 @@ const passwordRepeat = ref('')
             <v-text-field class="mx-2" label="Repeat email" v-model="emailRepeat"></v-text-field>
           </v-column>
           <v-column class="d-flex">
-            <v-text-field class="mx-2" label="Password" v-model="password"></v-text-field>
+            <v-text-field class="mx-2" type="password" label="Password" v-model="password"></v-text-field>
             <v-text-field
               class="mx-2"
+              type="password"
               label="Repeat password"
               v-model="passwordRepeat"
             ></v-text-field>
           </v-column>
           <v-column class="d-flex flex-column align-center my-6">
-            <PrimaryButton text="Register" />
+            <PrimaryButton color="#90A4AE" text="Register" @click="handleRegister" />
           </v-column>
         </form>
       </v-card>
