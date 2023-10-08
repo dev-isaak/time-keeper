@@ -1,15 +1,13 @@
+<script setup>
+import MainTemplate from '@/templates/MainTemplate.vue';
+</script>
 <template>
+  <MainTemplate>
   <div class="about">
     <h1>This is an about page</h1>
   </div>
+</MainTemplate>
 </template>
 
 <style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
 </style>
