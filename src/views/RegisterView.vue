@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import MainTemplate from '@/templates/MainTemplate.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
@@ -19,9 +19,13 @@ const passwordRepeat = ref('')
 const handleRegister = async() => {
   const isRegistered = await authStore.registerUser(email.value, password.value)
   if (isRegistered){
-    router.push('/user-main')
+    router.push('/verify-account')
   }
 }
+
+const authMessage = computed(() => {
+  return authStore.message
+})
 </script>
 
 <template>
@@ -48,6 +52,7 @@ const handleRegister = async() => {
             ></v-text-field>
           </v-column>
           <v-column class="d-flex flex-column align-center my-6">
+            {{ authMessage }}
             <PrimaryButton color="#90A4AE" text="Register" @click="handleRegister" />
           </v-column>
         </form>

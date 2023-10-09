@@ -1,18 +1,10 @@
 <script setup>
-import { ref, computed } from 'vue';
-import AccountIcon from '@/components/icons/AccountIcon.vue'
+import { ref } from 'vue';
 import MenuIcon from '@/components/icons/MenuIcon.vue'
-import { getAuth, signOut } from "firebase/auth"
-import { useAuthStore } from '@/stores/auth.js'
 import UserButton from '@/components/navbar/UserButton.vue'
 
-const auth = getAuth()
-const authStore = useAuthStore()
 const drawer = ref(false)
 
-const isLogedIn = computed(() => {
-  return authStore.jwt
-})
 </script>
 
 <template>
