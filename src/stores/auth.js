@@ -10,13 +10,14 @@ import {
   deleteUser,
   updatePassword,
   updateProfile,
+  onAuthStateChanged ,
 } from 'firebase/auth'
 
 export const useAuthStore = defineStore('auth', {
   state: () => {
     return {
       jwt: null,
-      userName: '',
+      userName: 'No-Name',
       userEmail: '',
       userPhone: '',
       userPhoto: '',
@@ -45,6 +46,7 @@ export const useAuthStore = defineStore('auth', {
               this.message = 'The account email is not verified. Please, verify the account before login.'
               this.isLoggedIn = false
             }
+            return true
           })
         } catch (e) {
           this.message = e
@@ -78,41 +80,69 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     async updateUserName(newName){
+      console.log(newName)
+      const auth = getAuth()
+      try{
+        onAuthStateChanged(auth, (user) => {
+          if (user){
+            console.log(user)
+            updateProfile(user, {
+              displayName: newName, 
+            }).then(() => {
+              this.userName = newName
+            }).catch((error) => {
+              this.message = error
+            })
+            console.log(this.userName)
+            return true
+          } else {
+            return
+          }
+        })
+      } catch(e){
+        console.error(e)
+      }
+     
+    },
+    async updatePhoneUser(newPhoneNumber){
       const auth = getAuth();
-      console.log(auth)
-      updateProfile(auth.currentUser, {
-        displayName: newName, 
-      }).then(() => {
-        this.message = 'Profile updated succesfully'
-      }).catch((error) => {
-        this.message = error
-      });
+      onAuthStateChanged(auth, (user) => {
+        if (user){
+          console.log(user)
+          updateProfile(user, {
+            phoneNumber: newPhoneNumber, 
+          }).then(() => {
+            this.userPhone = newPhoneNumber
+            setTimeout(() => {
+              this.message = 'Phone number updated succesfully'
+            }, 2000)
+          }).catch((error) => {
+            this.message = error
+          })
+        } else {
+          this.message = 'No user logged in'
+        }
+      })
     },
     async updateEmail(email) {
       const auth = getAuth()
-      const user = auth.currentUser;
-      const credential = () => {
-        //pedir credenciales de alguna manera
-        return user
-      }
-      //hay que reautenticar el user antes de cambiar el email
-      //https://firebase.google.com/docs/auth/web/manage-users#re-authenticate_a_user
-      reauthenticateWithCredential(user, credential).then(() => {
-        // User re-authenticated.
-      }).catch((error) => {
-        this.message = error
-      });
-      
-      updateEmail(auth.currentUser, email)
-        .then(() => {
-          this.message = 'The email was updated succesfully!'
-        })
-        .catch((error) => {
-          console.error(error)
-          this.message = error
-          // An error occurred
-          // ...
-        })
+      const user = auth.currentUser
+      onAuthStateChanged(auth, (user) => {
+        if (user){
+          updateEmail(auth.currentUser, email)
+          .then(() => {
+            this.message = 'The email was updated succesfully!'
+          })
+          .catch((error) => {
+            console.error(error)
+            this.message = error
+            // An error occurred
+            // ...
+          })
+        } else{
+
+        }
+      })
     },
     async updatePassword(newPassword){
       const auth = getAuth();

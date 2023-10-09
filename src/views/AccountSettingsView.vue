@@ -1,16 +1,29 @@
 <script setup>
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import MainTemplate from '@/templates/MainTemplate.vue'
-import { useAuthStore } from '../stores/auth'
 import { ref, computed } from 'vue'
+import { useAuthStore } from '@/stores/auth.js'
+import UpdateColumn from '@/components/UpdateColumn.vue'
 
 const authStore = useAuthStore()
 
 const email = ref('')
 const userName = ref('')
+const phoneNumer = ref('')
+const profilePhoto = ref('')
+const loadingState = ref(false)
+const messageUpdatedUsername = ref('')
 
 const accountMessage = computed (() => {
   return authStore.message
+})
+
+const currentUserName = computed(() => {
+  return authStore.userName
+})
+
+const currentPhoneNumber = computed(() => {
+  return authStore.userPhone
 })
 
 const handleDeleteAccount = async() => {
@@ -19,10 +32,30 @@ const handleDeleteAccount = async() => {
 
 const handleUpdateEmail = async() => {
   await authStore.updateEmail(email.value)
+  userName.value = ''
 }
 
 const handleUpdateName = async() => {
-  await authStore.updateUserName(userName.value )
+  loadingState.value = true
+  const isUpdated = await authStore.updateUserName(userName.value )
+  if (isUpdated) {
+    loadingState.value = false
+    messageUpdatedUsername.value = 'Username updated succesfully'
+  }
+  else {
+    setTimeout(() => {
+      loadingState.value = false
+      messageUpdatedUsername.value = 'Cannot update username. Try again later.'
+    }, 5000)
+  }
+}
+
+const handleUpdatePhone = async() => {
+  await authStore.updatePhoneUser(phoneNumer.value)
+}
+
+const handleUpdateProfilePhoto = async() => {
+  alert('No function yet')
 }
 </script>
 
@@ -30,20 +63,24 @@ const handleUpdateName = async() => {
   <!-- CAMBIAR TEMPLATE -->
   <MainTemplate>
   <h1>Account Settings</h1>
-  <v-divider class="my-10"></v-divider>
-  <v-container>
-    <h3>Update Username</h3>
-    <v-column class="d-flex flex-wrap align-center">
-      <v-text-field label="User Name" v-model="userName"></v-text-field>
-      <v-btn @click="handleUpdateName" >Icon</v-btn>
+  <v-divider class="my-5"></v-divider>
+  <v-container class="w-100 d-flex flex-column">
+    <UpdateColumn label="User Name" :fieldText="userName" v-model="userName" :message="messageUpdatedUsername" :handleActionButon="handleUpdateName" :loadingState="loadingState"/>
+    {{ userName }}
+    <v-column class="my-4">
+      <h3>{{ currentPhoneNumber }}</h3>
+      <v-text-field label="Phone Number" class="mr-6"></v-text-field>
+      <v-column class="d-flex flex-column">
+        {{ accountMessage }}
+        <PrimaryButton text="Update" color="#90A4AE" @click="handleUpdatePhone"  width="100"/>
+      </v-column>
     </v-column>
-    <v-column class="d-flex flex-wrap align-center">
-      <v-text-field label="Phone Number"></v-text-field>
-      <v-btn >Icon</v-btn>
-    </v-column>
-    <v-column class="d-flex flex-wrap align-center">
-      <v-text-field label="Profile Image"></v-text-field>
-      <v-btn >Icon</v-btn>
+    <v-column class="my-4">
+      <v-text-field label="Profile Image" class="mr-6"></v-text-field>
+      <v-column class="d-flex flex-column">
+        {{ accountMessage }}
+        <PrimaryButton text="Update" color="#90A4AE" @click="handleUpdateProfilePhoto"  width="100"/>
+      </v-column>
     </v-column>
     <h3>Update Email</h3>
     <form>
@@ -51,7 +88,7 @@ const handleUpdateName = async() => {
       <v-text-field label="Repeat email"></v-text-field>
       <v-container class="d-flex flex-column align-center justify-center">
         {{ accountMessage }}
-        <PrimaryButton text="Update email" color="var(--primary-color)" @click="handleUpdateEmail"/>
+        <PrimaryButton text="Update email" color="#90A4AE" @click="handleUpdateEmail"/>
       </v-container>
     </form>
   </v-container>
@@ -63,7 +100,7 @@ const handleUpdateName = async() => {
       <v-text-field type="password" label="Repeat Password"></v-text-field>
     </form>
     <v-container class="d-flex justify-center">
-        <PrimaryButton text="Update Password" color="var(--primary-color)"/>
+        <PrimaryButton text="Update Password" color="#90A4AE"/>
       </v-container>
   </v-container>
   <v-divider></v-divider>

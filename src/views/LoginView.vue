@@ -11,6 +11,7 @@ const router = useRouter()
 
 const email = ref('')
 const password = ref('')
+const loading = ref(false)
 
 const authMessage = computed(() => {
   return authStore.message
@@ -21,8 +22,10 @@ const isLoggedIn = computed(() => {
 })
 
 const handleLogin = async () => {
+  loading.value = true
   await authStore.userLogin(email.value, password.value)
   if (isLoggedIn.value) {
+    loading.value = false
     router.push('/user-main')
   } else {
     return
@@ -45,7 +48,7 @@ const handleLogin = async () => {
           ></v-text-field>
           <v-column class="d-flex flex-column align-center my-6">
             {{ authMessage }}
-            <PrimaryButton color="#90A4AE" text="Login" @click="handleLogin" />
+            <PrimaryButton color="#90A4AE" text="Login" @click="handleLogin" :loading="loading"/>
             <p class="mt-6">
               Don´t have an account yet?
               <RouterLink :to="{ name: 'register' }">Register</RouterLink>
