@@ -1,20 +1,19 @@
-import { useAuthStore } from "../stores/auth"
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 export default class Client {
-  jwt
-  constructor(){
-    const authStore = useAuthStore()
-    this.jwt = authStore.jwt
+  auth
+  jwt = null
+  uid = null
+  userName = 'bro'
+  emailVerified = false
+  user
+
+  constructor() {
+    this.auth = getAuth()
   }
 
-  isLogedIn(){
-    if (this.jwt) {
-      console.log('jwt', this.jwt)
-      return true
-    }
-    else {
-      console.log('no hay jwt')
-      return false
-    }
+  getUser() {
+    console.log('hola', this.userName)
+    return this.user
   }
 }
