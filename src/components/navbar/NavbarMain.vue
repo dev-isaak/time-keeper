@@ -29,18 +29,16 @@ const isLogedIn = computed(() => {
         <PrimaryButton v-else text="Sign In" :to="{name: 'login'}"/>
         </v-app-bar>
         <v-navigation-drawer location="left" v-model="drawer" temporary>
-          <v-list class="d-flex flex-column mt-6 mx-6">
-            <v-tabs direction="vertical">
-              <v-tab v-if="isLogedIn !== null" :to="{name: 'userMain'}">
+          <v-list class="d-flex flex-column mt-6">
+              <v-list-item variant="text" link color="#90A4AE" v-if="isLogedIn !== null" :to="{name: 'userMain'}">
                 Home
-              </v-tab>
-              <v-tab v-else to="/">
+              </v-list-item>
+              <v-list-item variant="text" link color="#90A4AE" v-else to="/">
                 Home
-              </v-tab>
-              <v-tab :to="{name: 'about'}">
+              </v-list-item>
+              <v-list-item variant="text" link color="#90A4AE" :to="{name: 'about'}">
                 About
-              </v-tab>
-            </v-tabs>
+              </v-list-item>
           </v-list>
         </v-navigation-drawer>
     </v-layout>
