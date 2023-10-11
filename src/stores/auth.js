@@ -10,7 +10,7 @@ import {
   deleteUser,
   updatePassword,
   updateProfile,
-  onAuthStateChanged
+  onAuthStateChanged,
 } from 'firebase/auth'
 
 export const useAuthStore = defineStore('auth', {
@@ -19,15 +19,16 @@ export const useAuthStore = defineStore('auth', {
       jwt: null,
       userName: '',
       userEmail: '',
-      userPhone: '',
       userPhoto: '',
       message: '',
+      errorMessage: '',
       isLoggedIn: false,
       user:null,
     }
   },
   getters: {
     providedUserName: (state) => state.userName,
+    providedEmail: (state) => state.userEmail,
     currentUser: (state) => state.user
   },
   actions: {
@@ -46,31 +47,67 @@ export const useAuthStore = defineStore('auth', {
             this.userPhone = user.phoneNumber
             this.userPhoto = user.photoUrl
             this.isLoggedIn = true
-            this.message = ''
+            this.errorMessage = ''
           } else {
-            this.message =
-              'The account email is not verified. Please, verify the account before login.'
-            this.isLoggedIn = false
+            this.errorMessage = 'The email account is not verified yet. Please, verify it before continue.'
           }
-          return true
         })
-      } catch (e) {
-        this.message = e
-        console.log(e)
+        return true
+      } catch (error) {
+        if (error.code === 'auth/invalid-email' || error.code === 'auth/invalid-login-credentials'){
+          this.errorMessage = 'The user or password is invalid.'
+        } 
+        else if (error.code === 'auth/user-disabled'){
+          this.errorMessage = 'Your account is disabled.'
+        }
+        else{
+          this.errorMessage = 'Something wrong happened.'
+        }
       }
+    },
+    async userStatus(){
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log(user)
+          this.user = user
+        } else {
+          // User is signed out
+          // ...
+          console.log(user)
+          this.user = null
+          this.jwt = null
+        }
+      });
     },
     async registerUser(email, password) {
       const auth = getAuth()
       try {
-        createUserWithEmailAndPassword(auth, email, password).then(() => {
+        await createUserWithEmailAndPassword(auth, email, password).then(() => {
           // Signed in
           sendEmailVerification(auth.currentUser).then(() => {
-            console.log('Email verification sent')
+            this.errorMessage = ''
           })
         })
         return true
-      } catch (e) {
-        console.log(e)
+      } catch (error) {
+        console.log(error.code)
+        if (error.code == 'auth/missing-password'){
+          this.errorMessage = 'Password must be provided.'
+        }
+        else if (error.code === 'auth/weak-password'){
+          this.errorMessage = 'Password must have at least 6 characters.'
+        }
+        else if (error.code === 'auth/invalid-email'){
+          this.errorMessage = 'Email format is wrong.'
+        }
+        else if (error.code === 'auth/email-already-in-use'){
+          this.errorMessage = 'The email provided is already in use.'
+        }
+        else{
+          this.errorMessage = 'Something wrong happened.'
+        }
+        return false
       }
     },
     async logout() {
@@ -86,12 +123,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     async updateUserName(newName) {
-      const auth = getAuth()
-      console.log(auth.currentUser)
-
       if (this.currentUser != null){
-        //funciona pero al recargar página se pierde el token¿?
-        //mirar la diferencia entre currenUser al iniciar sesion y al refrescar
         await updateProfile(this.currentUser, {
           displayName: newName
         })
@@ -107,59 +139,33 @@ export const useAuthStore = defineStore('auth', {
         console.log('user session expired')
       }
     },
-    async updatePhoneUser(newPhoneNumber) {
-      const auth = getAuth()
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          console.log(user)
-          updateProfile(user, {
-            phoneNumber: newPhoneNumber
-          })
-            .then(() => {
-              this.userPhone = newPhoneNumber
-              setTimeout(() => {
-                this.message = 'Phone number updated succesfully'
-              }, 2000)
-            })
-            .catch((error) => {
-              this.message = error
-            })
-        } else {
-          this.message = 'No user logged in'
-        }
-      })
-    },
-    async updateEmail(email) {
-      const auth = getAuth()
-      const user = auth.currentUser
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          updateEmail(auth.currentUser, email)
-            .then(() => {
-              this.message = 'The email was updated succesfully!'
-            })
-            .catch((error) => {
-              console.error(error)
-              this.message = error
-              // An error occurred
-              // ...
-            })
-        } else {
-        }
-      })
+    async updateEmail(newEmail) {
+      if(this.currentUser != null){
+        updateEmail(this.currentUser, newEmail).then(() => {
+          console.log('email updated')
+        }).catch((error) => {
+          // An error occurred
+          // ...
+          console.log(error)
+        })
+        return true
+      } else {
+        console.log('user session expired')
+      }
+      
     },
     async updatePassword(newPassword) {
-      const auth = getAuth()
-
-      const user = auth.currentUser
-
-      updatePassword(user, newPassword)
-        .then(() => {
-          this.message = 'Password updated succesfully'
-        })
-        .catch((error) => {
-          this.message = error
-        })
+      if(this.currentUser != null){
+        updatePassword(this.currentUser, newPassword)
+          .then(() => {
+            this.message = 'Password updated succesfully'
+          })
+          .catch((error) => {
+            this.message = error
+          })
+      } else {
+        console.log('user session expired')
+      }
     },
     async deleteAccount() {
       const auth = getAuth()

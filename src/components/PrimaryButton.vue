@@ -5,12 +5,13 @@ defineProps({
   text: String,
   color: String,
   loadingState: Boolean,
+  variant: String, 
 })
 
 </script>
 
 <template>
-  <v-btn variant="elevated" :color="color" :loading="loadingState">
+  <v-btn class="w-auto" :variant="variant" :color="color" :loading="loadingState">
     {{ text }}
     <template v-slot:append>
       <slot></slot>

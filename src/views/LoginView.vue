@@ -12,23 +12,20 @@ const router = useRouter()
 const email = ref('')
 const password = ref('')
 const loading = ref(false)
-
-const authMessage = computed(() => {
-  return authStore.message
-})
-
-const isLoggedIn = computed(() => {
-  return authStore.isLoggedIn
-})
+const authMessage = ref('')
 
 const handleLogin = async () => {
   loading.value = true
-  await authStore.userLogin(email.value, password.value)
-  if (isLoggedIn.value) {
+  const res = await authStore.userLogin(email.value, password.value)
+  if (res) {
+    authMessage.value = ''
+    authMessage.value = authStore.errorMessage
     loading.value = false
     router.push('/user-main')
   } else {
-    return
+    authMessage.value = ''
+    loading.value = false
+    authMessage.value = authStore.errorMessage
   }
 }
 </script>
@@ -47,11 +44,11 @@ const handleLogin = async () => {
             clearable
           ></v-text-field>
           <v-column class="d-flex flex-column align-center my-6">
-            {{ authMessage }}
+            <p class="text-error">{{ authMessage }}</p>
             <PrimaryButton color="#90A4AE" text="Login" @click="handleLogin" :loading="loading"/>
             <p class="mt-6">
               Don´t have an account yet?
-              <RouterLink :to="{ name: 'register' }">Register</RouterLink>
+              <RouterLink :to="{ name: 'register' }">Sign up</RouterLink>
             </p>
             <p>
               Forgot your password?

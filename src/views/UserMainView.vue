@@ -2,7 +2,6 @@
   import MainTemplate from '@/templates/MainTemplate.vue'
   import { useAuthStore } from '@/stores/auth.js'
   import { computed } from 'vue'
-  import { ref } from 'vue'
   import { RouterLink } from 'vue-router'
 
   const authStore = useAuthStore()
@@ -16,7 +15,7 @@
 
 <template>
   <MainTemplate>
-    <h1>Welcome back, {{ userName }}</h1>
+    <h1>Welcome back, {{ authStore.providedUserName || authStore.providedEmail }}</h1>
     <v-sheet v-if="userName === null || userName === ''" border rounded class="pa-4">
       <p>Set up your profile. Go to <router-link :to="{name: 'accountSettings'}">settings</router-link> </p>
 

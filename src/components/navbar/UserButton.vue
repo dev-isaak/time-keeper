@@ -1,6 +1,5 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth.js'
-import { computed } from 'vue'
 import AccountIcon from '@/components/icons/AccountIcon.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import { useRouter } from 'vue-router'
@@ -10,9 +9,7 @@ import SettingsIcon from '@/components/icons/SettingsIcon.vue'
 const authStore = useAuthStore()
 const router = useRouter()
 
-const isLogedIn = computed(() => {
-  return authStore.jwt
-})
+
 
 const handleLogout = async() => {
    const isLogedOut = await authStore.logout()
@@ -26,7 +23,7 @@ const handleLogout = async() => {
 
 <template>
   
-  <v-menu v-if="isLogedIn !== null">
+  <v-menu>
       <template v-slot:activator="{ props }">
         <v-btn
           v-bind="props"
@@ -47,7 +44,4 @@ const handleLogout = async() => {
           </v-list-item>
     </v-list>
   </v-menu>
-  <v-btn v-else :to="{name: 'login'}">
-    <AccountIcon />
-  </v-btn>
 </template>
