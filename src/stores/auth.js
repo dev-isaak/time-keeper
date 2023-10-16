@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-
 import {
   getAuth,
   signOut,
@@ -24,13 +23,21 @@ export const useAuthStore = defineStore('auth', {
       message: '',
       errorMessage: '',
       isLoggedIn: false,
-      user: null
+      user: null,
+      passwordUpdated: false,
+      emailUpdated: false,
+      accountDeleted: false,
+      reLogIn: false,
     }
   },
   getters: {
     providedUserName: (state) => state.userName,
     providedEmail: (state) => state.userEmail,
-    currentUser: (state) => state.user
+    currentUser: (state) => state.user,
+    isPasswordUpdated: (state) => state.passwordUpdated,
+    isEmailUpdated: (state) => state.emailUpdated,
+    isAccountDeleted: (state) => state.accountDeleted,
+    needReLogIn: (state) => state.reLogIn,
   },
   actions: {
     async userLogin(email, password) {
@@ -77,7 +84,6 @@ export const useAuthStore = defineStore('auth', {
         } else {
           // User is signed out
           // ...
-          console.log(user)
           this.user = null
           this.jwt = null
         }
@@ -94,7 +100,6 @@ export const useAuthStore = defineStore('auth', {
         })
         return true
       } catch (error) {
-        console.log(error.code)
         if (error.code == 'auth/missing-password') {
           this.errorMessage = 'Password must be provided.'
         } else if (error.code === 'auth/weak-password') {
@@ -155,13 +160,20 @@ export const useAuthStore = defineStore('auth', {
     },
     async updatePassword(newPassword) {
       if (this.currentUser != null) {
-        updatePassword(this.currentUser, newPassword)
+        await updatePassword(this.currentUser, newPassword)
           .then(() => {
-            this.message = 'Password updated succesfully'
+            this.passwordUpdated = true
           })
           .catch((error) => {
-            this.message = error
+            if (error.code === 'auth/requires-recent-login'){
+              this.reLogIn = true
+            }
+            else if (error.code === 'auth/weak-password'){
+              this.errorMessage = 'Password must be at least 6 characters'
+            }
+            this.passwordUpdated = false
           })
+          
       } else {
         console.log('user session expired')
       }
@@ -173,26 +185,25 @@ export const useAuthStore = defineStore('auth', {
           this.message = 'Email sent.'
         })
         .catch((error) => {
-          const errorCode = error.code
-          const errorMessage = error.message
           if (error.code === 'auth/invalid-email'){
             this.errorMessage = 'Email not found.'
           }
-          console.log(errorCode, errorMessage)
         })
         return true
     },
     async deleteAccount() {
-      const auth = getAuth()
-      const user = auth.currentUser
-
-      deleteUser(user)
+      if (this.currentUser != null){
+        await deleteUser(this.currentUser)
         .then(() => {
-          this.message = 'User deleted succesfully'
+          console.log('cuenta eliminada')
         })
         .catch((error) => {
+          if (error.code === 'auth/requires-recent-login'){
+            this.reLogIn = true
+          }
           this.message = error
         })
+      }
     }
   },
   persist: true

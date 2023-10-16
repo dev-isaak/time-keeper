@@ -30,23 +30,21 @@ const hidePassword2 = ref(true)
 
 const handleDeleteAccount = async () => {
   loadingStateDelete.value = true
-  if (password.value === repeatedPassword.value) {
-    const isUpdated = await authStore.deleteAccount()
-    password.value = ''
-    repeatedPassword.value = ''
+    await authStore.deleteAccount()
+    
+    if (!authStore.needReLogIn) {
+      await authStore.logout()
+    } else {
+      alert('RELOGIIN!!!')
+      authStore.reLogIn = false
+    }
     loadingStateDelete.value = false
-  } else {
-    messageUpdatedEmail.value = 'Passwords must be equals.'
-    setTimeout(() => {
-      messageUpdatedPassword.value = ''
-      loadingStateDelete.value = false
-    }, 5000)
-  }
+
 }
 
 const handleUpdateEmail = async () => {
+  loadingStateEmail.value = true
   if (email.value === repeatedEmail.value) {
-    loadingStateEmail.value = true
     const isUpdated = await authStore.updateEmail(email.value)
     email.value = ''
     repeatedEmail.value = ''
@@ -78,6 +76,32 @@ const handleUpdateName = async () => {
 
 const handleUpdateProfilePhoto = async () => {
   alert('No function yet')
+}
+
+const handleUpdatePassword = async() => {
+  if( password.value === repeatedPassword.value){
+  loadingStatePassword.value = true
+  await authStore.updatePassword(password.value)
+  
+  if (authStore.isPasswordUpdated){
+    loadingStatePassword.value = false
+    messageUpdatedPassword.value = 'Password updated succesfully'
+    setTimeout(() => {
+      messageUpdatedPassword.value = ''
+    }, 5000)
+    password.value = null
+    repeatedPassword.value = null
+  } else{
+    if(authStore.needReLogIn){
+      alert('Logear de nuevo!!')
+      authStore.reLogIn = false
+    }
+    loadingStatePassword.value = false
+    messageUpdatedPassword.value = authStore.errorMessage
+  }
+  } else{
+    messageUpdatedPassword.value = 'Passwords must be equals.'
+  }
 }
 </script>
 
