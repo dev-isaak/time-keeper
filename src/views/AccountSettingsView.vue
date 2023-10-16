@@ -27,6 +27,7 @@ const messageUpdatedPassword = ref('')
 const messageUpdatedProfilePhoto = ref('')
 const hidePassword = ref(true)
 const hidePassword2 = ref(true)
+const dialog = ref(true)
 
 const handleDeleteAccount = async () => {
   loadingStateDelete.value = true
@@ -224,16 +225,31 @@ const handleUpdatePassword = async() => {
     <v-divider class="mb-4"></v-divider>
     <v-container class="my-2">
       <h3 class="my-2">Delete Account</h3>
-      <v-sheet class="my-4">
+    
+    <v-dialog width="500">
+  <template v-slot:activator="{ props }">
+    <v-btn v-bind="props" text="Delete Account" color="error"> </v-btn>
+  </template>
+
+  <template v-slot:default="{ isActive }">
+    <v-card title="Dialog">
+      <v-card-text>
         <p>Are you sure you want to delete the account?</p>
         <p>If you delete the account, you won't be able to</p>
-      </v-sheet>
-      <PrimaryButton
-        text="Delete Account"
-        color="error"
-        @click="handleDeleteAccount"
-        :loading="loadingStateDelete"
-      />
-    </v-container>
+        <v-text-field hint="Repeat the phrase mailhere" persistent-hint></v-text-field>
+      </v-card-text>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <PrimaryButton text="Delete Account" color="error" @click="handleDeleteAccount"/>
+        <PrimaryButton
+          text="Close Dialog"
+          @click="isActive.value = false"
+        />
+      </v-card-actions>
+    </v-card>
+  </template>
+</v-dialog>
+</v-container>
   </MainTemplate>
 </template>
