@@ -4,6 +4,7 @@ import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
 import { initializeApp } from "firebase/app"
+import { getFirestore } from 'firebase/firestore'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 // Vuetify
@@ -27,11 +28,11 @@ const firebaseConfig = {
   appId: "1:591286989751:web:09166cbaeda785bd10ee32"
 }
 
-
-
 const firebase = initializeApp(firebaseConfig)
+
 const app = createApp(App)
 const pinia = createPinia()
+const db = getFirestore(firebase)
 pinia.use(piniaPluginPersistedstate)
 
 app.use(firebase)

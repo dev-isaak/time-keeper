@@ -9,9 +9,11 @@ import EyeOffIcon from '@/components/icons/EyeOffIcon.vue'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
 import LoginForm from '@/components/forms/LoginForm.vue'
 import { useRouter } from 'vue-router'
+import { useFirestoreDB } from '@/stores/firestoreDB.js'
 
 const authStore = useAuthStore()
 const router = useRouter()
+const db = useFirestoreDB()
 
 const password = ref('')
 const repeatedPassword = ref('')
@@ -90,6 +92,13 @@ const handleUpdatePassword = async () => {
     messageUpdatedPassword.value = 'Passwords must be equals.'
   }
 }
+
+const handleCreateTest = async() => {
+  await db.postTest()
+}
+const handleGetTest = async() => {
+  await db.getTest()
+}
 </script>
 
 <template>
@@ -97,6 +106,8 @@ const handleUpdatePassword = async () => {
   <MainTemplate>
     <div>
       <h1>Account Settings</h1>
+      <v-btn @click="handleCreateTest">Post</v-btn>
+      <v-btn @click="handleGetTest">Get</v-btn>
       <v-divider class="my-5"></v-divider>
       <v-container>
         <v-container class="mb-10 pa-0">

@@ -4,7 +4,6 @@ import {
   signOut,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  updateEmail,
   sendEmailVerification,
   deleteUser,
   updatePassword,
