@@ -195,9 +195,11 @@ export const useAuthStore = defineStore('auth', {
       if (this.currentUser != null){
         await deleteUser(this.currentUser)
         .then(() => {
-          console.log('cuenta eliminada')
+          this.accountDeleted = true
+          this.reLogIn = false
         })
         .catch((error) => {
+          this.accountDeleted = false
           if (error.code === 'auth/requires-recent-login'){
             this.reLogIn = true
           }

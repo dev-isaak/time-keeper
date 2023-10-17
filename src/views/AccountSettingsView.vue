@@ -8,6 +8,7 @@ import EyeIcon from '@/components/icons/EyeIcon.vue'
 import EyeOffIcon from '@/components/icons/EyeOffIcon.vue'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
 import EmailIcon from '@/components/icons/EmailIcon.vue'
+import LoginForm from '@/components/forms/LoginForm.vue'
 
 const authStore = useAuthStore()
 
@@ -27,20 +28,23 @@ const messageUpdatedPassword = ref('')
 const messageUpdatedProfilePhoto = ref('')
 const hidePassword = ref(true)
 const hidePassword2 = ref(true)
-const dialog = ref(true)
+const verifyEmailPhrase = ref('')
 
 const handleDeleteAccount = async () => {
+  authStore.reLogIn = false
   loadingStateDelete.value = true
-    await authStore.deleteAccount()
-    
-    if (!authStore.needReLogIn) {
-      await authStore.logout()
-    } else {
-      alert('RELOGIIN!!!')
-      authStore.reLogIn = false
-    }
-    loadingStateDelete.value = false
+  
+  if (authStore.needReLogIn) {
+    //authStore.reLogIn = true
+  }
 
+  await authStore.deleteAccount()
+
+  if(authStore.isAccountDeleted){
+    //authStore.reLogIn = false
+    await authStore.logout()
+  }
+    loadingStateDelete.value = false
 }
 
 const handleUpdateEmail = async () => {
@@ -226,22 +230,25 @@ const handleUpdatePassword = async() => {
     <v-container class="my-2">
       <h3 class="my-2">Delete Account</h3>
     
+      {{authStore.needReLogIn}}
     <v-dialog width="500">
   <template v-slot:activator="{ props }">
     <v-btn v-bind="props" text="Delete Account" color="error"> </v-btn>
   </template>
-
   <template v-slot:default="{ isActive }">
-    <v-card title="Dialog">
+    <v-card title="Delete Account">
       <v-card-text>
-        <p>Are you sure you want to delete the account?</p>
-        <p>If you delete the account, you won't be able to</p>
-        <v-text-field hint="Repeat the phrase mailhere" persistent-hint></v-text-field>
+        <v-sheet color="#f5f5f5" class="pa-4 ma-4">
+          <p>Are you sure you want to delete the account?</p>
+          <p>If you delete the account, you won't be able to recover it in the future.</p>
+        </v-sheet>
+        <h4>To confirm, type "{{ authStore.providedEmail  }}" in the box below"</h4>
+        <v-text-field v-model="verifyEmailPhrase"></v-text-field>
       </v-card-text>
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <PrimaryButton text="Delete Account" color="error" @click="handleDeleteAccount"/>
+        <PrimaryButton text="Delete Account" color="error" @click="handleDeleteAccount" :disabled="authStore.providedEmail === verifyEmailPhrase ? false : true"/>
         <PrimaryButton
           text="Close Dialog"
           @click="isActive.value = false"
@@ -250,6 +257,8 @@ const handleUpdatePassword = async() => {
     </v-card>
   </template>
 </v-dialog>
+<LoginForm v-if="authStore.needReLogIn"/>
+
 </v-container>
   </MainTemplate>
 </template>
