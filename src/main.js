@@ -29,10 +29,14 @@ const firebaseConfig = {
 }
 
 const firebase = initializeApp(firebaseConfig)
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(firebase)
 
+export {
+  db
+}
 const app = createApp(App)
 const pinia = createPinia()
-const db = getFirestore(firebase)
 pinia.use(piniaPluginPersistedstate)
 
 app.use(firebase)

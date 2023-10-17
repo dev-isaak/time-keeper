@@ -10,9 +10,11 @@ import EyeOffIcon from '@/components/icons/EyeOffIcon.vue'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
 import EmailIcon from '@/components/icons/EmailIcon.vue'
 import LockIcon from '@/components/icons/LockIcon.vue'
+import { useFirestoreDB } from '@/stores/firestoreDB.js'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const db = useFirestoreDB()
 
 const name = ref('')
 const lastname = ref('')
@@ -44,8 +46,8 @@ const handleRegister = async () => {
     authMessage.value = ''
     isLoading.value = true
     const isRegistered = await authStore.registerUser(email.value, password.value)
-    console.log(isRegistered)
     if (isRegistered) {
+      await db.createUserTable()
       isLoading.value = false
       router.push('/verify-account')
     } else {

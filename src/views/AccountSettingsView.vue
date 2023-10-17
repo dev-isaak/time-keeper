@@ -1,7 +1,7 @@
 <script setup>
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import MainTemplate from '@/templates/MainTemplate.vue'
-import { ref } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import { useAuthStore } from '@/stores/auth.js'
 import LockIcon from '@/components/icons/LockIcon.vue'
 import EyeIcon from '@/components/icons/EyeIcon.vue'
@@ -10,6 +10,7 @@ import CloseIcon from '@/components/icons/CloseIcon.vue'
 import LoginForm from '@/components/forms/LoginForm.vue'
 import { useRouter } from 'vue-router'
 import { useFirestoreDB } from '@/stores/firestoreDB.js'
+import SettingRow from '@/components/SettingRow.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -29,6 +30,11 @@ const hidePassword = ref(true)
 const hidePassword2 = ref(true)
 const verifyEmailPhrase = ref('')
 const dialog = ref(false)
+const updatedUserName = ref('')
+
+onBeforeMount(async() => {
+  await db.getUserData()
+})
 
 const handleDeleteAccount = async () => {
   authStore.reLogIn = false
@@ -93,12 +99,10 @@ const handleUpdatePassword = async () => {
   }
 }
 
-const handleCreateTest = async() => {
-  await db.postTest()
+const handleUpdateUsername = async() => {
+  await db.updateUserName(updatedUserName.value)
 }
-const handleGetTest = async() => {
-  await db.getTest()
-}
+
 </script>
 
 <template>
@@ -106,10 +110,18 @@ const handleGetTest = async() => {
   <MainTemplate>
     <div>
       <h1>Account Settings</h1>
-      <v-btn @click="handleCreateTest">Post</v-btn>
-      <v-btn @click="handleGetTest">Get</v-btn>
       <v-divider class="my-5"></v-divider>
       <v-container>
+        <v-sheet class="d-flex align-center">
+          <div class="bg-blue mx-6 pa-6 rounded" width="25" height="25">Photo here</div>
+          <PrimaryButton text="Edit" variant="text"/>
+        </v-sheet>
+            <SettingRow title="Name" :value="db.currentUserName" :updateValue="handleUpdateUsername" />
+            {{ updatedUserName }}
+            <SettingRow title="Last Name" :value="db.currentUserLastname" />
+            <SettingRow title="Address" :value="db.currentUserAddress"/>
+            <SettingRow title="Phone Number" :value="db.currentUserPhone"/>
+
         <v-container class="mb-10 pa-0">
           <h3 class="my-2">Change Username</h3>
           <v-text-field

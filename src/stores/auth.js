@@ -16,6 +16,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => {
     return {
       jwt: null,
+      uid: null,
       userName: '',
       userEmail: '',
       userPhoto: '',
@@ -57,6 +58,7 @@ export const useAuthStore = defineStore('auth', {
             this.errorMessage = ''
             this.reLogIn = false
             this.accountDeleted = false
+            this.uid = user.uid
           } else {
             this.errorMessage =
               'The email account is not verified yet. Please, verify it before continue.'
@@ -94,8 +96,9 @@ export const useAuthStore = defineStore('auth', {
     async registerUser(email, password) {
       const auth = getAuth()
       try {
-        await createUserWithEmailAndPassword(auth, email, password).then(() => {
+        await createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
           // Signed in
+          this.uid = userCredential.user.uid
           sendEmailVerification(auth.currentUser).then(() => {
             this.errorMessage = ''
           })
