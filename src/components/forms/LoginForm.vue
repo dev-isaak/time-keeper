@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, useRouter } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref, defineProps } from 'vue'
 import MainTemplate from '@/templates/MainTemplate.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import LockIcon from '@/components/icons/LockIcon.vue'
@@ -10,6 +10,10 @@ import CloseIcon from '@/components/icons/CloseIcon.vue';
 import EmailIcon from '@/components/icons/EmailIcon.vue';
 
 import { useAuthStore } from '@/stores/auth.js'
+
+const props = defineProps({
+  preventDefault : Boolean,
+})
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -31,7 +35,14 @@ const handleLogin = async () => {
     authMessage.value = ''
     authMessage.value = authStore.errorMessage
     loading.value = false
+    if (props.preventDefault){
+      console.log('loged')
+      authStore.reLogIn = false
+      return
+    }
+    else {
     router.push('/user-main')
+    }
   } else {
     authMessage.value = ''
     loading.value = false

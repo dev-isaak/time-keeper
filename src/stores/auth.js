@@ -56,6 +56,8 @@ export const useAuthStore = defineStore('auth', {
             this.userPhoto = user.photoUrl
             this.isLoggedIn = true
             this.errorMessage = ''
+            this.reLogIn = false
+            this.accountDeleted = false
           } else {
             this.errorMessage =
               'The email account is not verified yet. Please, verify it before continue.'
@@ -79,13 +81,14 @@ export const useAuthStore = defineStore('auth', {
       const auth = getAuth()
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          console.log(user)
           this.user = user
+          this.reLogIn = false
         } else {
           // User is signed out
           // ...
           this.user = null
           this.jwt = null
+          this.reLogIn = true
         }
       })
     },
@@ -136,22 +139,6 @@ export const useAuthStore = defineStore('auth', {
           })
           .catch((error) => {
             this.message = error
-          })
-        return true
-      } else {
-        console.log('user session expired')
-      }
-    },
-    async updateEmail(newEmail) {
-      if (this.currentUser != null) {
-        updateEmail(this.currentUser, newEmail)
-          .then(() => {
-            console.log('email updated')
-          })
-          .catch((error) => {
-            // An error occurred
-            // ...
-            console.log(error)
           })
         return true
       } else {
