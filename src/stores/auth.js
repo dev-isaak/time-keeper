@@ -7,7 +7,6 @@ import {
   sendEmailVerification,
   deleteUser,
   updatePassword,
-  updateProfile,
   onAuthStateChanged,
   sendPasswordResetEmail
 } from 'firebase/auth'
@@ -17,9 +16,7 @@ export const useAuthStore = defineStore('auth', {
     return {
       jwt: null,
       uid: null,
-      userName: '',
       userEmail: '',
-      userPhoto: '',
       message: '',
       errorMessage: '',
       isLoggedIn: false,
@@ -31,9 +28,9 @@ export const useAuthStore = defineStore('auth', {
     }
   },
   getters: {
-    providedUserName: (state) => state.userName,
     providedEmail: (state) => state.userEmail,
     currentUser: (state) => state.user,
+    currentUID: (state) => state.uid,
     isPasswordUpdated: (state) => state.passwordUpdated,
     isEmailUpdated: (state) => state.emailUpdated,
     isAccountDeleted: (state) => state.accountDeleted,
@@ -50,15 +47,13 @@ export const useAuthStore = defineStore('auth', {
           if (user.emailVerified) {
             this.user = user
             this.jwt = user.accessToken
-            this.userName = user.displayName
             this.userEmail = user.email
-            this.userPhone = user.phoneNumber
-            this.userPhoto = user.photoUrl
             this.isLoggedIn = true
             this.errorMessage = ''
             this.reLogIn = false
             this.accountDeleted = false
             this.uid = user.uid
+            console.log(user.uid)
           } else {
             this.errorMessage =
               'The email account is not verified yet. Please, verify it before continue.'
@@ -98,6 +93,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         await createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
           // Signed in
+          this.userEmail = email
           this.uid = userCredential.user.uid
           sendEmailVerification(auth.currentUser).then(() => {
             this.errorMessage = ''
@@ -125,26 +121,10 @@ export const useAuthStore = defineStore('auth', {
         await signOut(auth)
         this.jwt = null
         this.user = null
-
+        this.uid = null
         return true
       } catch (e) {
         console.error(e)
-      }
-    },
-    async updateUserName(newName) {
-      if (this.currentUser != null) {
-        await updateProfile(this.currentUser, {
-          displayName: newName
-        })
-          .then(() => {
-            this.userName = newName
-          })
-          .catch((error) => {
-            this.message = error
-          })
-        return true
-      } else {
-        console.log('user session expired')
       }
     },
     async updatePassword(newPassword) {
@@ -188,6 +168,7 @@ export const useAuthStore = defineStore('auth', {
           this.reLogIn = false
         })
         .catch((error) => {
+          console.log(error)
           this.accountDeleted = false
           if (error.code === 'auth/requires-recent-login'){
             this.reLogIn = true

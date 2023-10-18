@@ -1,9 +1,9 @@
 <script setup>
 import { ref, computed } from 'vue';
 import MenuIcon from '@/components/icons/MenuIcon.vue'
-import UserButton from '@/components/navbar/UserButton.vue'
 import { useAuthStore } from '@/stores/auth.js'
 import PrimaryButton from '@/components/PrimaryButton.vue'
+import ProfileAvatar from '@/components/ProfileAvatar.vue'
 
 const authStore = useAuthStore()
 
@@ -25,8 +25,12 @@ const isLogedIn = computed(() => {
         </v-toolbar-title>
         <v-spacer>
         </v-spacer>
-        <UserButton v-if="isLogedIn !== null"/>
-        <PrimaryButton v-else text="Sign In" :to="{name: 'login'}"/>
+        <ProfileAvatar v-if="isLogedIn !== null" size="50" class="mr-4" menu/>
+        <!--<UserButton v-if="isLogedIn !== null"/>-->
+        <div v-else class="mr-4">
+          <PrimaryButton text="Sign In" :to="{name: 'login'}"/>
+          <PrimaryButton text="Sign Up" variant="text" :to="{name: 'register'}"/>
+        </div>
         </v-app-bar>
         <v-navigation-drawer location="left" v-model="drawer" temporary>
           <v-list class="d-flex flex-column mt-6">

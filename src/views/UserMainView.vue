@@ -3,8 +3,10 @@
   import { useAuthStore } from '@/stores/auth.js'
   import { computed } from 'vue'
   import { RouterLink } from 'vue-router'
+  import { useFirestoreDB } from '../stores/firestoreDB'
 
   const authStore = useAuthStore()
+  const db = useFirestoreDB()
 
   const userName = computed(() => {
     return authStore.userName
@@ -15,8 +17,9 @@
 
 <template>
   <MainTemplate>
-    <h1>Welcome back, {{ authStore.providedUserName || authStore.providedEmail }}</h1>
-    <v-sheet v-if="userName === null || userName === ''" border rounded class="pa-4">
+    <h1>Welcome back, {{ db.currentUserName|| authStore.providedEmail }}</h1>
+    //Steps to finish set up profile
+    <v-sheet v-if="userName === null || userName === ''" border-md rounded class="pa-4">
       <p>Set up your profile. Go to <router-link :to="{name: 'accountSettings'}">settings</router-link> </p>
 
     </v-sheet>

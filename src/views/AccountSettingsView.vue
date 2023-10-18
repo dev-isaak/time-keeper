@@ -10,29 +10,29 @@ import CloseIcon from '@/components/icons/CloseIcon.vue'
 import LoginForm from '@/components/forms/LoginForm.vue'
 import { useRouter } from 'vue-router'
 import { useFirestoreDB } from '@/stores/firestoreDB.js'
-import SettingRow from '@/components/SettingRow.vue'
+import SettingRow from '@/components/account-settings/SettingRow.vue'
+import ProfileAvatar from '@/components/ProfileAvatar.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
 const db = useFirestoreDB()
-
 const password = ref('')
 const repeatedPassword = ref('')
-const userName = ref('')
-const loadingStateName = ref(false)
-const loadingStateProfileImage = ref(false)
 const loadingStatePassword = ref(false)
 const loadingStateDelete = ref(false)
-const messageUpdatedUsername = ref('')
 const messageUpdatedPassword = ref('')
-const messageUpdatedProfilePhoto = ref('')
 const hidePassword = ref(true)
 const hidePassword2 = ref(true)
 const verifyEmailPhrase = ref('')
 const dialog = ref(false)
 const updatedUserName = ref('')
+const updatedUserLastname = ref('')
+const updatedUserAddress = ref('')
+const updatedUserBirthDate = ref('')
+const updatedUserPhone = ref('')
+const closeEditingView = ref(false)
 
-onBeforeMount(async() => {
+onBeforeMount(async () => {
   await db.getUserData()
 })
 
@@ -40,36 +40,16 @@ const handleDeleteAccount = async () => {
   authStore.reLogIn = false
   loadingStateDelete.value = true
 
-  if(authStore.needReLogIn) {
+  if (authStore.needReLogIn) {
     dialog.value = true
-  } 
+  }
 
   await authStore.deleteAccount()
 
   if (authStore.isAccountDeleted) {
-    router.push({name: 'login'})
+    router.push({ name: 'login' })
   }
   loadingStateDelete.value = false
-}
-
-const handleUpdateName = async () => {
-  loadingStateName.value = true
-  const isUpdated = await authStore.updateUserName(userName.value)
-  if (isUpdated) {
-    loadingStateName.value = false
-    messageUpdatedUsername.value = 'Username updated succesfully'
-    setTimeout(() => {
-      messageUpdatedUsername.value = ''
-    }, 5000)
-    userName.value = null
-  } else {
-    loadingStateName.value = false
-    messageUpdatedUsername.value = 'Cannot update username. Try again later.'
-  }
-}
-
-const handleUpdateProfilePhoto = async () => {
-  alert('No function yet')
 }
 
 const handleUpdatePassword = async () => {
@@ -99,10 +79,42 @@ const handleUpdatePassword = async () => {
   }
 }
 
-const handleUpdateUsername = async() => {
+const handleUpdateUsername = async () => {
   await db.updateUserName(updatedUserName.value)
+  if (db.isUserNameUpdated) {
+    closeEditingView.value = true
+  }
 }
-
+const handleUpdateLastname = async () => {
+  await db.updateUserLastname(updatedUserLastname.value)
+  if (db.isUserLastnameUpdated) {
+    closeEditingView.value = true
+  }
+}
+const handleUpdateBirthDate = async () => {
+  await db.updateUserBirthDate(updatedUserBirthDate.value)
+  if (db.isUserBirthDateUpdated) {
+    closeEditingView.value = true
+  }
+}
+const handleUpdateAddress = async () => {
+  await db.updateUserAddress(updatedUserAddress.value)
+  if (db.isUserAddressUpdated) {
+    closeEditingView.value = true
+  }
+}
+const handleUpdatePhone = async () => {
+  await db.updateUserPhone(updatedUserPhone.value)
+  if (db.isUserPhoneUpdated) {
+    closeEditingView.value = true
+  }
+}
+//Received values from text field at SettingRow component
+const receivedUserName = (userName) => (updatedUserName.value = userName)
+const receivedLastname = (lastName) => (updatedUserLastname.value = lastName)
+const receivedBirthDate = (birthDate) => (updatedUserBirthDate.value = birthDate)
+const receivedAddress = (address) => (updatedUserAddress.value = address)
+const receivedPhone = (phoneNumber) => (updatedUserPhone.value = phoneNumber)
 </script>
 
 <template>
@@ -111,50 +123,58 @@ const handleUpdateUsername = async() => {
     <div>
       <h1>Account Settings</h1>
       <v-divider class="my-5"></v-divider>
-      <v-container>
-        <v-sheet class="d-flex align-center">
-          <div class="bg-blue mx-6 pa-6 rounded" width="25" height="25">Photo here</div>
-          <PrimaryButton text="Edit" variant="text"/>
-        </v-sheet>
-            <SettingRow title="Name" :value="db.currentUserName" :updateValue="handleUpdateUsername" />
-            {{ updatedUserName }}
-            <SettingRow title="Last Name" :value="db.currentUserLastname" />
-            <SettingRow title="Address" :value="db.currentUserAddress"/>
-            <SettingRow title="Phone Number" :value="db.currentUserPhone"/>
-
-        <v-container class="mb-10 pa-0">
-          <h3 class="my-2">Change Username</h3>
-          <v-text-field
-            :label="authStore.providedUserName || 'User Name'"
-            v-model="userName"
-          ></v-text-field>
-          <v-sheet class="d-flex flex-column">
-            <p v-if="messageUpdatedUsername != ''" class="text-success mb-2">
-              {{ messageUpdatedUsername }}
-            </p>
-            <PrimaryButton
-              text="Update"
-              color="#90A4AE"
-              @click="handleUpdateName"
-              :loading="loadingStateName"
-            />
-          </v-sheet>
-        </v-container>
-        <v-container class="mb-10 pa-0">
-          <h3 class="my-2">Change Profile Photo</h3>
-          <v-file-input prepend-icon="" prepend-inner-icon="" label="Select photo"></v-file-input>
-          <v-sheet class="d-flex flex-column">
-            <p v-if="messageUpdatedProfilePhoto != ''" class="text-success mb-2">
-              {{ messageUpdatedProfilePhoto }}
-            </p>
-            <PrimaryButton
-              text="Update"
-              color="#90A4AE"
-              @click="handleUpdateProfilePhoto"
-              :loading="loadingStateProfileImage"
-            />
-          </v-sheet>
-        </v-container>
+      <v-container cols="1">
+        <v-row>
+          <v-col cols="12" md="2">
+            <v-sheet>
+              <v-sheet class="d-flex flex-column align-center w-100" width="100">
+                <ProfileAvatar size="150" class="mb-4"/>
+                <PrimaryButton text="Edit" />
+              </v-sheet>
+            </v-sheet>
+          </v-col>
+          <v-col>
+            <v-sheet class="d-flex flex-wrap">
+              <SettingRow
+                title="Name"
+                :value="db.currentUserName"
+                :updateValue="handleUpdateUsername"
+                @fieldValue="receivedUserName"
+                :closeEditingView="closeEditingView"
+              />
+              <SettingRow
+                title="Last Name"
+                :value="db.currentUserLastname"
+                :updateValue="handleUpdateLastname"
+                @fieldValue="receivedLastname"
+                :closeEditingView="closeEditingView"
+              />
+              <SettingRow
+                title="Birth Date"
+                :value="db.currentUserBirthDate"
+                :updateValue="handleUpdateBirthDate"
+                @fieldValue="receivedBirthDate"
+                :closeEditingView="closeEditingView"
+              />
+              <SettingRow
+                title="Address"
+                :value="db.currentUserAddress"
+                :updateValue="handleUpdateAddress"
+                @fieldValue="receivedAddress"
+                :closeEditingView="closeEditingView"
+              />
+              <SettingRow
+                title="Phone Number"
+                :value="db.currentUserPhone"
+                :updateValue="handleUpdatePhone"
+                @fieldValue="receivedPhone"
+                :closeEditingView="closeEditingView"
+              />
+            </v-sheet>
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-container class="px-0">
         <v-container class="my-2 pa-0">
           <h3 class="my-2">Update Account Password</h3>
           <v-text-field
@@ -202,12 +222,10 @@ const handleUpdateUsername = async() => {
           </v-sheet>
         </v-container>
       </v-container>
-      <v-divider class="mb-4"></v-divider>
-      <v-container class="my-2">
-        <h3 class="my-2">Delete Account</h3>
+      <v-container class="my-2 d-flex justify-center border">
         <v-dialog width="500">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" text="Delete Account" color="error"> </v-btn>
+              <v-btn v-bind="props" text="Delete Account" color="error"> </v-btn>
           </template>
           <template v-slot:default="{ isActive }">
             <v-card title="Delete Account">
