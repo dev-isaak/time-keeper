@@ -1,7 +1,7 @@
 <script setup>
   import MainTemplate from '@/templates/MainTemplate.vue'
   import { useAuthStore } from '@/stores/auth.js'
-  import { computed } from 'vue'
+  import { computed, onBeforeMount } from 'vue'
   import { RouterLink } from 'vue-router'
   import { useFirestoreDB } from '../stores/firestoreDB'
 
@@ -11,7 +11,9 @@
   const userName = computed(() => {
     return authStore.userName
   })
-
+  onBeforeMount(async () => {
+  await db.getUserData()
+})
 
 </script>
 

@@ -4,28 +4,27 @@ import { useRouter } from 'vue-router'
 import MainTemplate from '@/templates/MainTemplate.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import { useAuthStore } from '@/stores/auth.js'
-import MenuIcon from '@/components/icons/MenuIcon.vue'
 import EyeIcon from '@/components/icons/EyeIcon.vue'
 import EyeOffIcon from '@/components/icons/EyeOffIcon.vue'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
 import EmailIcon from '@/components/icons/EmailIcon.vue'
 import LockIcon from '@/components/icons/LockIcon.vue'
 import { useFirestoreDB } from '@/stores/firestoreDB.js'
+import SnackBar from '../SnackBar.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const db = useFirestoreDB()
 
-const name = ref('')
-const lastname = ref('')
 const email = ref('')
 const emailRepeat = ref('')
 const password = ref('')
 const passwordRepeat = ref('')
-const authMessage = ref('')
+const message = ref('')
 const isLoading = ref(false)
 const hidePassword = ref(true)
 const hidePassword2 = ref(true)
+const openSnackbar = ref(false)
 
 const rules = {
   required: (value) => !!value || 'Field is required'
@@ -33,17 +32,19 @@ const rules = {
 
 const handleRegister = async () => {
   if (email.value !== emailRepeat.value) {
-    authMessage.value = 'Emails must be equals.'
+    message.value = 'Emails must be equals.'
+    openSnackbar.value = true
     setTimeout(() => {
-      authMessage.value = ''
-    }, 5000)
+      openSnackbar.value = false
+    }, 3000)
   } else if (password.value !== passwordRepeat.value) {
-    authMessage.value = 'Passwords must be equals'
+    message.value = 'Passwords must be equals'
+    openSnackbar.value = true
     setTimeout(() => {
-      authMessage.value = ''
-    }, 5000)
+      openSnackbar.value = false
+    }, 3000)
   } else {
-    authMessage.value = ''
+    message.value = ''
     isLoading.value = true
     const isRegistered = await authStore.registerUser(email.value, password.value)
     if (isRegistered) {
@@ -52,16 +53,18 @@ const handleRegister = async () => {
       router.push('/verify-account')
     } else {
       isLoading.value = false
-      authMessage.value = authStore.errorMessage
-      setTimeout(() => {
-        authMessage.value = ''
-      }, 5000)
+      message.value = authStore.errorMessage
+      openSnackbar.value = true
+    setTimeout(() => {
+      openSnackbar.value = false
+    }, 3000)
     }
   }
 }
 </script>
 
 <template>
+  <SnackBar :text="message" :openSnackbar="openSnackbar"/>
   <MainTemplate>
     <v-container class="w-100 d-flex flex-column">
       <h1>Register</h1>
@@ -135,7 +138,7 @@ const handleRegister = async () => {
             </template>
           </v-text-field>
           <v-container class="d-flex flex-column align-center">
-            <p v-if="authMessage != ''" class="text-error mb-4">{{ authMessage }}</p>
+            <p v-if="message != ''" class="text-error mb-4">{{ message }}</p>
             <PrimaryButton
               color="#90A4AE"
               text="Register"

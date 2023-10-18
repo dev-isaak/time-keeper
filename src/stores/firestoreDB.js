@@ -42,7 +42,6 @@ export const useFirestoreDB = defineStore('firestoreDB', {
       
       const docRef = doc(db, 'users', auth.currentUID)
       const docSnap = await getDoc(docRef)
-      console.log(docSnap.data())
       if (docSnap.exists()) {
         this.userName = docSnap.data().user_name
         this.userLastname = docSnap.data().user_lastname
@@ -50,7 +49,6 @@ export const useFirestoreDB = defineStore('firestoreDB', {
         this.userPhone = docSnap.data().user_phone
         this.userBirthDate = docSnap.data().user_birth_date
         this.Photo = docSnap.data().user_photo
-        console.log('Document data:', docSnap.data())
       } else {
         // docSnap.data() will be undefined in this case
         console.log('No such document!')

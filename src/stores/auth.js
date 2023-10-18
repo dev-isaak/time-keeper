@@ -53,7 +53,6 @@ export const useAuthStore = defineStore('auth', {
             this.reLogIn = false
             this.accountDeleted = false
             this.uid = user.uid
-            console.log(user.uid)
           } else {
             this.errorMessage =
               'The email account is not verified yet. Please, verify it before continue.'
@@ -78,7 +77,6 @@ export const useAuthStore = defineStore('auth', {
       onAuthStateChanged(auth, (user) => {
         if (user) {
           this.user = user
-          this.reLogIn = false
         } else {
           // User is signed out
           // ...
@@ -132,13 +130,17 @@ export const useAuthStore = defineStore('auth', {
         await updatePassword(this.currentUser, newPassword)
           .then(() => {
             this.passwordUpdated = true
+            this.reLogIn = false
+            
           })
           .catch((error) => {
             if (error.code === 'auth/requires-recent-login'){
+              this.errorMessage = 'Need to re-login again'
               this.reLogIn = true
             }
             else if (error.code === 'auth/weak-password'){
               this.errorMessage = 'Password must be at least 6 characters'
+              this.reLogIn = false
             }
             this.passwordUpdated = false
           })
