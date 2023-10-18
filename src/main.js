@@ -5,6 +5,7 @@ import router from './router'
 import { createPinia } from 'pinia'
 import { initializeApp } from "firebase/app"
 import { getFirestore } from 'firebase/firestore'
+import { getStorage } from "firebase/storage";
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 // Vuetify
@@ -31,10 +32,13 @@ const firebaseConfig = {
 const firebase = initializeApp(firebaseConfig)
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(firebase)
-
+// Initialize Cloud Storage and get a reference to the service
+const storage = getStorage(firebase);
 export {
-  db
+  db,
+  storage
 }
+
 const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)

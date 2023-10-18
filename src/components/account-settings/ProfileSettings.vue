@@ -5,8 +5,11 @@ import ProfileAvatar from '@/components/ProfileAvatar.vue'
 import { ref } from 'vue'
 import SnackBar from '../SnackBar.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
+import { useFirebaseStorage } from '@/stores/firebaseStorage.js'
+import ImageUploadForm from '@/components/forms/ImageUploadForm.vue'
 
 const db = useFirestoreDB()
+const storage = useFirebaseStorage()
 const updatedUserName = ref('')
 const updatedUserLastname = ref('')
 const updatedUserAddress = ref('')
@@ -20,6 +23,7 @@ const loadingLastname = ref(false)
 const loadingBirthDate = ref(false)
 const loadingAddress = ref(false)
 const loadingPhone = ref(false)
+const fileUploaded = ref()
 
 const handleUpdateUsername = async () => {
   loadingName.value = true
@@ -93,6 +97,10 @@ const receivedBirthDate = (birthDate) => (updatedUserBirthDate.value = birthDate
 const receivedAddress = (address) => (updatedUserAddress.value = address)
 const receivedPhone = (phoneNumber) => (updatedUserPhone.value = phoneNumber)
 
+const handleUploadProfilePhoto = async() => {
+  await storage.uploadProfileImage(fileUploaded.value)
+}
+
 </script>
 
 <template>
@@ -104,7 +112,7 @@ const receivedPhone = (phoneNumber) => (updatedUserPhone.value = phoneNumber)
             <v-sheet>
               <v-sheet class="d-flex flex-column align-center w-100" width="100">
                 <ProfileAvatar size="150" class="mb-4"/>
-                <PrimaryButton text="Edit" />
+                <ImageUploadForm />
               </v-sheet>
             </v-sheet>
           </v-col>
