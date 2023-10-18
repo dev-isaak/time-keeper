@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { useAuthStore } from '@/stores/auth.js'
-import { setDoc, getDoc, doc, updateDoc } from 'firebase/firestore'
+import { setDoc, getDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore'
 import { db } from '@/main.js'
 
 export const useFirestoreDB = defineStore('firestoreDB', {
@@ -20,9 +20,13 @@ export const useFirestoreDB = defineStore('firestoreDB', {
     }
   },
   getters: {
-    currentUserName: (state) => state.userName.toUpperCase(),
-    currentUserLastname: (state) => state.userLastname.toUpperCase(),
-    currentUserAddress: (state) => state.userAddress.toUpperCase(),
+    currentUserName: (state) => {
+     return state.userName.charAt(0).toUpperCase() + state.userName.substring(1)
+    },
+    currentUserLastname: (state) => {
+      return state.userLastname.charAt(0).toUpperCase() + state.userLastname.substring(1)
+    },
+    currentUserAddress: (state) => state.userAddress,
     currentUserPhone: (state) => state.userPhone,
     currentUserPhoto: (state) => state.userPhoto,
     currentUserBirthDate: (state) => state.userBirthDate,
@@ -65,7 +69,6 @@ export const useFirestoreDB = defineStore('firestoreDB', {
           user_photo: 'route-photo',
           user_address: 'Your address here'
         })
-        console.log('Documento Creado')
       } catch (e) {
         console.error('Error adding document: ', e)
       }
@@ -136,6 +139,17 @@ export const useFirestoreDB = defineStore('firestoreDB', {
       }
 
     },
+    async deleteUserDB(){
+      const auth = useAuthStore()
+      try{
+        const res = await deleteDoc(doc(db, 'users', auth.currentUID))
+        if (res === undefined){
+          return true
+        }
+      } catch(e){
+        console.error(e)
+      }
+    }
   },
   persist: true
 })

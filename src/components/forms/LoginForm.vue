@@ -1,7 +1,6 @@
 <script setup>
 import { RouterLink, useRouter } from 'vue-router'
 import { ref, defineProps } from 'vue'
-import MainTemplate from '@/templates/MainTemplate.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import LockIcon from '@/components/icons/LockIcon.vue'
 import EyeIcon from '@/components/icons/EyeIcon.vue';
@@ -21,10 +20,10 @@ const router = useRouter()
 const email = ref('')
 const password = ref('')
 const loading = ref(false)
-const authMessage = ref('')
 const hidePassword = ref(true)
 const openSnackbar = ref(false)
 const message = ref('')
+const errorMessage = ref(false)
 
 const rules = {
   required: (value) => !!value || 'Field is required'
@@ -35,6 +34,7 @@ const handleLogin = async () => {
   const res = await authStore.userLogin(email.value, password.value)
   if (res) {
     authStore.reLogIn = false
+    errorMessage.value = true
     message.value = authStore.errorMessage
     openSnackbar.value = true
     setTimeout(() => {
@@ -42,7 +42,7 @@ const handleLogin = async () => {
     },3000)
     loading.value = false
     if (props.preventDefault){
-      emits('isLogedIn', true)
+      emits('isLogedIn', false)
       authStore.reLogIn = false
       return
     }
@@ -50,9 +50,10 @@ const handleLogin = async () => {
     router.push('/user-main')
     }
   } else {
-    authMessage.value = ''
     loading.value = false
+    errorMessage.value = true
     message.value = authStore.errorMessage
+    openSnackbar.value = true
     setTimeout(() => {
       openSnackbar.value = false
     },3000)
@@ -61,11 +62,10 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <SnackBar :text="message" :openSnackbar="openSnackbar"/>
-  <MainTemplate>
+  <SnackBar :text="message" :openSnackbar="openSnackbar"  :error="errorMessage ? true : false"/>
     <v-container class="w-100 d-flex flex-column">
       <h1>Login</h1>
-      <v-card class="my-6 pa-6" variant="text">
+      <v-card class="py-6" variant="text">
         <form>
           <v-text-field label="Email" type="email" v-model="email" >
             <template v-slot:prepend-inner>
@@ -86,20 +86,10 @@ const handleLogin = async () => {
               <EyeOffIcon v-else @click="hidePassword = !hidePassword"  color="gray"/>
             </template>
         </v-text-field>
-          <v-column class="d-flex flex-column align-center my-6">
-            <p class="text-error">{{ authMessage }}</p>
+          <v-column class="d-flex flex-column align-center mt-6">
             <PrimaryButton color="#90A4AE" text="Login" @click="handleLogin" :loading="loading" />
-            <p class="mt-6">
-              Don´t have an account yet?
-              <RouterLink :to="{ name: 'register' }">Sign up</RouterLink>
-            </p>
-            <p>
-              Forgot your password?
-              <RouterLink :to="{name: 'recoveryPassword'}">Recovery</RouterLink>
-            </p>
           </v-column>
         </form>
       </v-card>
     </v-container>
-  </MainTemplate>
 </template>

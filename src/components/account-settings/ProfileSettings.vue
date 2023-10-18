@@ -4,7 +4,7 @@ import SettingRow from '@/components/account-settings/SettingRow.vue'
 import ProfileAvatar from '@/components/ProfileAvatar.vue'
 import { ref } from 'vue'
 import SnackBar from '../SnackBar.vue'
-
+import PrimaryButton from '@/components/PrimaryButton.vue'
 
 const db = useFirestoreDB()
 const updatedUserName = ref('')
@@ -15,57 +15,72 @@ const updatedUserPhone = ref('')
 const closeEditingView = ref(false)
 const message = ref('')
 const openSnackbar = ref(false)
+const loadingName = ref(false)
+const loadingLastname = ref(false)
+const loadingBirthDate = ref(false)
+const loadingAddress = ref(false)
+const loadingPhone = ref(false)
 
 const handleUpdateUsername = async () => {
+  loadingName.value = true
   await db.updateUserName(updatedUserName.value)
   if (db.isUserNameUpdated) {
     closeEditingView.value = true
     message.value = 'User name updated succesfully.'
     openSnackbar.value = true
+    loadingName.value = false
     setTimeout(() => {
         openSnackbar.value = false
     }, 3000)
   }
 }
 const handleUpdateLastname = async () => {
+  loadingLastname.value = true
   await db.updateUserLastname(updatedUserLastname.value)
   if (db.isUserLastnameUpdated) {
     closeEditingView.value = true
-        message.value = 'Last name updated succesfully.'
+    message.value = 'Last name updated succesfully.'
     openSnackbar.value = true
+    loadingLastname.value = false
     setTimeout(() => {
         openSnackbar.value = false
     }, 3000)
   }
 }
 const handleUpdateBirthDate = async () => {
+  loadingBirthDate.value = true
   await db.updateUserBirthDate(updatedUserBirthDate.value)
   if (db.isUserBirthDateUpdated) {
     closeEditingView.value = true
     message.value = 'Birth date updated succesfully.'
     openSnackbar.value = true
+    loadingBirthDate.value = false
     setTimeout(() => {
         openSnackbar.value = false
     }, 3000)
   }
 }
 const handleUpdateAddress = async () => {
+  loadingAddress.value = true
   await db.updateUserAddress(updatedUserAddress.value)
   if (db.isUserAddressUpdated) {
     closeEditingView.value = true
     message.value = 'Address updated succesfully.'
     openSnackbar.value = true
+    loadingAddress.value = false
     setTimeout(() => {
         openSnackbar.value = false
     }, 3000)
   }
 }
 const handleUpdatePhone = async () => {
+  loadingPhone.value = true
   await db.updateUserPhone(updatedUserPhone.value)
   if (db.isUserPhoneUpdated) {
     closeEditingView.value = true
     message.value = 'Phone number updated succesfully.'
     openSnackbar.value = true
+    loadingPhone.value = false
     setTimeout(() => {
         openSnackbar.value = false
     }, 3000)
@@ -89,7 +104,7 @@ const receivedPhone = (phoneNumber) => (updatedUserPhone.value = phoneNumber)
             <v-sheet>
               <v-sheet class="d-flex flex-column align-center w-100" width="100">
                 <ProfileAvatar size="150" class="mb-4"/>
-                <!--<PrimaryButton text="Edit" />-->
+                <PrimaryButton text="Edit" />
               </v-sheet>
             </v-sheet>
           </v-col>
@@ -101,6 +116,7 @@ const receivedPhone = (phoneNumber) => (updatedUserPhone.value = phoneNumber)
                 :updateValue="handleUpdateUsername"
                 @fieldValue="receivedUserName"
                 :closeEditingView="closeEditingView"
+                :loading="loadingName"
               />
               <SettingRow
                 title="Last Name"
@@ -108,6 +124,7 @@ const receivedPhone = (phoneNumber) => (updatedUserPhone.value = phoneNumber)
                 :updateValue="handleUpdateLastname"
                 @fieldValue="receivedLastname"
                 :closeEditingView="closeEditingView"
+                :loading="loadingLastname"
               />
               <SettingRow
                 title="Birth Date"
@@ -115,6 +132,7 @@ const receivedPhone = (phoneNumber) => (updatedUserPhone.value = phoneNumber)
                 :updateValue="handleUpdateBirthDate"
                 @fieldValue="receivedBirthDate"
                 :closeEditingView="closeEditingView"
+                :loading="loadingBirthDate"
               />
               <SettingRow
                 title="Address"
@@ -122,6 +140,7 @@ const receivedPhone = (phoneNumber) => (updatedUserPhone.value = phoneNumber)
                 :updateValue="handleUpdateAddress"
                 @fieldValue="receivedAddress"
                 :closeEditingView="closeEditingView"
+                :loading="loadingAddress"
               />
               <SettingRow
                 title="Phone Number"
@@ -129,6 +148,7 @@ const receivedPhone = (phoneNumber) => (updatedUserPhone.value = phoneNumber)
                 :updateValue="handleUpdatePhone"
                 @fieldValue="receivedPhone"
                 :closeEditingView="closeEditingView"
+                :loading="loadingPhone"
               />
             </v-sheet>
           </v-col>

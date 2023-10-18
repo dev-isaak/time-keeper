@@ -18,6 +18,7 @@ const loadingStatePassword = ref(false)
 const dialog = ref(false)
 const message = ref('')
 const openSnackbar = ref(false)
+const errorMessage = ref(false)
 
 const closeDialog = computed(() => {
 	return dialog.value
@@ -49,6 +50,7 @@ const handleUpdatePassword = async () => {
       }, 3000)
     }
   } else {
+    errorMessage.value = true
 		openSnackbar.value = true
     message.value = 'Passwords must be equals.'
     setTimeout(() => {
@@ -58,13 +60,12 @@ const handleUpdatePassword = async () => {
 }
 
 const handleReLogIn = (e) => {
-	console.log('lo ultimo que recibe es ', e)
 	dialog.value = e
 }
 </script>
 
 <template>
-	<SnackBar :text="message" :openSnackbar="openSnackbar"/>
+	<SnackBar :text="message" :openSnackbar="openSnackbar" :error="errorMessage ? true : false"/>
 	<h3 class="mb-2 mt-10">Update Account Password</h3>
   <v-container class="border d-flex justify-center">
     <v-sheet class="my-2 pa-0 w-100" max-width="500">

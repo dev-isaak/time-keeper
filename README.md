@@ -1,11 +1,7 @@
 #TODOS
 
 FASE 1
-
-- Al eliminar cuenta se tiene que eliminar el documento de la BD
 - Avatar en FileStorage
-- Botones menu avatar con icono bien puesto
-- Capital Letters, NO uppercase()
 - Tests
 
 # time-keeper

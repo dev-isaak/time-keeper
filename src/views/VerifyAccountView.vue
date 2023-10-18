@@ -21,6 +21,5 @@ onMounted(() => {
       You will recive an email verification on your email account. Please, verify your email before
       login.
     </p>
-    <p>If you didn't recive any email, take a look on 'correo no deseado' or </p> <v-btn variant="plain">Send verification email</v-btn>
   </MainTemplate>
 </template>

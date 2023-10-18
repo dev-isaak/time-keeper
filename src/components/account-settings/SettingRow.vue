@@ -10,6 +10,7 @@ const props = defineProps({
   value: String,
   updateValue: Function,
   closeEditingView: Boolean,
+  loading: Boolean,
 })
 
 defineEmits(['fieldValue'])
@@ -53,5 +54,6 @@ onUpdated(() => {
         </PrimaryButton>
       </v-container>
     </v-sheet>
+    <v-progress-linear v-if="loading"  color="blue-grey-lighten-2" indeterminate></v-progress-linear>
     </v-sheet>
 </template>

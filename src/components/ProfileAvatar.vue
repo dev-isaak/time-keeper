@@ -59,13 +59,9 @@ const handleLogout = async() => {
                 {{ authStore.providedEmail }}
               </p>
               <v-divider class="my-3"></v-divider>
-							<PrimaryButton text="Edit Account" variant="text" class="w-100" :to="{name: 'accountSettings'}" >
-              <SettingsIcon color="grey"/>
-              </PrimaryButton>
+							<PrimaryButton text="Edit Account" variant="text" class="w-100" :to="{name: 'accountSettings'}" />
               <v-divider class="my-3"></v-divider>
-              <PrimaryButton text="Disconnect" variant="text" class="w-100" @click="handleLogout">
-              <LogoutIcon color="grey" />
-              </PrimaryButton>
+              <PrimaryButton text="Disconnect" variant="text" class="w-100" @click="handleLogout" />
             </div>
           </v-card-text>
         </v-card>

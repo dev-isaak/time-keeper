@@ -25,6 +25,7 @@ const isLoading = ref(false)
 const hidePassword = ref(true)
 const hidePassword2 = ref(true)
 const openSnackbar = ref(false)
+const errorMessage = ref(false)
 
 const rules = {
   required: (value) => !!value || 'Field is required'
@@ -32,19 +33,20 @@ const rules = {
 
 const handleRegister = async () => {
   if (email.value !== emailRepeat.value) {
+    errorMessage.value = true
     message.value = 'Emails must be equals.'
     openSnackbar.value = true
     setTimeout(() => {
       openSnackbar.value = false
     }, 3000)
   } else if (password.value !== passwordRepeat.value) {
+    errorMessage.value = true
     message.value = 'Passwords must be equals'
     openSnackbar.value = true
     setTimeout(() => {
       openSnackbar.value = false
     }, 3000)
   } else {
-    message.value = ''
     isLoading.value = true
     const isRegistered = await authStore.registerUser(email.value, password.value)
     if (isRegistered) {
@@ -64,7 +66,7 @@ const handleRegister = async () => {
 </script>
 
 <template>
-  <SnackBar :text="message" :openSnackbar="openSnackbar"/>
+  <SnackBar :text="message" :openSnackbar="openSnackbar"  :error="errorMessage ? true : false"/>
   <MainTemplate>
     <v-container class="w-100 d-flex flex-column">
       <h1>Register</h1>
@@ -75,28 +77,20 @@ const handleRegister = async () => {
             label="Email"
             v-model="email"
             :rules="[rules.required]"
-            clearable
           >
           <template v-slot:prepend-inner>
             <EmailIcon color="gray" class="mr-2" />
           </template>
-            <template v-slot:clear>
-              <CloseIcon color="gray" />
-            </template>
           </v-text-field>
           <v-text-field
             class="mx-2"
             label="Repeat email"
             :rules="[rules.required]"
             v-model="emailRepeat"
-            clearable
           >
           <template v-slot:prepend-inner>
             <EmailIcon color="gray" class="mr-2" />
           </template>
-            <template v-slot:clear>
-              <CloseIcon color="gray" />
-            </template>
           </v-text-field>
           <v-text-field
             class="mx-2"
@@ -105,14 +99,10 @@ const handleRegister = async () => {
             hint="Password must contain at least 6 characters."
             :rules="[rules.required]"
             v-model="password"
-            clearable
           >
           <template v-slot:prepend-inner>
             <LockIcon color="gray" class="mr-2" />
           </template>
-            <template v-slot:clear>
-              <CloseIcon color="gray" />
-            </template>
             <template v-slot:append-inner>
               <EyeIcon v-if="!hidePassword" @click="hidePassword = !hidePassword"  color="gray"/>
               <EyeOffIcon v-else @click="hidePassword = !hidePassword"  color="gray"/>
@@ -124,7 +114,6 @@ const handleRegister = async () => {
             label="Repeat password"
             :rules="[rules.required]"
             v-model="passwordRepeat"
-            clearable
           >
           <template v-slot:prepend-inner>
             <LockIcon color="gray" class="mr-2" />
@@ -138,7 +127,6 @@ const handleRegister = async () => {
             </template>
           </v-text-field>
           <v-container class="d-flex flex-column align-center">
-            <p v-if="message != ''" class="text-error mb-4">{{ message }}</p>
             <PrimaryButton
               color="#90A4AE"
               text="Register"
