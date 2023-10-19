@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 import { storage } from '../main'
 import { useAuthStore } from './auth'
 
@@ -21,6 +21,7 @@ export const useFirebaseStorage = defineStore('firebaseStorage', {
         this.imageURL = url
       })
       .catch((e) => {
+        this.imageURL = null
         console.error(e)
       });
     },
@@ -29,9 +30,17 @@ export const useFirebaseStorage = defineStore('firebaseStorage', {
       const storageRef = ref(storage, `images/profile_photo_${auth.uid}`)
       try {
         await uploadBytes(storageRef, file[0]).then(() => {
-          console.log('Uploaded!')
         })
       } catch (e) {
+        console.error(e)
+      }
+    },
+    async deleteProfileImage(){
+      const auth = useAuthStore()
+      const storageRef = ref(storage, `images/profile_photo_${auth.uid}`)
+      try{
+        await deleteObject(storageRef)
+      } catch(e){
         console.error(e)
       }
     }

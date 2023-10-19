@@ -8,6 +8,7 @@ import SnackBar from '@/components/SnackBar.vue'
 const storage = useFirebaseStorage()
 
 const loadingState = ref(false)
+const loadingStateDeleteButton = ref(false)
 const fileUploaded = ref()
 const openSnackBar = ref(false)
 const message = ref('')
@@ -18,6 +19,18 @@ const handleUploadImage = async() => {
   await storage.uploadProfileImage(fileUploaded.value)
   loadingState.value = false
   message.value = 'File uploaded successfully.'
+  await storage.getProfileImage()
+  openSnackBar.value = true
+  setTimeout(() => {
+    openSnackBar.value = false
+  }, 3000);
+}
+
+const handleDeleteImage = async() => {
+  loadingStateDeleteButton.value = true
+  await storage.deleteProfileImage()
+  loadingStateDeleteButton.value = false
+  message.value = 'File deleted successfully.'
   await storage.getProfileImage()
   openSnackBar.value = true
   setTimeout(() => {
@@ -47,6 +60,12 @@ const handleUploadImage = async() => {
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
+            <PrimaryButton
+              text="Delete"
+              :loading="loadingStateDeleteButton"
+              @click="handleDeleteImage"
+              color="error"
+              />
             <PrimaryButton
               text="Upload"
               :loading="loadingState"
