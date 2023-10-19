@@ -13,7 +13,7 @@ defineProps({
 <template>
   <v-btn class="w-auto" :variant="variant" :color="color" :loading="loadingState">
     {{ text }}
-    <template v-slot:append>
+    <template v-slot:prepend>
       <slot></slot>
     </template>
   </v-btn>
