@@ -36,18 +36,53 @@ const handleStop = () => {
 </script>
 
 <template>
-  <SnackBar :text="message" :openSnackbar="openSnackbar"  :error="errorMessage ? true : false"/>
+  <SnackBar :text="message" :openSnackbar="openSnackbar" :error="errorMessage ? true : false" />
   <v-container class="w-100 d-flex justify-center">
-  <v-sheet class="w-100 d-flex flex-column flex-sm-row align-center justify-space-around " max-width="400">
-    <PrimaryButton text="Start" variant="outlined" color="#1B5E20" @click="handleStart" class="ma-4 w-50">
-      <StartIcon color="#1B5E20"/>
-    </PrimaryButton>
-    <PrimaryButton text="Pause" variant="outlined" color="#0D47A1" @click="handlePause" class="ma-4 w-50">
-      <PauseIcon color="#0D47A1"/>
-    </PrimaryButton>
-    <PrimaryButton text="Stop" variant="outlined" color="#B71C1C" @click="handleStop" class="ma-4 w-50">
-      <StopIcon color="#B71C1C"/>
-    </PrimaryButton>
+    <v-sheet
+      class="w-100 d-flex flex-column flex-sm-row align-center justify-space-around"
+      max-width="400"
+    >
+      <PrimaryButton
+        text="Start"
+        variant="outlined"
+        color="#1B5E20"
+        @click="handleStart"
+        class="ma-4 w-50"
+      >
+        <StartIcon color="#1B5E20" />
+      </PrimaryButton>
+      <PrimaryButton
+        text="Pause"
+        variant="outlined"
+        color="#0D47A1"
+        @click="handlePause"
+        class="ma-4 w-50"
+      >
+        <PauseIcon color="#0D47A1" />
+      </PrimaryButton>
+      <PrimaryButton
+        text="Stop"
+        variant="outlined"
+        color="#B71C1C"
+        @click="handleStop"
+        class="ma-4 w-50"
+      >
+        <StopIcon color="#B71C1C" />
+      </PrimaryButton>
+    </v-sheet>
+  </v-container>
+  <v-sheet class="pa-4" width="300" elevation="2">
+    <v-sheet class="d-flex align-center">
+      <h3 class="mr-4">Starting time:</h3>
+      <p>tal</p>
+    </v-sheet>
+    <v-sheet class="d-flex align-center">
+      <h3 class="mr-4">Stopping time:</h3>
+      <p>tal</p>
+    </v-sheet>
+    <v-sheet class="d-flex align-center">
+      <h3 class="mr-4">Pause time:</h3>
+      <p>tal</p>
+    </v-sheet>
   </v-sheet>
-</v-container>
 </template>

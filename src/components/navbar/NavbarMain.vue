@@ -40,6 +40,9 @@ const isLogedIn = computed(() => {
               <v-list-item variant="text" link color="#90A4AE" v-else to="/">
                 Home
               </v-list-item>
+              <v-list-item variant="text" link color="#90A4AE" v-if="isLogedIn !== null" :to="{name: 'calendar'}">
+                Calendar
+              </v-list-item>
               <v-list-item variant="text" link color="#90A4AE" :to="{name: 'about'}">
                 About
               </v-list-item>

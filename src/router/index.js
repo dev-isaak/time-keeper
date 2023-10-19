@@ -8,6 +8,7 @@ import UserMainView from '@/views/UserMainView.vue'
 import AccountSettingsView from '@/views/AccountSettingsView.vue'
 import VerifyAccountView from '@/views/VerifyAccountView.vue'
 import RecoveryPasswordView from '@/views/RecoveryPasswordView.vue'
+import CalendarView from '@/views/CalendarView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -72,8 +73,15 @@ const router = createRouter({
       meta: {
         requireAuth: false
       }
-    }
-
+    },
+    {
+      path: '/calendar',
+      name: 'calendar',
+      component: CalendarView,
+      meta: {
+        requireAuth: true
+      }
+    },
   ]
 })
 
