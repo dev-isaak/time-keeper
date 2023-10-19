@@ -18,6 +18,7 @@ const handleUploadImage = async() => {
   await storage.uploadProfileImage(fileUploaded.value)
   loadingState.value = false
   message.value = 'File uploaded successfully.'
+  await storage.getProfileImage()
   openSnackBar.value = true
   setTimeout(() => {
     openSnackBar.value = false
@@ -27,8 +28,8 @@ const handleUploadImage = async() => {
 </script>
 
 <template>
-  <SnackBar :text="message" :openSnackbar="openSnackbar"  :error="errorMessage ? true : false"/>
- <v-dialog width="500">
+  <SnackBar :text="message" :openSnackbar="openSnackBar"  :error="errorMessage ? true : false"/>
+  <v-dialog width="500">
       <template v-slot:activator="{ props }">
         <v-btn v-bind="props" text="Edit"> </v-btn>
       </template>

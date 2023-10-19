@@ -33,7 +33,7 @@ const handleLogout = async () => {
 
 <template>
   <v-avatar class="border" v-if="!menu" :size="size">
-    <v-img v-if="storage.currentImageURL !== null" :src="storage.currentImageURL"></v-img>
+    <v-img v-if="storage.currentImageURL !== null" :src="storage.currentImageURL" cover></v-img>
     <div v-else>
       {{ db.initials }}
     </div>
@@ -43,7 +43,7 @@ const handleLogout = async () => {
       <template v-slot:activator="{ props }">
         <v-btn icon v-bind="props">
           <v-avatar color="blue-grey-lighten-1" :size="size">
-            <v-img v-if="storage.currentImageURL !== null" :src="storage.currentImageURL"></v-img>
+            <v-img v-if="storage.currentImageURL !== null" :src="storage.currentImageURL" cover></v-img>
             <div v-else>
               {{ db.initials }}
             </div>

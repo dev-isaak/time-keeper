@@ -1,7 +1,7 @@
 #TODOS
 
 FASE 1
-- Avatar en FileStorage
+- Google auth
 - Tests
 
 # time-keeper
