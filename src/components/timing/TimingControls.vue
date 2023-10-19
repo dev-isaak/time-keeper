@@ -4,20 +4,38 @@ import StartIcon from '@/components/icons/StartIcon.vue'
 import PauseIcon from '@/components/icons/PauseIcon.vue'
 import StopIcon from '@/components/icons/StopIcon.vue'
 import SnackBar from '../SnackBar.vue'
-import { ref } from 'vue'
+import { ref, onBeforeMount } from 'vue'
+import { useDateStorage } from '@/stores/dateStorage.js'
 
-//const date = new Date()
+const dateStorage = useDateStorage()
+
+onBeforeMount(async() => {
+  const currentDate = new Date()
+  await dateStorage.getDailyHours(currentDate.getFullYear(), currentDate.getMonth()+1, currentDate.getDate())
+})
 
 const message = ref('')
 const openSnackbar = ref(false)
 const errorMessage = ref(false)
-let startingTime = ''
-let endingTime = ''
-let totalTime = ''
+const loadingStart = ref(false)
+const loadingStop = ref(false)
+const startingHour = ref('00')
+const startingMinutes = ref('00')
+const stoppingHour = ref('00')
+const stoppingMinutes = ref('00')
+const pauseTime = ref('0')
+const totalHour = ref('00')
+const totalMinutes = ref('00')
 
-const handleStart = () => {
-  //se almacena la hora de entrada
-  startingTime = new Date().getTime()
+const handleStart = async() => {
+  loadingStart.value = true
+  let start = new Date()
+  startingHour.value = `${start.getHours()}`
+  startingMinutes.value = `${start.getMinutes()}`
+  const startDate = `${startingHour.value}:${startingMinutes.value}`
+  await dateStorage.postDailyHours(start, start.getFullYear(), start.getMonth()+1, start.getDate(), startDate )
+  await dateStorage.getDailyHours(start.getFullYear(), start.getMonth()+1, start.getDate())
+  loadingStart.value = false
   message.value = 'Journey started.'
   openSnackbar.value = true
   setTimeout(() => {
@@ -33,19 +51,24 @@ const handlePause = () => {
   }, 3000)
 }
 
-const handleStop = () => {
-  endingTime = new Date().getTime()
-  console.log('starting at: ', startingTime)
-  console.log('ending at: ', endingTime)
-  totalTime = endingTime - startingTime / 1000
-  totalTime /= (60 * 60)
-  Math.abs(Math.round(totalTime))
-  console.log(totalTime.toLocaleDateString())
+const handleStop = async() => {
+  loadingStop.value = true
+  let stop = new Date()
+  stoppingHour.value = `${stop.getHours()}`
+  stoppingMinutes.value = `${stop.getMinutes()}`
+  const stopDate = `${stoppingHour.value}:${stoppingMinutes.value}`
+  totalHour.value = stoppingHour.value - startingHour.value
+  totalMinutes.value = stoppingMinutes.value - startingMinutes.value
+  const totalDate = `${totalHour.value}:${totalMinutes.value}`
+  await dateStorage.postStoppingTime(stop.getFullYear(), stop.getMonth()+1, stop.getDate(), stopDate, totalDate )
+  await dateStorage.getDailyHours(stop.getFullYear(), stop.getMonth()+1, stop.getDate())
+  loadingStop.value = false
   message.value = 'Journey stoped.'
   openSnackbar.value = true
   setTimeout(() => {
     openSnackbar.value = false
   }, 3000)
+  
 }
 </script>
 
@@ -58,45 +81,50 @@ const handleStop = () => {
     >
       <PrimaryButton
         text="Start"
-        variant="outlined"
-        color="#1B5E20"
+        color="#90A4AE"
         @click="handleStart"
         class="ma-4 w-50"
+        :loading="loadingStart"
       >
-        <StartIcon color="#1B5E20" />
+        <StartIcon />
       </PrimaryButton>
       <PrimaryButton
         text="Pause"
-        variant="outlined"
-        color="#0D47A1"
+        color="#90A4AE"
         @click="handlePause"
         class="ma-4 w-50"
       >
-        <PauseIcon color="#0D47A1" />
+        <PauseIcon />
       </PrimaryButton>
       <PrimaryButton
         text="Stop"
-        variant="outlined"
-        color="#B71C1C"
+        color="#90A4AE"
         @click="handleStop"
         class="ma-4 w-50"
+        :loading="loadingStop"
       >
-        <StopIcon color="#B71C1C" />
+        <StopIcon />
       </PrimaryButton>
     </v-sheet>
   </v-container>
+  <v-container class="w-100 d-flex justify-center">
   <v-sheet class="pa-4" width="300" elevation="2">
-    <v-sheet class="d-flex align-center">
-      <h3 class="mr-4">Starting time:</h3>
-      <p>tal</p>
+    <v-sheet class="d-flex align-center justify-space-between">
+      <h3 class="mr-4">Starting time</h3>
+      <p>{{ dateStorage.currentStartingTime }}h</p>
     </v-sheet>
-    <v-sheet class="d-flex align-center">
-      <h3 class="mr-4">Stopping time:</h3>
-      <p>tal</p>
+    <v-sheet class="d-flex align-center justify-space-between">
+      <h3 class="mr-4">Stopping time</h3>
+      <p>{{ dateStorage.currentStoppingTime }}h</p>
     </v-sheet>
-    <v-sheet class="d-flex align-center">
-      <h3 class="mr-4">Pause time:</h3>
-      <p>tal</p>
+    <v-sheet class="d-flex align-center justify-space-between">
+      <h3 class="mr-4">Pause time</h3>
+      <p>{{ pauseTime }}h</p>
+    </v-sheet>
+    <v-sheet class="d-flex align-center justify-space-between">
+      <h3 class="mr-4">Daily total time</h3>
+      <p>{{ dateStorage.currentTotalTime }}h</p>
     </v-sheet>
   </v-sheet>
+</v-container>
 </template>

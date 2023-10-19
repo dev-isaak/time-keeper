@@ -44,7 +44,7 @@ const handleDeleteImage = async() => {
   <SnackBar :text="message" :openSnackbar="openSnackBar"  :error="errorMessage ? true : false"/>
   <v-dialog width="500">
       <template v-slot:activator="{ props }">
-        <v-btn v-bind="props" text="Edit"> </v-btn>
+        <v-btn v-bind="props" text="Edit" color="#90A4AE"> </v-btn>
       </template>
       <template v-slot:default="{ isActive }">
         <v-card title="Upload Profile Photo">
