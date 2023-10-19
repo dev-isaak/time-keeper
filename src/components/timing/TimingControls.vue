@@ -6,11 +6,18 @@ import StopIcon from '@/components/icons/StopIcon.vue'
 import SnackBar from '../SnackBar.vue'
 import { ref } from 'vue'
 
+//const date = new Date()
+
 const message = ref('')
 const openSnackbar = ref(false)
 const errorMessage = ref(false)
+let startingTime = ''
+let endingTime = ''
+let totalTime = ''
 
 const handleStart = () => {
+  //se almacena la hora de entrada
+  startingTime = new Date().getTime()
   message.value = 'Journey started.'
   openSnackbar.value = true
   setTimeout(() => {
@@ -27,6 +34,13 @@ const handlePause = () => {
 }
 
 const handleStop = () => {
+  endingTime = new Date().getTime()
+  console.log('starting at: ', startingTime)
+  console.log('ending at: ', endingTime)
+  totalTime = endingTime - startingTime / 1000
+  totalTime /= (60 * 60)
+  Math.abs(Math.round(totalTime))
+  console.log(totalTime.toLocaleDateString())
   message.value = 'Journey stoped.'
   openSnackbar.value = true
   setTimeout(() => {
