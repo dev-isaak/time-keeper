@@ -54,12 +54,20 @@ const handlePause = () => {
 const handleStop = async() => {
   loadingStop.value = true
   let stop = new Date()
-  stoppingHour.value = `${stop.getHours()}`
-  stoppingMinutes.value = `${stop.getMinutes()}`
-  const stopDate = `${stoppingHour.value}:${stoppingMinutes.value}`
-  totalHour.value = stoppingHour.value - startingHour.value
-  totalMinutes.value = stoppingMinutes.value - startingMinutes.value
-  const totalDate = `${totalHour.value}:${totalMinutes.value}`
+  const currentHour = stop.getHours()
+  const currentMinutes = stop.getMinutes()
+  const stopDate = `${currentHour}:${currentMinutes}`
+  
+  const result = dateStorage.currentStartingTime.split(':')
+  const hour = result[0]
+  const minutes = result[1]
+  
+
+  const totalHour = currentHour -hour
+  const totalMinutes = currentMinutes - minutes
+  const totalDate = `${totalHour}:${totalMinutes}`
+  console.log(totalHour, totalMinutes)
+  
   await dateStorage.postStoppingTime(stop.getFullYear(), stop.getMonth()+1, stop.getDate(), stopDate, totalDate )
   await dateStorage.getDailyHours(stop.getFullYear(), stop.getMonth()+1, stop.getDate())
   loadingStop.value = false
