@@ -34,11 +34,12 @@ const handleStart = async() => {
   startingHour.value = `${start.getHours()}`
   startingMinutes.value = `${start.getMinutes()}`
   const startDate = `${startingHour.value}:${startingMinutes.value}`
-  await dateStorage.postDailyHours(start, start.getFullYear(), start.getMonth()+1, start.getDate(), startDate, projectField.value, 4 )
+  await dateStorage.postDailyHours(+start, start.getFullYear(), start.getMonth()+1, start.getDate(), startDate, projectField.value, 4 )
   await dateStorage.getDailyHours(start.getFullYear(), start.getMonth()+1, start.getDate())
   loadingStart.value = false
   message.value = 'Journey started.'
   openSnackbar.value = true
+  projectField.value = null
   setTimeout(() => {
     openSnackbar.value = false
   }, 3000)
@@ -54,23 +55,20 @@ const handlePause = () => {
 
 const handleStop = async() => {
   loadingStop.value = true
-  let stop = new Date()
-  const currentHour = stop.getHours()
-  const currentMinutes = stop.getMinutes()
-  const stopDate = `${currentHour}:${currentMinutes}`
+  let stopTime = new Date()
+  await dateStorage.getDailyHours(stopTime.getFullYear(), stopTime.getMonth()+1, stopTime.getDate())
   
-  const result = dateStorage.currentStartingTime.split(':')
-  const hour = result[0]
-  const minutes = result[1]
-  
+  //Get total time in ms
+  const totalTime = stopTime - dateStorage.currentLastTimeStamp
 
-  const totalHour = currentHour -hour
-  const totalMinutes = currentMinutes - minutes
-  const totalDate = `${totalHour}:${totalMinutes}`
-  console.log(totalHour, totalMinutes)
+  //convert stop time to hh:mm
+  stoppingHour.value = `${stopTime.getHours()}`
+  stoppingMinutes.value = `${stopTime.getMinutes()}`
+  const stopDate = `${stoppingHour.value}:${stoppingMinutes.value}`
+  console.log(stopDate)
   
-  await dateStorage.postStoppingTime(stop.getFullYear(), stop.getMonth()+1, stop.getDate(), stopDate, totalDate )
-  await dateStorage.getDailyHours(stop.getFullYear(), stop.getMonth()+1, stop.getDate())
+  await dateStorage.postStoppingTime(stopTime.getFullYear(), stopTime.getMonth()+1, stopTime.getDate(), stopDate, totalTime, +stopTime )
+  await dateStorage.getDailyHours(stopTime.getFullYear(), stopTime.getMonth()+1, stopTime.getDate())
   loadingStop.value = false
   message.value = 'Journey stoped.'
   openSnackbar.value = true
@@ -125,7 +123,7 @@ const handleStop = async() => {
     </v-sheet>
     <v-sheet class="d-flex align-center justify-space-between">
       <h3 class="mr-4">Total time</h3>
-      <p>{{ dailyHour.data.total_time }}h</p>
+      <p>{{ dailyHour.data.total_time_ms / 1000 / 60 }}min</p>
     </v-sheet>
   </v-sheet>
   <v-sheet v-else>
