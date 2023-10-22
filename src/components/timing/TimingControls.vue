@@ -152,15 +152,15 @@ const handleStop = async () => {
         <h2>{{ dailyHour.data.project }}</h2>
         <v-divider class="mb-4"></v-divider>
         <v-sheet class="d-flex align-center justify-space-between">
-          <h3 class="mr-4">Starting time</h3>
+          <h4 class="mr-4">Starting time</h4>
           <p>{{ dailyHour.data.starting_time }}</p>
         </v-sheet>
         <v-sheet class="d-flex align-center justify-space-between">
-          <h3 class="mr-4">Stopping time</h3>
+          <h4 class="mr-4">Stopping time</h4>
           <p>{{ dailyHour.data.stopping_time }}</p>
         </v-sheet>
         <v-sheet class="d-flex align-center justify-space-between">
-          <h3 class="mr-4">Total time</h3>
+          <h4 class="mr-4">Total time</h4>
           <p>{{ dailyHour.data.total_time }}</p>
         </v-sheet>
         <v-sheet v-if="dailyHour.data.notes != undefined" class="pa-2 mt-2" color="#f5f5f5">

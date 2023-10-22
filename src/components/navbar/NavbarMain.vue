@@ -28,21 +28,26 @@ const isLogedIn = computed(() => {
         <ProfileAvatar v-if="isLogedIn !== null" size="50" class="mr-4" menu/>
         <!--<UserButton v-if="isLogedIn !== null"/>-->
         <div v-else class="mr-4">
-          <PrimaryButton text="Sign In" :to="{name: 'login'}"/>
+          <PrimaryButton text="Log In" :to="{name: 'login'}"/>
           <PrimaryButton text="Sign Up" variant="text" :to="{name: 'register'}"/>
         </div>
         </v-app-bar>
         <v-navigation-drawer location="left" v-model="drawer" temporary>
           <v-list class="d-flex flex-column mt-6">
               <v-list-item variant="text" link color="#90A4AE" v-if="isLogedIn !== null" :to="{name: 'userMain'}">
-                Home
+                Daily hours
               </v-list-item>
               <v-list-item variant="text" link color="#90A4AE" v-else to="/">
                 Home
               </v-list-item>
-              <v-list-item variant="text" link color="#90A4AE" v-if="isLogedIn !== null" :to="{name: 'calendar'}">
-                Calendar
-              </v-list-item>
+              <div v-if="isLogedIn !== null">
+                <v-list-item variant="text" link color="#90A4AE" :to="{name: 'calendar'}">
+                  Calendar
+                </v-list-item>
+                <v-list-item variant="text" link color="#90A4AE" :to="{name: 'statistics'}">
+                  Statistics
+                </v-list-item>
+              </div>
               <v-list-item variant="text" link color="#90A4AE" :to="{name: 'about'}">
                 About
               </v-list-item>

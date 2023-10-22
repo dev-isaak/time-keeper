@@ -9,6 +9,7 @@ import AccountSettingsView from '@/views/AccountSettingsView.vue'
 import VerifyAccountView from '@/views/VerifyAccountView.vue'
 import RecoveryPasswordView from '@/views/RecoveryPasswordView.vue'
 import CalendarView from '@/views/CalendarView.vue'
+import StatisticsView from '@/views/StatisticsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -78,6 +79,14 @@ const router = createRouter({
       path: '/calendar',
       name: 'calendar',
       component: CalendarView,
+      meta: {
+        requireAuth: true
+      }
+    },
+    {
+      path: '/statistics',
+      name: 'statistics',
+      component: StatisticsView,
       meta: {
         requireAuth: true
       }

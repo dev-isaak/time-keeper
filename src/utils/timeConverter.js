@@ -7,12 +7,11 @@ const timeConverter = (time) => {
   while (time_minutes > 0){
     time_minutes -= 1
     minutes ++
-    if (minutes === 60){
+    if (minutes === 59){
       minutes = 0
       hours ++
     }
   }
-  
   if (minutes < 10){
     minutes = '0' + minutes
   }
