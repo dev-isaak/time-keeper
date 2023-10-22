@@ -19,10 +19,12 @@
     "@fullcalendar/interaction": "^6.1.9",
     "@fullcalendar/vue3": "^6.1.9",
     "@jamescoyle/vue-icon": "^0.1.2",
+    "chart.js": "^4.4.0",
     "firebase": "^10.4.0",
     "pinia": "^2.1.6",
     "pinia-plugin-persistedstate": "^3.2.0",
     "vue": "^3.3.4",
+    "vue-chartjs": "^5.2.0",
     "vue-router": "^4.2.4",
     "vuetify": "^3.3.20"
   },

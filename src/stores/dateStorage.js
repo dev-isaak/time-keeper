@@ -17,7 +17,20 @@ export const useDateStorage = defineStore('dateStorage', {
       docRef: null,
       lastDocId: null,
       lastTimeStart: null,
-      totalTimeToday: 0
+      totalTimeToday: 0,
+      monthlyHours: 0,
+      januaryHours: 0,
+      februaryHours: 0,
+      marchHours: 0,
+      aprilHours: 0,
+      mayHours: 0,
+      juneHours: 0,
+      julyHours: 0,
+      augustHours: 0,
+      septemberHours: 0,
+      octoberHours: 0,
+      novemberHours: 0,
+      decemberHours: 0,
     }
   },
   getters: {
@@ -29,7 +42,21 @@ export const useDateStorage = defineStore('dateStorage', {
     currentCounter: (state) => parseInt(state.counter),
     currentDailyHoursList: (state) => state.dailyHoursList,
     currentLastTimeStart: (state) => state.lastTimeStart,
-    currentTotalTimeToday: (state) => timeConverter(state.totalTimeToday)
+    currentTotalTimeToday: (state) => timeConverter(state.totalTimeToday),
+    currentMonthlyHours: (state) => timeConverter(state.monthlyHours),
+    currentMonthlyHoursMs: (state) => state.monthlyHours,
+    currentJanuaryHours: (state) => timeConverter(state.januaryHours),
+    currentFebruaryHours: (state) => timeConverter(state.februaryHours),
+    currentMarchHours: (state) => timeConverter(state.marchHours),
+    currentAprilHours: (state) => timeConverter(state.aprilHours),
+    currentMayHours: (state) => timeConverter(state.mayHours),
+    currentJuneHours: (state) => timeConverter(state.juneHours),
+    currentJulyHours: (state) => timeConverter(state.julyHours),
+    currentAugustHours: (state) => timeConverter(state.augustHours),
+    currentSeptemberHours: (state) => timeConverter(state.septemberHours),
+    currentOctoberHours: (state) => timeConverter(state.octoberHours),
+    currentNovemberHours: (state) => timeConverter(state.novemberHours),
+    currentDecemberHours: (state) => timeConverter(state.decemberHours),
   },
   actions: {
     async getDailyHours(year, month, day) {
@@ -38,7 +65,7 @@ export const useDateStorage = defineStore('dateStorage', {
         this.dailyHoursList = []
         this.totalTimeToday = 0
         const querySnap = await getDocs(
-          collection(db, `dates/${year}/${month}/${day}/${auth.currentUID}`)
+          collection(db, `dates/${year}/${auth.currentUID}`)
         )
         querySnap.forEach((doc) => {
           if (doc.data().total_time_ms !== undefined) {
@@ -82,10 +109,13 @@ export const useDateStorage = defineStore('dateStorage', {
 
       const startingHour = `${hours}:${minutes} h`
 
-      const ref = collection(db, `dates/${year}/${month}/${day}`, auth.currentUID)
+      const ref = collection(db, 'dates', `/${year}`, auth.currentUID)
       try {
         await addDoc(ref, {
           date: serverTimestamp(),
+          year: year,
+          month: month,
+          day: day,
           starting_time: startingHour,
           starting_time_ms: +startingTime,
           is_started: true,
@@ -108,7 +138,7 @@ export const useDateStorage = defineStore('dateStorage', {
       if (minutes < 10) minutes = '0' + minutes
 
       const stoppingHour = `${hours}:${minutes} h`
-      const data = doc(db, `dates/${year}/${month}/${day}/${auth.currentUID}/${this.lastDocId}`)
+      const data = doc(db, `dates/${year}/${auth.currentUID}/${this.lastDocId}`)
       try {
         await updateDoc(data, {
           stopping_time: stoppingHour,
@@ -123,16 +153,67 @@ export const useDateStorage = defineStore('dateStorage', {
         console.error(e)
       }
     },
-    async getMonthlyHours(year, month, day){
+    async getCurrentMonthlyHours(year, month) {
       const auth = useAuthStore()
-      try{
-        const querySnap = await getDocs(collection(db, `dates/${year}/${month}/21/${auth.currentUID}`))
+      const q = query(collection(db, `dates/${year}/${auth.currentUID}`), where('month', '==', month))
+        this.monthlyHours = 0
+      try {
+        const querySnap = await getDocs(q);
         querySnap.forEach((doc) => {
-          console.log(doc)
+          if(doc.data().total_time_ms !== undefined){
+            this.monthlyHours += doc.data().total_time_ms
+          }
         })
-
-      } catch(e){
-
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    async getYearMonthlyHours(year){
+      const auth = useAuthStore()
+      const q = collection(db, `dates/${year}/${auth.currentUID}`)
+        
+      try {
+        const querySnap = await getDocs(q);
+        querySnap.forEach((doc) => {
+          if(doc.data().month === 1){
+            this.januaryHours += doc.data().total_time_ms
+          }
+          else if(doc.data().month === 2){
+            this.februaryHours += doc.data().total_time_ms
+          }
+          else if(doc.data().month === 3){
+            this.marchHoursHours += doc.data().total_time_ms
+          }
+          else if(doc.data().month === 4){
+            this.aprilHours += doc.data().total_time_ms
+          }
+          else if(doc.data().month === 5){
+            this.mayHours += doc.data().total_time_ms
+          }
+          else if(doc.data().month === 6){
+            this.juneHours += doc.data().total_time_ms
+          }
+          else if(doc.data().month === 7){
+            this.julyHours += doc.data().total_time_ms
+          }
+          else if(doc.data().month === 8){
+            this.augustHours += doc.data().total_time_ms
+          }
+          else if(doc.data().month === 9){
+            this.septemberHours += doc.data().total_time_ms
+          }
+          else if(doc.data().month === 10){
+            this.octoberHours += doc.data().total_time_ms
+          }
+          else if(doc.data().month === 11){
+            this.novemberHours += doc.data().total_time_ms
+          }
+          else if(doc.data().month === 12){
+            this.decemberHours += doc.data().total_time_ms
+          }
+        })
+      } catch (e) {
+        console.error(e);
       }
     }
   }
