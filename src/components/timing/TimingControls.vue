@@ -7,6 +7,7 @@ import SnackBar from '../SnackBar.vue'
 import { ref, onBeforeMount } from 'vue'
 import { useDateStorage } from '@/stores/dateStorage.js'
 import timeConverter from '@/utils/timeConverter.js'
+import MessageIcon from '@/components/icons/MessageIcon.vue'
 
 const dateStorage = useDateStorage()
 
@@ -18,6 +19,7 @@ const loadingStop = ref(false)
 const projectField = ref('')
 const notesField = ref('')
 const overlay = ref(false)
+const openTooltip = ref(false)
 
 onBeforeMount(async () => {
   overlay.value = true
@@ -95,78 +97,83 @@ const handleStop = async () => {
     <v-progress-circular color="#546E7A" indeterminate size="64"></v-progress-circular>
   </v-overlay>
   <div v-if="overlay === false">
-    <v-container class="w-100 d-flex flex-column align-center">
-      <v-container class="w-100 d-flex flex-column align-center">
-        <v-sheet class="d-flex align-center pa-4" color="#f5f5f5" max-width="400">
-          <h3 class="mr-4">Total time today:</h3>
-          <p>{{ dateStorage.currentTotalTimeToday }}</p>
-        </v-sheet>
-      </v-container>
-      <v-sheet
-        class="w-100 d-flex flex-column justify-space-around pa-4 ma-0"
-        elevation="1"
-        max-width="400"
-      >
-        <div v-if="!dateStorage.timeIsRunning">
-          <h3>Project</h3>
-          <v-text-field label="Enter project" class="w-100" v-model="projectField"></v-text-field>
-          <h3>Notes</h3>
-          <v-textarea label="Write some notes" class="w-100" v-model="notesField"></v-textarea>
-        </div>
-        <v-container class="ma-0 d-flex justify-center">
-          <PrimaryButton
-            v-if="!dateStorage.timeIsRunning"
-            text="Start"
-            color="#90A4AE"
-            @click="handleStart"
-            class="w-50"
-            :loading="loadingStart"
-          >
-            <StartIcon />
-          </PrimaryButton>
-          <v-sheet v-else class="w-100 d-flex flex-column align-center">
-            <p class="font-weight-bold">Time is running up!</p>
-            <v-progress-linear class="my-4" indeterminate></v-progress-linear>
-            <PrimaryButton
-              text="Stop"
-              color="#90A4AE"
-              @click="handleStop"
-              class="w-50"
-              :loading="loadingStop"
+    <v-container>
+      <v-row>
+        <v-col>
+          <v-container class="w-100 d-flex flex-column align-center">
+            <v-sheet
+              class="w-100 d-flex flex-column justify-space-around ma-0"
+              max-width="400"
             >
-              <StopIcon />
+              <div v-if="!dateStorage.timeIsRunning">
+                <h3>Project</h3>
+                <v-text-field
+                  label="Enter project"
+                  class="w-100"
+                  v-model="projectField"
+                ></v-text-field>
+                <h3>Notes</h3>
+                <v-textarea
+                  label="Write some notes"
+                  class="w-100"
+                  v-model="notesField"
+                ></v-textarea>
+              </div>
+              <v-container class="ma-0 d-flex justify-center">
+                <PrimaryButton
+                  v-if="!dateStorage.timeIsRunning"
+                  text="Start"
+                  color="#90A4AE"
+                  @click="handleStart"
+                  class="w-50"
+                  :loading="loadingStart"
+                >
+                  <StartIcon />
+                </PrimaryButton>
+                <v-sheet v-else class="w-100 d-flex flex-column align-center">
+                  <p class="font-weight-bold">Time is running up!</p>
+                  <v-progress-linear class="my-4" indeterminate></v-progress-linear>
+                  <PrimaryButton
+                    text="Stop"
+                    color="#90A4AE"
+                    @click="handleStop"
+                    class="w-50"
+                    :loading="loadingStop"
+                  >
+                    <StopIcon />
+                  </PrimaryButton>
+                </v-sheet>
+              </v-container>
+            </v-sheet>
+          </v-container>
+        </v-col>
+        <v-col>
+         <v-sheet
+          v-if="dateStorage.currentDailyHoursList.length >= 1"
+          v-for="dailyHour in dateStorage.currentDailyHoursList"
+          :key="dailyHour.id"
+          class="d-flex align-center justify-space-between w-100 border-b pa-2">
+          <div>
+            <h2>{{ dailyHour.data.project }}</h2>
+            <p>{{ dailyHour.data.starting_time }} - {{ dailyHour.data.stopping_time }}</p>
+          </div>
+          <div class="d-flex align-center">
+            <PrimaryButton class="mr-4" variant="plain">
+              <MessageIcon />
+                <v-tooltip activator="parent" location="bottom">
+                  {{ dailyHour.data.notes }}
+                </v-tooltip>
             </PrimaryButton>
-          </v-sheet>
-        </v-container>
-      </v-sheet>
-    </v-container>
-    <v-container class="w-100 d-flex flex-wrap justify-center">
-      <v-sheet
-        v-if="dateStorage.currentDailyHoursList.length >= 1"
-        v-for="dailyHour in dateStorage.currentDailyHoursList"
-        :key="dailyHour.id"
-        class="pa-4 ma-4"
-        width="300"
-        elevation="2"
-      >
-        <h2>{{ dailyHour.data.project }}</h2>
-        <v-divider class="mb-4"></v-divider>
-        <v-sheet class="d-flex align-center justify-space-between">
-          <h4 class="mr-4">Starting time</h4>
-          <p>{{ dailyHour.data.starting_time }}</p>
-        </v-sheet>
-        <v-sheet class="d-flex align-center justify-space-between">
-          <h4 class="mr-4">Stopping time</h4>
-          <p>{{ dailyHour.data.stopping_time }}</p>
-        </v-sheet>
-        <v-sheet class="d-flex align-center justify-space-between">
-          <h4 class="mr-4">Total time</h4>
-          <p>{{ dailyHour.data.total_time }}</p>
-        </v-sheet>
-        <v-sheet v-if="dailyHour.data.notes != undefined" class="pa-2 mt-2" color="#f5f5f5">
-          <p class="text-body-2">{{ dailyHour.data.notes }}</p>
-        </v-sheet>
-      </v-sheet>
+              
+            <h3 class="text-grey-darken-4 bg-blue-grey-lighten-4 pa-2 rounded-lg">{{ dailyHour.data.total_time }}</h3>
+          </div>
+         </v-sheet>
+         <div class="d-flex justify-space-between align-center">
+          <p class="text-start w-auto font-weight-black ma-2">Total</p>
+          <h3 class="text-end my-2 mx-2 border pa-2 rounded-lg">{{ dateStorage.currentTotalTimeToday }}</h3>
+         </div>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
