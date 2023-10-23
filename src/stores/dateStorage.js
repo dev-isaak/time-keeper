@@ -31,6 +31,7 @@ export const useDateStorage = defineStore('dateStorage', {
       octoberHours: 0,
       novemberHours: 0,
       decemberHours: 0,
+      weeklyHours: 0,
     }
   },
   getters: {
@@ -57,6 +58,8 @@ export const useDateStorage = defineStore('dateStorage', {
     currentOctoberHours: (state) => timeConverter(state.octoberHours),
     currentNovemberHours: (state) => timeConverter(state.novemberHours),
     currentDecemberHours: (state) => timeConverter(state.decemberHours),
+    currentWeeklyHours: (state) => timeConverter(state.weeklyHours),
+    currentWeeklyHoursMs: (state) => state.weeklyHours
   },
   actions: {
     async getDailyHours(year, month, day) {
@@ -152,6 +155,48 @@ export const useDateStorage = defineStore('dateStorage', {
       } catch (e) {
         console.error(e)
       }
+    },
+    async getWeeklyHours(year){
+      const auth = useAuthStore()
+      this.weeklyHours = 0
+      //const q = query(collection(db, `dates/${year}/${auth.currentUID}`), where('month', '==', month))
+      
+      // obtengo número de la semana
+      let date = new Date()
+      let today = date.getDate()
+      let weekDate = date.getDay()
+      let restWeekDate = weekDate
+      let queryDate = ''
+      let dayCounter = 0
+      // si date es 0 (domingo) lo cambiamos a 7
+      if (weekDate === 0){
+        weekDate = 7
+      }
+      // el número obtenido lo resto hasta que sea cero. Por cada resta, sumo uno a un contador
+      // para obtener el número de días que tengo que obtener
+      while (restWeekDate > 1){
+        restWeekDate -= 1
+        dayCounter += 1
+      }
+      // Si es lunes solo hacemos una query con el día de hoy
+      if (weekDate === 1){
+        queryDate = query(collection(db, `dates/${year}/${auth.currentUID}`), where('day', '==', today))
+      } 
+      // Si es otro día de la semana hacemos la query entre dos días
+      else {
+        let sinceDay = today - dayCounter
+        queryDate = query(collection(db, `dates/${year}/${auth.currentUID}`), where('day', '>=', sinceDay), where('day', '<=', today))
+      }
+      try{
+        const querySnap = await getDocs(queryDate);
+        querySnap.forEach((doc) => {
+          if(doc.data().total_time_ms !== undefined){
+            this.weeklyHours += doc.data().total_time_ms
+          }
+        })
+      } catch(e){
+        console.error(e)
+      }      
     },
     async getCurrentMonthlyHours(year, month) {
       const auth = useAuthStore()

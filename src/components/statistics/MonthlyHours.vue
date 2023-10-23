@@ -7,17 +7,14 @@ import ProgressLinear from '@/components/ProgressLinear.vue'
 const dateStorage = useDateStorage()
 
 const overlay = ref(false)
-const weeklyHours = ref(78)
+const weeklyHours = ref(0)
 const monthlyHours = ref(0)
 const selectedMonth = ref('')
 const yearList = [
   {
     title: 'January',
-    props: {
-      id: 1,
-      currentHours: dateStorage.currentJanuaryHours,
-      msHours: dateStorage.januaryHours
-    }
+    currentHours: dateStorage.currentJanuaryHours,
+    msHours: dateStorage.januaryHours
   },
   {
     title: 'February',
@@ -79,11 +76,14 @@ const yearList = [
 onBeforeMount(async () => {
   overlay.value = true
   const date = new Date()
+
   await dateStorage.getCurrentMonthlyHours(date.getFullYear(), date.getMonth() + 1)
-  await dateStorage.getYearMonthlyHours(2023)
+  await dateStorage.getYearMonthlyHours(date.getFullYear())
+  await dateStorage.getWeeklyHours(date.getFullYear())
 
   // se calcula el porcentage sobre 160h = 576000000
   monthlyHours.value = dateStorage.currentMonthlyHoursMs * 100 / 576000000
+  weeklyHours.value = dateStorage.currentWeeklyHoursMs * 100 / 144000000
 
   overlay.value = false
 })
@@ -96,19 +96,21 @@ onBeforeMount(async () => {
   <h2>Monthly Hours</h2>
   <v-container>
     <v-row>
-      <v-col>
+      <v-col align="center">
         <v-sheet
           elevation="1"
           class="d-flex flex-column align-center w-auto pa-4"
           max-width="400"
         >
           <v-progress-circular :model-value="weeklyHours" size="100" width="15" color="#78909C"
-            >43</v-progress-circular
+            >
+            {{ dateStorage.currentWeeklyHours }}
+            </v-progress-circular
           >
           <h4 class="text-center mt-4">Total time this week</h4>
         </v-sheet>
       </v-col>
-      <v-col>
+      <v-col align="center">
         <v-sheet elevation="1" class="d-flex flex-column align-center w-auto pa-4" max-width="400">
           <v-progress-circular :model-value="monthlyHours" size="100" width="15" color="#78909C"
             >{{ dateStorage.currentMonthlyHours }}</v-progress-circular
@@ -123,7 +125,7 @@ onBeforeMount(async () => {
     </v-container>
   <v-container>
     <v-sheet>
-      <h4>{{selectedMonth}}</h4>
+      <h4>{{selectedMonth.title}}</h4>
       <ProgressLinear class="mx-2 my-2" :time="selectedMonth.currentHours" :msTime="selectedMonth.msHours" />
     </v-sheet>
   </v-container>
