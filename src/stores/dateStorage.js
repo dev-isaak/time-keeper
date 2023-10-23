@@ -65,7 +65,7 @@ export const useDateStorage = defineStore('dateStorage', {
         this.dailyHoursList = []
         this.totalTimeToday = 0
         const querySnap = await getDocs(
-          collection(db, `dates/${year}/${auth.currentUID}`)
+          query(collection(db, `dates/${year}/${auth.currentUID}`), where('day','==',day), where('month', '==', month), where('year', '==', year))
         )
         querySnap.forEach((doc) => {
           if (doc.data().total_time_ms !== undefined) {

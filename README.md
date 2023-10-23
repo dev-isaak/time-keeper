@@ -1,8 +1,13 @@
-#TODOS
+# TODOS
 
 FASE 1
-- Google auth
 - Tests
+
+FASE 2
+- Weekly hours
+- Monthly Progress bar
+- Calendar events
+-Tests
 
 # time-keeper
 
