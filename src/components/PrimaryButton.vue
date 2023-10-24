@@ -6,6 +6,7 @@ defineProps({
   color: String,
   loadingState: Boolean,
   variant: String, 
+  icon: Boolean,
 })
 
 </script>
@@ -13,8 +14,8 @@ defineProps({
 <template>
   <v-btn class="w-auto" :variant="variant" :color="color" :loading="loadingState">
     {{ text }}
-    <template v-slot:prepend>
+    <v-icon v-if="icon">
       <slot></slot>
-    </template>
+    </v-icon>
   </v-btn>
 </template>

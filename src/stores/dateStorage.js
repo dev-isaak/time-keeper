@@ -130,6 +130,7 @@ export const useDateStorage = defineStore('dateStorage', {
       try {
         const querySnap = await getDoc(docRef)
         let projectDate = new Date(querySnap.data().date.seconds * 1000)
+        
         this.cronoTime = date - projectDate
         setInterval(() => {
           this.cronoTime += 1000
@@ -150,7 +151,6 @@ export const useDateStorage = defineStore('dateStorage', {
       if (minutes < 10) minutes = '0' + minutes
 
       const startingHour = `${hours}:${minutes} h`
-
       const ref = collection(db, 'dates', `/${year}`, auth.currentUID)
       try {
         await addDoc(ref, {
@@ -165,7 +165,6 @@ export const useDateStorage = defineStore('dateStorage', {
           notes: notes
         })
         console.log('tiempos creados')
-        this.cronoTime = 0
       } catch (e) {
         console.error('Error adding document: ', e)
       }
@@ -190,6 +189,7 @@ export const useDateStorage = defineStore('dateStorage', {
           total_time_ms: totalTime,
           is_started: false
         })
+        this.cronoTime = 0
         this.isStarted = false
         console.log('tiempos actualizados')
       } catch (e) {

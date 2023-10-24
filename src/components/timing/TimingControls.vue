@@ -6,8 +6,10 @@ import SnackBar from '../SnackBar.vue'
 import { ref, onBeforeMount } from 'vue'
 import { useDateStorage } from '@/stores/dateStorage.js'
 import MessageIcon from '@/components/icons/MessageIcon.vue'
+import { useProjectsStorage } from '../../stores/projectsStorage'
 
 const dateStorage = useDateStorage()
+const projectsStorage = useProjectsStorage()
 
 const message = ref('')
 const openSnackbar = ref(false)
@@ -17,9 +19,14 @@ const loadingStop = ref(false)
 const projectField = ref('')
 const notesField = ref('')
 const overlay = ref(false)
+const rules = {
+        required: value => !!value || 'Field is required',
+      }
 
 onBeforeMount(async () => {
   overlay.value = true
+  projectsStorage.getProjects()
+  
   const currentDate = new Date()
   await dateStorage.getDailyHours(
     currentDate.getFullYear(),
@@ -34,24 +41,37 @@ onBeforeMount(async () => {
 const handleStart = async () => {
   loadingStart.value = true
   let start = new Date()
+  console.log(projectField.value)
+  if (projectField.value !== ''){
+    console.log('entra aqui')
+    await dateStorage.postDailyHours(
+      start.getFullYear(),
+      start.getMonth() + 1,
+      start.getDate(),
+      start,
+      projectField.value,
+      notesField.value
+    )
 
-  await dateStorage.postDailyHours(
-    start.getFullYear(),
-    start.getMonth() + 1,
-    start.getDate(),
-    start,
-    projectField.value,
-    notesField.value
-  )
-  await dateStorage.getDailyHours(start.getFullYear(), start.getMonth() + 1, start.getDate())
-  loadingStart.value = false
-  message.value = 'Journey started.'
-  openSnackbar.value = true
-  projectField.value = null
-  notesField.value = null
-  setTimeout(() => {
-    openSnackbar.value = false
-  }, 3000)
+    await dateStorage.getDailyHours(start.getFullYear(), start.getMonth() + 1, start.getDate())
+    loadingStart.value = false
+    message.value = 'Journey started.'
+    openSnackbar.value = true
+    projectField.value = null
+    notesField.value = null
+    setTimeout(() => {
+      openSnackbar.value = false
+    }, 3000)
+  } else{
+    errorMessage.value = true
+    message.value = 'Select a project'
+    openSnackbar.value = true
+    projectField.value = ''
+    setTimeout(() => {
+      openSnackbar.value = false
+    }, 3000)
+    loadingStart.value = false
+  }
 }
 
 const handleStop = async () => {
@@ -96,11 +116,8 @@ const handleStop = async () => {
             >
               <div v-if="!dateStorage.timeIsRunning">
                 <h3>Project</h3>
-                <v-text-field
-                  label="Enter project"
-                  class="w-100"
-                  v-model="projectField"
-                ></v-text-field>
+                <v-select v-if="projectsStorage.currentCustomerProjects.length >= 1" label="Select Project" :items="projectsStorage.currentCustomerProjects" v-model="projectField" :rules="[rules.required]"></v-select>
+                <p v-else><v-btn class="ma-0 pa-0" variant="plain" color="black" :to="{name: 'projects'}">Add a new project</v-btn></p>
                 <h3>Notes</h3>
                 <v-textarea
                   label="Write some notes"
