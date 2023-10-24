@@ -6,7 +6,7 @@ import MainTemplate from '@/templates/MainTemplate.vue';
 
 <template>
   <MainTemplate>
-    <v-container>
+    <v-container class="px-0">
       <FullCalendar />
     </v-container>
   </MainTemplate>

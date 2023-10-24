@@ -47,6 +47,12 @@ const calendarOptions = {
   plugins: [dayGridPlugin, interactionPlugin],
   initialView: 'dayGridMonth',
   firstDay: 1,
+  dayMaxEventRows: true,
+  views: {
+    timeGrid: {
+      dayMaxEventRows : 3,
+  },
+  },
   //weekNumbers: true,
   eventClick: handleEventClick,
   events: calendarEvents.value,
@@ -68,7 +74,7 @@ const calendarOptions = {
   </v-container>
   </div>
   <v-overlay v-model="eventOverlay" class="d-flex justify-center align-center">
-    <v-sheet v-if="eventOverlay" class="pa-6" min-width="300">
+    <v-sheet v-if="eventOverlay" class="pa-6" min-width="300" style="z-index:1000;">
       <h2>{{ eventTitle }}</h2>
       <v-divider class="mb-4"></v-divider>
       <div class="d-flex justify-space-between">
