@@ -4,7 +4,7 @@ FASE 1
 - Tests
 
 FASE 2
-- Add and delete projects to select them
+- When a project is started after a stop, the counter does not start from 0
 - Statistics per project
 -Tests
 

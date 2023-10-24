@@ -46,6 +46,7 @@ export const useDateStorage = defineStore('dateStorage', {
       todayProjects: [],
       allProjects: [],
       cronoTime: 0,
+      cronoInterval: 0,
     }
   },
   getters: {
@@ -124,18 +125,17 @@ export const useDateStorage = defineStore('dateStorage', {
       }
     },
     async getProjectCurrentTime() {
+      clearInterval(this.cronoInterval)
       const auth = useAuthStore()
       const date = new Date()
       const docRef = doc(db, `dates/${date.getFullYear()}/${auth.currentUID}/${this.lastDocId}`)
       try {
         const querySnap = await getDoc(docRef)
         let projectDate = new Date(querySnap.data().date.seconds * 1000)
-        
         this.cronoTime = date - projectDate
-        setInterval(() => {
-          this.cronoTime += 1000
-        },1000)
-        
+          this.cronoInterval = setInterval(() => {
+            this.cronoTime += 1000
+          },1000)
       } catch (e) {
         console.error(e)
       }
@@ -189,6 +189,7 @@ export const useDateStorage = defineStore('dateStorage', {
           total_time_ms: totalTime,
           is_started: false
         })
+        clearInterval(this.cronoInterval)
         this.cronoTime = 0
         this.isStarted = false
         console.log('tiempos actualizados')
