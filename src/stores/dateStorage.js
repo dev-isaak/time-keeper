@@ -4,6 +4,7 @@ import {
   doc,
   addDoc,
   updateDoc,
+  getDoc,
   getDocs,
   collection,
   serverTimestamp,
@@ -117,6 +118,18 @@ export const useDateStorage = defineStore('dateStorage', {
         return
       } catch (e) {
         console.log(e)
+      }
+    },
+    async getProjectCurrentTime(){
+      const auth = useAuthStore()
+      const date = new Date()
+      const docRef = doc(db, `dates/${date.getFullYear()}/${auth.currentUID}`)
+      try{
+        const querySnap = await getDoc(query(docRef), where('day','==',date.getDate()), where('month', '==', date.getMonth()), where('year', '==', date.getFullYear()))
+
+        console.log(querySnap.data())
+      } catch(e){
+        console.error(e)
       }
     },
     async postDailyHours(year, month, day, startingTime, project, notes) {

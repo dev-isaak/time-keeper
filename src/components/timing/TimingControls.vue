@@ -22,6 +22,7 @@ const overlay = ref(false)
 onBeforeMount(async () => {
   overlay.value = true
   const currentDate = new Date()
+  await dateStorage.getProjectCurrentTime()
   await dateStorage.getDailyHours(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1,
