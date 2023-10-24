@@ -83,11 +83,11 @@ const calendarOptions = {
       </div>
       <div class="d-flex justify-space-between">
         <p class="font-weight-bold">Stop time:</p>
-        <p>{{ eventStop }}</p>
+        <p>{{ eventStop != 'undefined' ? eventStop : 'Running' }}</p>
       </div>
       <div class="d-flex justify-space-between">
         <p class="font-weight-bold">Total time:</p>
-        <p>{{ eventTotal }}</p>
+        <p>{{ eventTotal != 'undefined' ? eventTotal : 'Running' }}</p>
       </div>
       <div>
         <p class="font-weight-bold">Notes</p>

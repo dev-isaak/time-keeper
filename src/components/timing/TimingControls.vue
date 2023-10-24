@@ -1,7 +1,6 @@
 <script setup>
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import StartIcon from '@/components/icons/StartIcon.vue'
-import PauseIcon from '@/components/icons/PauseIcon.vue'
 import StopIcon from '@/components/icons/StopIcon.vue'
 import SnackBar from '../SnackBar.vue'
 import { ref, onBeforeMount } from 'vue'
@@ -22,12 +21,13 @@ const overlay = ref(false)
 onBeforeMount(async () => {
   overlay.value = true
   const currentDate = new Date()
-  await dateStorage.getProjectCurrentTime()
   await dateStorage.getDailyHours(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1,
     currentDate.getDate()
   )
+  await dateStorage.getProjectCurrentTime()
+
   overlay.value = false
 })
 
@@ -89,7 +89,7 @@ const handleStop = async () => {
   </v-overlay>
   <div v-if="overlay === false">
     <v-container>
-          <v-container class="w-100 d-flex flex-column align-center">
+          <v-container class="w-100 pa-0 d-flex flex-column align-center">
             <v-sheet
               class="w-100 d-flex flex-column justify-space-around ma-0"
               max-width="400"
@@ -108,7 +108,7 @@ const handleStop = async () => {
                   v-model="notesField"
                 ></v-textarea>
               </div>
-              <v-container class="ma-0 d-flex justify-center">
+              <v-container class="mb-8 pa-0 d-flex justify-center">
                 <PrimaryButton
                   v-if="!dateStorage.timeIsRunning"
                   text="Start"
@@ -120,8 +120,7 @@ const handleStop = async () => {
                   <StartIcon />
                 </PrimaryButton>
                 <v-sheet v-else class="w-100 d-flex flex-column align-center">
-                  <p class="font-weight-bold">Time is running up!</p>
-                  <v-progress-linear class="my-4" indeterminate></v-progress-linear>
+                  <span class="pa-2 mb-6 text-blue-grey-darken-1 text-h4 font-weight-black">{{dateStorage.currentCronoTime}}</span>
                   <PrimaryButton
                     text="Stop"
                     color="#90A4AE"
@@ -146,18 +145,18 @@ const handleStop = async () => {
           </div>
           <div class="d-flex align-center">
             <PrimaryButton class="mr-4" variant="plain">
-              <MessageIcon />
+              <MessageIcon v-if="dailyHour.data.notes" />
                 <v-tooltip activator="parent" location="bottom">
                   {{ dailyHour.data.notes }}
                 </v-tooltip>
             </PrimaryButton>
               
-            <h3 class="text-grey-darken-4 bg-blue-grey-lighten-4 pa-2 rounded-lg">{{ dailyHour.data.total_time }}</h3>
+            <h3 class="text-end pa-2  border pa-2 rounded-lg" >{{ dailyHour.data.total_time || 'Running' }}</h3>
           </div>
          </v-sheet>
          <div class="d-flex justify-space-between align-center">
           <p class="text-start w-auto font-weight-black ma-2">Total</p>
-          <h3 class="text-end my-2 mx-2 border pa-2 rounded-lg">{{ dateStorage.currentTotalTimeToday }}</h3>
+          <h3 class="text-grey-darken-4 ma-2 pa-2 bg-blue-grey-lighten-4 rounded-lg">{{ dateStorage.currentTotalTimeToday }}</h3>
          </div>
     </v-container>
   </div>

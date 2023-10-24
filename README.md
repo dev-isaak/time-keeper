@@ -4,7 +4,8 @@ FASE 1
 - Tests
 
 FASE 2
-- Total hours per project
+- Add and delete projects to select them
+- Statistics per project
 -Tests
 
 # time-keeper

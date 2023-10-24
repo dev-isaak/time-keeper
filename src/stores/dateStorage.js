@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore'
 import { db } from '@/main.js'
 import timeConverter from '@/utils/timeConverter.js'
+import timeConverterSeconds from '@/utils/timeConverterSeconds.js'
 
 export const useDateStorage = defineStore('dateStorage', {
   state: () => {
@@ -43,7 +44,8 @@ export const useDateStorage = defineStore('dateStorage', {
       decemberHours: 0,
       weeklyHours: 0,
       todayProjects: [],
-      allProjects: []
+      allProjects: [],
+      cronoTime: 0,
     }
   },
   getters: {
@@ -74,6 +76,7 @@ export const useDateStorage = defineStore('dateStorage', {
     currentWeeklyHoursMs: (state) => state.weeklyHours,
     currentTodayProjects: (state) => state.todayProjects,
     currentAllProjects: (state) => state.allProjects,
+    currentCronoTime: (state) => timeConverterSeconds(state.cronoTime)
   },
   actions: {
     async getDailyHours(year, month, day) {
@@ -120,15 +123,19 @@ export const useDateStorage = defineStore('dateStorage', {
         console.log(e)
       }
     },
-    async getProjectCurrentTime(){
+    async getProjectCurrentTime() {
       const auth = useAuthStore()
       const date = new Date()
-      const docRef = doc(db, `dates/${date.getFullYear()}/${auth.currentUID}`)
-      try{
-        const querySnap = await getDoc(query(docRef), where('day','==',date.getDate()), where('month', '==', date.getMonth()), where('year', '==', date.getFullYear()))
-
-        console.log(querySnap.data())
-      } catch(e){
+      const docRef = doc(db, `dates/${date.getFullYear()}/${auth.currentUID}/${this.lastDocId}`)
+      try {
+        const querySnap = await getDoc(docRef)
+        let projectDate = new Date(querySnap.data().date.seconds * 1000)
+        this.cronoTime = date - projectDate
+        setInterval(() => {
+          this.cronoTime += 1000
+        },1000)
+        
+      } catch (e) {
         console.error(e)
       }
     },
@@ -158,6 +165,7 @@ export const useDateStorage = defineStore('dateStorage', {
           notes: notes
         })
         console.log('tiempos creados')
+        this.cronoTime = 0
       } catch (e) {
         console.error('Error adding document: ', e)
       }
