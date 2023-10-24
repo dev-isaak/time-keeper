@@ -6,7 +6,6 @@ import StopIcon from '@/components/icons/StopIcon.vue'
 import SnackBar from '../SnackBar.vue'
 import { ref, onBeforeMount } from 'vue'
 import { useDateStorage } from '@/stores/dateStorage.js'
-import timeConverter from '@/utils/timeConverter.js'
 import MessageIcon from '@/components/icons/MessageIcon.vue'
 
 const dateStorage = useDateStorage()
@@ -19,7 +18,6 @@ const loadingStop = ref(false)
 const projectField = ref('')
 const notesField = ref('')
 const overlay = ref(false)
-const openTooltip = ref(false)
 
 onBeforeMount(async () => {
   overlay.value = true
@@ -50,14 +48,6 @@ const handleStart = async () => {
   openSnackbar.value = true
   projectField.value = null
   notesField.value = null
-  setTimeout(() => {
-    openSnackbar.value = false
-  }, 3000)
-}
-
-const handlePause = () => {
-  message.value = 'Journey paused.'
-  openSnackbar.value = true
   setTimeout(() => {
     openSnackbar.value = false
   }, 3000)
@@ -98,8 +88,6 @@ const handleStop = async () => {
   </v-overlay>
   <div v-if="overlay === false">
     <v-container>
-      <v-row>
-        <v-col>
           <v-container class="w-100 d-flex flex-column align-center">
             <v-sheet
               class="w-100 d-flex flex-column justify-space-around ma-0"
@@ -146,8 +134,6 @@ const handleStop = async () => {
               </v-container>
             </v-sheet>
           </v-container>
-        </v-col>
-        <v-col>
          <v-sheet
           v-if="dateStorage.currentDailyHoursList.length >= 1"
           v-for="dailyHour in dateStorage.currentDailyHoursList"
@@ -172,8 +158,6 @@ const handleStop = async () => {
           <p class="text-start w-auto font-weight-black ma-2">Total</p>
           <h3 class="text-end my-2 mx-2 border pa-2 rounded-lg">{{ dateStorage.currentTotalTimeToday }}</h3>
          </div>
-        </v-col>
-      </v-row>
     </v-container>
   </div>
 </template>

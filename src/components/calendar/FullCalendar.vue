@@ -145,4 +145,11 @@ const calendarOptions = {
 .fc-daygrid-event:hover{
   background-color: #cfd8dc;
 }
+.fc-popover{
+  z-index:10 !important;
+}
+.fc-daygrid-more-link {
+  color: #37474f;
+  margin-top: .5em !important;
+}
 </style>

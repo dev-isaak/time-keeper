@@ -4,9 +4,7 @@ FASE 1
 - Tests
 
 FASE 2
-- Weekly hours
-- Monthly Progress bar
-- Calendar events
+- Total hours per project
 -Tests
 
 # time-keeper

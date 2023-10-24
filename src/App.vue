@@ -15,3 +15,10 @@ onMounted(async() => {
   <NavbarMain />
   <RouterView />
 </template>
+
+<style>
+h1{
+  text-align: center;
+  margin-bottom: .5em;
+}
+</style>
