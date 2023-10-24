@@ -33,7 +33,7 @@ export const useProjectsStorage = defineStore('projectsStorage', {
 			const docRef = collection(db, `projects/user_projects`, auth.currentUID)
 			try{
       	await addDoc( docRef, {
-					project_name: projectName,
+					project_name: projectName.toUpperCase(),
 				})
 				this.customerProjects.push({
 					project_name: projectName

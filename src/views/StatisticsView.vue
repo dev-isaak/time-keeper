@@ -2,6 +2,7 @@
 import MainTemplate from '@/templates/MainTemplate.vue'
 import MonthlyHours from '@/components/statistics/MonthlyHours.vue'
 import WeeklyHours from '@/components/statistics/WeeklyHours.vue'
+import ProjectStatistics from '@/components/statistics/ProjectStatistics.vue'
 </script>
 
 <template>
@@ -17,5 +18,6 @@ import WeeklyHours from '@/components/statistics/WeeklyHours.vue'
       </v-col>
     </v-row>
   </v-container>
+  <ProjectStatistics />
 </MainTemplate>
 </template>
