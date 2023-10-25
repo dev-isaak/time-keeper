@@ -7,6 +7,7 @@ import { ref, onBeforeMount } from 'vue'
 import { useDateStorage } from '@/stores/dateStorage.js'
 import MessageIcon from '@/components/icons/MessageIcon.vue'
 import { useProjectsStorage } from '../../stores/projectsStorage'
+import capitalizeLetters from '@/utils/capitalizeLetters.js'
 
 const dateStorage = useDateStorage()
 const projectsStorage = useProjectsStorage()
@@ -97,6 +98,7 @@ const handleStop = async () => {
     openSnackbar.value = false
   }, 3000)
 }
+
 </script>
 
 <template>
@@ -159,8 +161,9 @@ const handleStop = async () => {
         :key="dailyHour.id"
         class="d-flex align-center justify-space-between w-100 border-b pa-2"
       >
+      {{capitalizedProjectNames}}
         <div>
-          <h3>{{ dailyHour.data.project }}</h3>
+          <h3>{{ capitalizeLetters(dailyHour.data.project)}}</h3>
           <p>{{ dailyHour.data.starting_time }} - {{ dailyHour.data.stopping_time || 'Running' }}</p>
         </div>
         <div class="d-flex align-center">
@@ -176,8 +179,8 @@ const handleStop = async () => {
           </h4>
         </div>
       </v-sheet>
-      <div class="d-flex justify-space-between align-center">
-        <h3 class="text-start w-auto font-weight-black ma-2">Total</h3>
+      <div class="d-flex justify-space-between align-center mt-4">
+        <h3 class="text-start w-auto font-weight-black ma-2">Total time today</h3>
         <h4 class="bg-blue-grey-darken-1 ma-2 pa-2 text-white rounded-lg">
           {{ dateStorage.currentTotalTimeToday }}
         </h4>

@@ -1,7 +1,6 @@
 <script setup>
-import { onMounted, ref, computed, onBeforeMount } from 'vue';
+import { ref, computed, onBeforeMount } from 'vue';
 import { useStatisticsStorage } from '@/stores/statisticsStorage.js'
-import PrimaryButton from '@/components/PrimaryButton.vue'
 import { useProjectsStorage } from '@/stores/projectsStorage.js'
 
 const statisticsStorage = useStatisticsStorage()
