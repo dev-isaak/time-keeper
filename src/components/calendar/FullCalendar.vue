@@ -78,19 +78,19 @@ const calendarOptions = {
       <h2>{{ eventTitle }}</h2>
       <v-divider class="mb-4"></v-divider>
       <div class="d-flex justify-space-between">
-        <p class="font-weight-bold">Start time:</p>
+        <h4 class="font-weight-bold">Start time:</h4>
         <p>{{ eventStart }}</p>
       </div>
       <div class="d-flex justify-space-between">
-        <p class="font-weight-bold">Stop time:</p>
+        <h4 class="font-weight-bold">Stop time:</h4>
         <p>{{ eventStop != 'undefined' ? eventStop : 'Running' }}</p>
       </div>
       <div class="d-flex justify-space-between">
-        <p class="font-weight-bold">Total time:</p>
+        <h4 class="font-weight-bold">Total time:</h4>
         <p>{{ eventTotal != 'undefined' ? eventTotal : 'Running' }}</p>
       </div>
       <div>
-        <p class="font-weight-bold">Notes</p>
+        <h4 class="font-weight-bold">Notes</h4>
         <v-sheet class="pa-4" color="#f5f5f5">
           <p>{{ eventNotes }}</p>
         </v-sheet>
@@ -109,17 +109,21 @@ const calendarOptions = {
   --fc-today-bg-color: #cfd8dc;
   --fc-highlight-color: red;
 }
+.fc-theme-standard , .fc-scrollgrid{
+  border-top: none !important;
+}
 .fc-col-header {
-  background-color: #cfd8dc;
+  background-color: var(--primary-color);
+  border-radius: 5px 5px 0px 0px;
 }
 .fc-col-header-cell a {
-  color: #37474f;
+  color: var(--tertiary-color);
 }
 .fc-daygrid-day-number {
-  color: #455a64;
+  color: var(--secondary-color);
 }
 .fc-header-toolbar {
-  max-width: 700px;
+  max-width: 100%;
 }
 .fc-header-toolbar .fc-toolbar-chunk {
   display: flex;
@@ -136,7 +140,7 @@ const calendarOptions = {
   margin: 0 0.1em !important;
 }
 .fc-daygrid-event{
-  background-color: #37474f;
+  background-color: var(--primary-color);
   border:none;
   padding: .1em .4em;
   cursor:pointer;
@@ -149,7 +153,12 @@ const calendarOptions = {
   z-index:10 !important;
 }
 .fc-daygrid-more-link {
-  color: #37474f;
+  color: var(--tertiary-color);
+  background-color: var(--secondary-color);
   margin-top: .5em !important;
+}
+.fc-daygrid-more-link:hover {
+  color: var(--primary-color);
+
 }
 </style>

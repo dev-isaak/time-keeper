@@ -4,8 +4,7 @@
 </script>
 
 <template>
-    <MainTemplate>
-        <h1>Projects</h1>
+    <MainTemplate title="Projects">
         <AddProject />
     </MainTemplate>
 </template>

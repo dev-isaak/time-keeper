@@ -6,8 +6,7 @@ import ProjectStatistics from '@/components/statistics/ProjectStatistics.vue'
 </script>
 
 <template>
-<MainTemplate>
-  <h1>Statistics</h1>
+<MainTemplate title="Statistics">
   <v-container>
     <v-row>
       <v-col align="center">

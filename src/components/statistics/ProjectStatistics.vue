@@ -35,11 +35,10 @@ const handleSearchProject = async() =>{
   <v-progress-circular
       v-if="loadingProject"
       indeterminate
-      color="teal"
       size="20"
       width="2"
       class="ml-4"
     ></v-progress-circular>
   </div>
-  <v-progress-linear class="my-4" color="teal" v-model="projectPercent"></v-progress-linear>
+  <v-progress-linear class="my-4" v-model="projectPercent"></v-progress-linear>
 </template>

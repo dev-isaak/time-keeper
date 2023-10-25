@@ -20,7 +20,7 @@ onBeforeMount(async() => {
 
 <template>
   <v-sheet elevation="1" class="d-flex flex-column align-center w-auto pa-4" max-width="400">
-    <v-progress-circular :model-value="weeklyHours" size="100" width="15" color="#78909C">
+    <v-progress-circular :model-value="weeklyHours" size="100" width="15">
       {{ dateStorage.currentWeeklyHours }}
     </v-progress-circular>
     <h4 class="text-center mt-4">Total time this week</h4>

@@ -12,18 +12,12 @@ onMounted(async() => {
 </script>
 
 <template>
-  <NavbarMain />
-  <RouterView />
+  <v-theme-provider>
+    <NavbarMain theme="default" />
+    <RouterView />
+  </v-theme-provider>
 </template>
 
 <style>
-h1{
-  text-align: center;
-  margin-bottom: .5em;
-}
-@media(min-width:768px){
-  h1{
-    text-align:start;
-  }
-}
+@import './assets/variables.css';
 </style>

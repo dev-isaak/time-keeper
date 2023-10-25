@@ -6,6 +6,6 @@ import PrimaryButton from '@/components/PrimaryButton.vue';
 <h3>Select time zone</h3>
 <form>
   <v-select label="Select time zone" :items="[]"></v-select>
-  <PrimaryButton text="Update" color=""></PrimaryButton>
+  <PrimaryButton text="Update"></PrimaryButton>
 </form>
 </template>

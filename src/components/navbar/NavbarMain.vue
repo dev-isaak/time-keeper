@@ -16,7 +16,7 @@ const isLogedIn = computed(() => {
 <template>
   <header>
     <v-layout>
-      <v-app-bar color="var(--primary-color)" class="text-white">
+      <v-app-bar color="primary" class="text-white">
         <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer">
         <MenuIcon />
         </v-app-bar-nav-icon>
@@ -34,24 +34,24 @@ const isLogedIn = computed(() => {
         </v-app-bar>
         <v-navigation-drawer location="left" v-model="drawer" temporary>
           <v-list class="d-flex flex-column mt-6">
-              <v-list-item variant="text" link color="#90A4AE" v-if="isLogedIn !== null" :to="{name: 'userMain'}">
+              <v-list-item variant="text" link v-if="isLogedIn !== null" :to="{name: 'userMain'}">
                 Daily hours
               </v-list-item>
-              <v-list-item variant="text" link color="#90A4AE" v-else to="/">
+              <v-list-item variant="text" link v-else to="/">
                 Home
               </v-list-item>
               <div v-if="isLogedIn !== null">
-                <v-list-item variant="text" link color="#90A4AE" :to="{name: 'projects'}">
+                <v-list-item variant="text" link :to="{name: 'projects'}">
                   Projects
                 </v-list-item>
-                <v-list-item variant="text" link color="#90A4AE" :to="{name: 'calendar'}">
+                <v-list-item variant="text" link :to="{name: 'calendar'}">
                   Calendar
                 </v-list-item>
-                <v-list-item variant="text" link color="#90A4AE" :to="{name: 'statistics'}">
+                <v-list-item variant="text" link :to="{name: 'statistics'}">
                   Statistics
                 </v-list-item>
               </div>
-              <v-list-item variant="text" link color="#90A4AE" :to="{name: 'about'}">
+              <v-list-item variant="text" link :to="{name: 'about'}">
                 About
               </v-list-item>
           </v-list>

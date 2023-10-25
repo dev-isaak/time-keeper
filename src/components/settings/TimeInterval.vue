@@ -9,6 +9,6 @@ const loading = ref(false)
 <h3>Select time interval</h3>
 <form>
   <v-select label="Select time interval" :items="['1 minute','5 minutes', '15 minutes']"></v-select>
-  <PrimaryButton text="Update" color="" :loading="loading"></PrimaryButton>
+  <PrimaryButton text="Update" :loading="loading"></PrimaryButton>
 </form>
 </template>

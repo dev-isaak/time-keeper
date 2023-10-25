@@ -58,7 +58,7 @@ const handleDeleteProject = async(projectName) => {
 			<form @submit.prevent>
 				<v-text-field label="Project name" v-model="projectName" :rules="[rules.required]"></v-text-field>
 				<div class="d-flex justify-center">
-					<PrimaryButton type="submit" text="Add Project" @click="handleUploadProject" color="#90A4AE"/>
+					<PrimaryButton type="submit" text="Add Project" @click="handleUploadProject"/>
 				</div>
 			</form>
 		</v-sheet>

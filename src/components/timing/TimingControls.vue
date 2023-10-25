@@ -131,7 +131,6 @@ const handleStop = async () => {
             <PrimaryButton
               v-if="!dateStorage.timeIsRunning"
               text="Start"
-              color="#90A4AE"
               @click="handleStart"
               class="w-50"
               :loading="loadingStart"
@@ -163,8 +162,8 @@ const handleStop = async () => {
       >
       {{capitalizedProjectNames}}
         <div>
-          <h3>{{ capitalizeLetters(dailyHour.data.project)}}</h3>
-          <p>{{ dailyHour.data.starting_time }} - {{ dailyHour.data.stopping_time || 'Running' }}</p>
+          <h3 class="text-primary">{{ capitalizeLetters(dailyHour.data.project)}}</h3>
+          <p class="text-dark">{{ dailyHour.data.starting_time }} - {{ dailyHour.data.stopping_time || 'Running' }}</p>
         </div>
         <div class="d-flex align-center">
           <PrimaryButton icon class="mr-4" variant="plain">
@@ -174,14 +173,14 @@ const handleStop = async () => {
             </v-tooltip>
           </PrimaryButton>
 
-          <h4 class="text-end pa-2 border pa-2 rounded-lg text-blue-grey-darken-1">
+          <h4 class="text-end pa-2 border-md pa-2 rounded-lg text-primary">
             {{ dailyHour.data.total_time || 'Running' }}
           </h4>
         </div>
       </v-sheet>
       <div class="d-flex justify-space-between align-center mt-4">
-        <h3 class="text-start w-auto font-weight-black ma-2">Total time today</h3>
-        <h4 class="bg-blue-grey-darken-1 ma-2 pa-2 text-white rounded-lg">
+        <h3 class="text-start text-primary w-auto font-weight-black ma-2">Total time today</h3>
+        <h4 class="bg-tertiary ma-2 pa-2 text-dark rounded-lg">
           {{ dateStorage.currentTotalTimeToday }}
         </h4>
       </div>

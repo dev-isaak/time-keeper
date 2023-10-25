@@ -103,7 +103,6 @@ const handleReLogIn = (e) => {
         </p>
         <PrimaryButton
           text="Update"
-          color="#90A4AE"
           @click="handleUpdatePassword"
           :loading="loadingStatePassword"
         />

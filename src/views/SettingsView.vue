@@ -5,9 +5,7 @@
 </script>
 
 <template>
-<MainTemplate>
-  <h1>Settings</h1>
-  <v-divider></v-divider>
+<MainTemplate title="Settings">
   <v-container>
     <TimeZone />
   </v-container>

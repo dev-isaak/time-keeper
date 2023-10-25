@@ -17,6 +17,36 @@ import * as directives from 'vuetify/directives'
 const vuetify = createVuetify({
   components,
   directives,
+  theme: {
+    themes: {
+      light: {
+        dark: false,
+        colors: {
+          primary: '#315775',
+          secondary: '#718696',
+          tertiary: '#EBB463',
+          dark: '#333333',
+          success:'#C1EB63',
+          error: '#EB5550'
+        }
+      },
+    },
+  },
+  defaults:{
+    PrimaryButton:{
+      color: 'tertiary',
+      style: 'color:white;'
+    },
+    VProgressCircular:{
+      color: 'secondary'
+    },
+    VProgressLinear: {
+      color: 'primary'
+    },
+    VList:{
+      color: 'primary'
+    },
+  }
 })
 
 //Firebase configuration
