@@ -21,4 +21,9 @@ h1{
   text-align: center;
   margin-bottom: .5em;
 }
+@media(min-width:768px){
+  h1{
+    text-align:start;
+  }
+}
 </style>

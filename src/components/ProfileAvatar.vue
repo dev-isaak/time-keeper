@@ -59,6 +59,13 @@ const handleLogout = async () => {
             </p>
             <v-divider class="my-3"></v-divider>
             <PrimaryButton
+              text="Settings"
+              variant="text"
+              class="w-100"
+              :to="{ name: 'settings'}"
+              />
+              <v-divider class="my-3"></v-divider>
+            <PrimaryButton
               text="Edit Account"
               variant="text"
               class="w-100"
