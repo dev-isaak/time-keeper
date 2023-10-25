@@ -42,14 +42,14 @@ onUpdated(() => {
       <v-container class=" w-100" v-else>
         <v-text-field variant="underlined"  label="Value" v-model="valueEntered" @update:modelValue="$emit('fieldValue',valueEntered )"></v-text-field>
       </v-container>
-      <PrimaryButton v-if="isEditing === false" variant="plain" @click="isEditing = true">
+      <PrimaryButton v-if="isEditing === false" variant="plain" @click="isEditing = true" icon>
         <UpdateIcon />
       </PrimaryButton>
       <v-container v-else class="ma-0 pa-0 w-auto">
-        <PrimaryButton variant="plain" @click="updateValue">
+        <PrimaryButton variant="plain" @click="updateValue" icon>
           <CheckIcon />
         </PrimaryButton>
-        <PrimaryButton variant="plain" @click="handleCloseEditingView">
+        <PrimaryButton variant="plain" @click="handleCloseEditingView" icon>
           <CloseIcon />
         </PrimaryButton>
       </v-container>
