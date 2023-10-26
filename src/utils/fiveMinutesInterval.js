@@ -1,4 +1,4 @@
-function fifteenMinutesInterval(hours, minutes, start) {
+function fiveMinutesInterval(hours, minutes, start) {
   let newMinutes = minutes
   let newHours = hours
   const result = minutes % 5
@@ -63,4 +63,4 @@ function fifteenMinutesInterval(hours, minutes, start) {
   }
 }
 
-export default fifteenMinutesInterval
+export default fiveMinutesInterval
