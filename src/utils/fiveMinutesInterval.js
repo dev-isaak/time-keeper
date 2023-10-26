@@ -10,6 +10,7 @@ function fiveMinutesInterval(hours, minutes, start) {
       newHours = newHours + 1
       newMinutes = 0
       if (newMinutes < 10) newMinutes = '0' + newMinutes
+      if (newHours < 10) newHours = '0' + newHours
       return newHours + ':' + newMinutes
     } else {
       if (result === 0) {
@@ -30,6 +31,7 @@ function fiveMinutesInterval(hours, minutes, start) {
             break
         }
         if (newMinutes < 10) newMinutes = '0' + newMinutes
+        if (newHours < 10) newHours = '0' + newHours
         return hours + ':' + newMinutes
       }
     }
@@ -37,6 +39,7 @@ function fiveMinutesInterval(hours, minutes, start) {
     //When press button stop
     if (result === 0) {
       if (newMinutes < 10) newMinutes = '0' + newMinutes
+      if (newHours < 10) newHours = '0' + newHours
       return hours + ':' + minutes
     } else {
       switch (result) {
@@ -54,6 +57,7 @@ function fiveMinutesInterval(hours, minutes, start) {
           break
       }
       if (newMinutes < 10) newMinutes = '0' + newMinutes
+      if (newHours < 10) newHours = '0' + newHours
       return hours + ':' + newMinutes
     }
   }

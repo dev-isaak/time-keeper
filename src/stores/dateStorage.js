@@ -162,8 +162,7 @@ export const useDateStorage = defineStore('dateStorage', {
       } else {
         console.log('un minuto intervalo')
         //comprobar que funciona
-        startingHour = timeConverter(startingTime)
-        console.log(startingHour)
+        startingHour = `${startingTime.getHours()}:${startingTime.getMinutes()}`
       }
 
       const ref = collection(db, 'dates', `/${year}`, auth.currentUID)
@@ -198,7 +197,7 @@ export const useDateStorage = defineStore('dateStorage', {
         //
       } else {
         //comprobar que funciona
-        stoppingHour = timeConverter(stoppingTime)
+        stoppingHour = `${stoppingTime.getHours()}:${stoppingTime.getMinutes()}`
       }
       const data = doc(db, `dates/${year}/${auth.currentUID}/${this.lastDocId}`)
       try {
