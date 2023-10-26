@@ -189,11 +189,11 @@ export const useDateStorage = defineStore('dateStorage', {
       let hours = stoppingTime.getHours()
       let minutes = stoppingTime.getMinutes()
       let stoppingHour = ''
-      let fiveMinutesInterval = false
+      let isfiveMinutesInterval = false
 
       if (fireStoreDB.currentTimeInterval === '5 minutes') {
         stoppingHour = fiveMinutesInterval(hours, minutes)
-        fiveMinutesInterval = true
+        isfiveMinutesInterval = true
       } else if (fireStoreDB.currentTimeInterval === '15 minutes') {
         //
       } else {
@@ -202,7 +202,7 @@ export const useDateStorage = defineStore('dateStorage', {
       const data = doc(db, `dates/${year}/${auth.currentUID}/${this.lastDocId}`)
       try {
         //Si el tiempo de crono es menor de 10 minutos, no se ejecuta la acción
-        if (this.currentCronoTimeMs < 600000 && fiveMinutesInterval === true) {
+        if (this.currentCronoTimeMs < 600000 && isfiveMinutesInterval === true) {
           await updateDoc(data, {
             stopping_time: this.currentLastTimeStartFormatted,
             stopping_ms: this.currentLastTimeStart,
