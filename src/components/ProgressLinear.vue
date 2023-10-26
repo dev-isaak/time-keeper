@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref } from 'vue';
 
 defineProps({
   time: String,
@@ -14,7 +14,6 @@ const power = ref(74)
 <template>
   <v-progress-linear 
     v-model="power" 
-    color="#B0BEC5" 
     height="25"
   >
   <p class="font-weight-bold">{{ time }}</p> - {{ msTime }}

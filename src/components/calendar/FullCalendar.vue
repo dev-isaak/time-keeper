@@ -117,7 +117,7 @@ const calendarOptions = {
   border-radius: 5px 5px 0px 0px;
 }
 .fc-col-header-cell a {
-  color: var(--tertiary-color);
+  color:white;
 }
 .fc-daygrid-day-number {
   color: var(--secondary-color);

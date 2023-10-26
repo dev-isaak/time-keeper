@@ -32,7 +32,7 @@ const handlePasswordRecovery = async() => {
   <p :class=" authStore.errorMessage ? 'text-error' : 'text-success'">
     {{ authStore.errorMessage || authStore.message }}
   </p>
-  <PrimaryButton color="#90A4AE" text="Send email" @click="handlePasswordRecovery" :loading="loading"></PrimaryButton>
+  <PrimaryButton text="Send email" @click="handlePasswordRecovery" :loading="loading"></PrimaryButton>
 </v-column>
 </form>
 

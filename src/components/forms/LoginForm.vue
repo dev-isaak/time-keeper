@@ -87,7 +87,7 @@ const handleLogin = async () => {
             </template>
         </v-text-field>
           <v-column class="d-flex flex-column align-center mt-6">
-            <PrimaryButton color="#90A4AE" text="Login" @click="handleLogin" :loading="loading" />
+            <PrimaryButton text="Login" @click="handleLogin" :loading="loading" />
           </v-column>
         </form>
       </v-card>

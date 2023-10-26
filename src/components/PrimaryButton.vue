@@ -11,7 +11,7 @@ const _props = defineProps({
   styles: String
 })
 
-  const props = useDefaults(_props, 'PrimaryButton')
+const props = useDefaults(_props, 'PrimaryButton')
 
 </script>
 

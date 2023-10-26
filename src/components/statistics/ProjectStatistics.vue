@@ -2,6 +2,7 @@
 import { ref, computed, onBeforeMount } from 'vue';
 import { useStatisticsStorage } from '@/stores/statisticsStorage.js'
 import { useProjectsStorage } from '@/stores/projectsStorage.js'
+import ArrowDown from '../icons/ArrowDown.vue';
 
 const statisticsStorage = useStatisticsStorage()
 const projectsStorage = useProjectsStorage()
@@ -29,7 +30,7 @@ const handleSearchProject = async() =>{
 <template>
 
   <h3 class="mb-4">Project total time</h3>
-  <v-select label="Select Project" v-model="projectName" :items="projectsStorage.currentCustomerProjects" @update:modelValue="handleSearchProject"></v-select>
+  <v-select label="Select Project" v-model="projectName" :items="projectsStorage.currentCustomerProjects" @update:modelValue="handleSearchProject" :menu-icon="ArrowDown"></v-select>
   <div class="d-flex align-center">
   <h3>{{projectPercent ? `${statisticsStorage.currentTotalProjectsTimeMs}` : ''}}</h3>
   <v-progress-circular

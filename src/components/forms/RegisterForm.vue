@@ -128,7 +128,6 @@ const handleRegister = async () => {
           </v-text-field>
           <v-container class="d-flex flex-column align-center">
             <PrimaryButton
-              color="#90A4AE"
               text="Register"
               @click="handleRegister"
               :loading="isLoading"

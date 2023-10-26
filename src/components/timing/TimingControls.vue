@@ -8,6 +8,7 @@ import { useDateStorage } from '@/stores/dateStorage.js'
 import MessageIcon from '@/components/icons/MessageIcon.vue'
 import { useProjectsStorage } from '../../stores/projectsStorage'
 import capitalizeLetters from '@/utils/capitalizeLetters.js'
+import ArrowDown from '../icons/ArrowDown.vue'
 
 const dateStorage = useDateStorage()
 const projectsStorage = useProjectsStorage()
@@ -117,6 +118,7 @@ const handleStop = async () => {
               label="Select Project"
               :items="projectsStorage.currentCustomerProjects"
               v-model="projectField"
+              :menu-icon="ArrowDown"
               :rules="[rules.required]"
             ></v-select>
             <p v-else>
@@ -143,7 +145,6 @@ const handleStop = async () => {
               }}</span>
               <PrimaryButton
                 text="Stop"
-                color="#90A4AE"
                 @click="handleStop"
                 class="w-50"
                 :loading="loadingStop"
@@ -161,24 +162,24 @@ const handleStop = async () => {
         class="d-flex align-center justify-space-between w-100 border-b pa-2"
       >
       {{capitalizedProjectNames}}
-        <div>
+        <v-sheet width="150">
           <h3 class="text-primary">{{ capitalizeLetters(dailyHour.data.project)}}</h3>
           <p class="text-dark">{{ dailyHour.data.starting_time }} - {{ dailyHour.data.stopping_time || 'Running' }}</p>
-        </div>
-        <div class="d-flex align-center">
-          <PrimaryButton icon class="mr-4" variant="plain">
+        </v-sheet>
+        <v-sheet class="d-flex align-center">
+          <PrimaryButton icon class="mr-4" size="40" variant="plain" color="dark">
             <MessageIcon v-if="dailyHour.data.notes" />
             <v-tooltip activator="parent" location="bottom">
               {{ dailyHour.data.notes }}
             </v-tooltip>
           </PrimaryButton>
 
-          <h4 class="text-end pa-2 border-md pa-2 rounded-lg text-primary">
+          <h4 class="text-end py-1 px-2 border-md rounded-lg text-primary">
             {{ dailyHour.data.total_time || 'Running' }}
           </h4>
-        </div>
+        </v-sheet>
       </v-sheet>
-      <div class="d-flex justify-space-between align-center mt-4">
+      <div class="d-flex justify-space-between align-center mt-2">
         <h3 class="text-start text-primary w-auto font-weight-black ma-2">Total time today</h3>
         <h4 class="bg-tertiary ma-2 pa-2 text-dark rounded-lg">
           {{ dateStorage.currentTotalTimeToday }}

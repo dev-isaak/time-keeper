@@ -26,7 +26,6 @@ const isLogedIn = computed(() => {
         <v-spacer>
         </v-spacer>
         <ProfileAvatar v-if="isLogedIn !== null" size="50" class="mr-4" menu/>
-        <!--<UserButton v-if="isLogedIn !== null"/>-->
         <div v-else class="mr-4">
           <PrimaryButton text="Log In" :to="{name: 'login'}"/>
           <PrimaryButton text="Sign Up" variant="text" :to="{name: 'register'}"/>
