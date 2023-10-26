@@ -12,6 +12,7 @@ export const useFirestoreDB = defineStore('firestoreDB', {
       userPhone: '',
       userPhoto: '',
       userBirthDate:'',
+      timeInterval: '',
       userNameUpdated: false,
       userLastnameUpdated: false,
       userAddressUpdated: false,
@@ -35,6 +36,7 @@ export const useFirestoreDB = defineStore('firestoreDB', {
     isUserAddressUpdated: (state) => state.userAddressUpdated,
     isUserPhoneUpdated: (state) => state.userPhoneUpdated,
     isUserBirthDateUpdated: (state) => state.userBirthDateUpdated,
+    currentTimeInterval: (state) => state.timeInterval,
     initials: (state) => {
       return state.userName.charAt(0).toUpperCase() + state.userLastname.charAt(0).toUpperCase()
     }
@@ -53,6 +55,7 @@ export const useFirestoreDB = defineStore('firestoreDB', {
         this.userPhone = docSnap.data().user_phone
         this.userBirthDate = docSnap.data().user_birth_date
         this.Photo = docSnap.data().user_photo
+        this.timeInterval = docSnap.data().time_interval
       } else {
         // docSnap.data() will be undefined in this case
         console.log('No such document!')
@@ -67,7 +70,8 @@ export const useFirestoreDB = defineStore('firestoreDB', {
           user_birth_date: 'Your birth date here',
           user_phone: 'Your phone number here',
           user_photo: 'route-photo',
-          user_address: 'Your address here'
+          user_address: 'Your address here',
+          time_interval: '5 minutes'
         })
       } catch (e) {
         console.error('Error adding document: ', e)
@@ -138,6 +142,18 @@ export const useFirestoreDB = defineStore('firestoreDB', {
         console.error(e)
       }
 
+    },
+    async updateTimeInterval(selectedInterval){
+      const auth = useAuthStore()
+      const data = doc(db, 'users', auth.currentUID)
+      try{
+        await updateDoc(data, {
+          time_interval: selectedInterval
+        })
+        this.timeInterval = selectedInterval
+      } catch(e){
+        console.error(e)
+      }
     },
     async deleteUserDB(){
       const auth = useAuthStore()

@@ -21,9 +21,7 @@ onBeforeMount(async() => {
 })
 
 const handleUploadProject = async () => {
-	console.log(projectName.value)
 	if(projectName.value != ''){
-		console.log('entra aquí')
 		projectStorage.postProject(projectName.value)
 		message.value = 'Project created.'
 		projectName.value = null

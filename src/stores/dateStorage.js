@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useAuthStore } from '@/stores/auth.js'
+import { useFirestoreDB } from './firestoreDB'
 import {
   doc,
   addDoc,
@@ -14,6 +15,7 @@ import {
 import { db } from '@/main.js'
 import timeConverter from '@/utils/timeConverter.js'
 import timeConverterSeconds from '@/utils/timeConverterSeconds.js'
+import fiveMinutesInterval from '../utils/fiveMinutesInterval'
 
 export const useDateStorage = defineStore('dateStorage', {
   state: () => {
@@ -28,6 +30,7 @@ export const useDateStorage = defineStore('dateStorage', {
       docRef: null,
       lastDocId: null,
       lastTimeStart: null,
+      lastTimeStartFormatted: '',
       totalTimeToday: 0,
       monthlyHours: 0,
       januaryHours: 0,
@@ -77,11 +80,14 @@ export const useDateStorage = defineStore('dateStorage', {
     currentWeeklyHoursMs: (state) => state.weeklyHours,
     currentTodayProjects: (state) => state.todayProjects,
     currentAllProjects: (state) => state.allProjects,
-    currentCronoTime: (state) => timeConverterSeconds(state.cronoTime)
+    currentCronoTime: (state) => timeConverterSeconds(state.cronoTime),
+    currentCronoTimeMs: (state) => state.cronoTime,
+    currentLastTimeStartFormatted: (state) => state.lastTimeStartFormatted,
   },
   actions: {
     async getDailyHours(year, month, day) {
       const auth = useAuthStore()
+      
       try {
         this.dailyHoursList = []
         this.totalTimeToday = 0
@@ -118,6 +124,7 @@ export const useDateStorage = defineStore('dateStorage', {
           this.isStarted = true
           this.lastDocId = this.dailyHoursList[0].id
           this.lastTimeStart = this.dailyHoursList[0].data.starting_time_ms
+          this.lastTimeStartFormatted = this.dailyHoursList[0].data.starting_time
         }
         return
       } catch (e) {
@@ -142,15 +149,25 @@ export const useDateStorage = defineStore('dateStorage', {
     },
     async postDailyHours(year, month, day, startingTime, project, notes) {
       const auth = useAuthStore()
-
+      const fireStoreDB = useFirestoreDB()
+      let startingHour = ''
       //Convert date to hour format
       let hours = startingTime.getHours()
       let minutes = startingTime.getMinutes()
+      const start = true
+      if (fireStoreDB.currentTimeInterval === '5 minutes'){
+        startingHour = fiveMinutesInterval(hours, minutes, start)
+      } 
+      else if (fireStoreDB.currentTimeInterval === '15 minutes'){
+        //
+      } 
+      else {
+        console.log('un minuto intervalo')
+        //comprobar que funciona
+        startingHour = timeConverter(startingTime)
+        console.log(startingHour)
+      }
 
-      if (hours < 10) hours = '0' + hours
-      if (minutes < 10) minutes = '0' + minutes
-
-      const startingHour = `${hours}:${minutes} h`
       const ref = collection(db, 'dates', `/${year}`, auth.currentUID)
       try {
         await addDoc(ref, {
@@ -158,7 +175,7 @@ export const useDateStorage = defineStore('dateStorage', {
           year: year,
           month: month,
           day: day,
-          starting_time: startingHour,
+          starting_time: `${startingHour} h`,
           starting_time_ms: +startingTime,
           is_started: true,
           project: project,
@@ -171,28 +188,51 @@ export const useDateStorage = defineStore('dateStorage', {
     },
     async postStoppingTime(year, month, day, stoppingTime, totalTime) {
       const auth = useAuthStore()
-
+      const fireStoreDB = useFirestoreDB()
       //Convert date to hour format
       let hours = stoppingTime.getHours()
       let minutes = stoppingTime.getMinutes()
+      let stoppingHour = ''
 
-      if (hours < 10) hours = '0' + hours
-      if (minutes < 10) minutes = '0' + minutes
-
-      const stoppingHour = `${hours}:${minutes} h`
+      if (fireStoreDB.currentTimeInterval === '5 minutes'){
+        stoppingHour = fiveMinutesInterval(hours, minutes)
+      } 
+      else if (fireStoreDB.currentTimeInterval === '15 minutes'){
+        //
+      } 
+      else {
+        //comprobar que funciona
+        stoppingHour = timeConverter(stoppingTime)
+      }
       const data = doc(db, `dates/${year}/${auth.currentUID}/${this.lastDocId}`)
       try {
-        await updateDoc(data, {
-          stopping_time: stoppingHour,
-          stopping_ms: +stoppingTime,
-          total_time: timeConverter(totalTime),
-          total_time_ms: totalTime,
-          is_started: false
-        })
-        clearInterval(this.cronoInterval)
-        this.cronoTime = 0
-        this.isStarted = false
-        console.log('tiempos actualizados')
+        //Si el tiempo de crono es menor de 10 minutos, no se ejecuta la acción
+        if (this.currentCronoTimeMs < 600000){
+          await updateDoc(data, {
+            stopping_time: this.currentLastTimeStartFormatted,
+            stopping_ms: this.currentLastTimeStart,
+            total_time: timeConverter(0),
+            total_time_ms: 0,
+            is_started: false
+          })
+          clearInterval(this.cronoInterval)
+          this.cronoTime = 0
+          this.isStarted = false
+          // NO ACTUALIZA EL CRONO
+          console.log('tiempos actualizados')
+        }else {
+          await updateDoc(data, {
+            stopping_time: `${stoppingHour} h`,
+            stopping_ms: +stoppingTime,
+            total_time: timeConverter(totalTime),
+            total_time_ms: totalTime,
+            is_started: false
+          })
+          clearInterval(this.cronoInterval)
+          this.cronoTime = 0
+          this.isStarted = false
+          console.log('tiempos actualizados')
+        }
       } catch (e) {
         console.error(e)
       }
