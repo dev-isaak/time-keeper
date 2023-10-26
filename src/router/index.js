@@ -108,20 +108,19 @@ const router = createRouter({
       meta: {
         requireAuth: true
       }
-    },
+    }
   ]
 })
 
 router.beforeEach((to, from, next) => {
-
   const store = useAuthStore()
 
   const isAuthenticated = store.jwt
   const needAuth = to.meta.requireAuth
-  
-  if (!isAuthenticated && to.name !== 'login' && needAuth ==true ) {
-    return next({name:'login'})
-  }else{
+
+  if (!isAuthenticated && to.name !== 'login' && needAuth == true) {
+    return next({ name: 'login' })
+  } else {
     next()
   }
 })

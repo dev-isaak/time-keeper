@@ -99,7 +99,6 @@ const handleStop = async () => {
     openSnackbar.value = false
   }, 3000)
 }
-
 </script>
 
 <template>
@@ -143,12 +142,7 @@ const handleStop = async () => {
               <span class="pa-2 mb-6 text-blue-grey-darken-1 text-h4 font-weight-black">{{
                 dateStorage.currentCronoTime
               }}</span>
-              <PrimaryButton
-                text="Stop"
-                @click="handleStop"
-                class="w-50"
-                :loading="loadingStop"
-              >
+              <PrimaryButton text="Stop" @click="handleStop" class="w-50" :loading="loadingStop">
                 <StopIcon />
               </PrimaryButton>
             </v-sheet>
@@ -161,10 +155,12 @@ const handleStop = async () => {
         :key="dailyHour.id"
         class="d-flex align-center justify-space-between w-100 border-b pa-2"
       >
-      {{capitalizedProjectNames}}
+        {{ capitalizedProjectNames }}
         <v-sheet width="150">
-          <h3 class="text-primary">{{ capitalizeLetters(dailyHour.data.project)}}</h3>
-          <p class="text-dark">{{ dailyHour.data.starting_time }} - {{ dailyHour.data.stopping_time || 'Running' }}</p>
+          <h3 class="text-primary">{{ capitalizeLetters(dailyHour.data.project) }}</h3>
+          <p class="text-dark">
+            {{ dailyHour.data.starting_time }} - {{ dailyHour.data.stopping_time || 'Running' }}
+          </p>
         </v-sheet>
         <v-sheet class="d-flex align-center">
           <PrimaryButton icon class="mr-4" size="40" variant="plain" color="dark">

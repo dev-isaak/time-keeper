@@ -69,19 +69,23 @@ const yearList = [
 ]
 
 onBeforeMount(async () => {
-	const date = new Date()
+  const date = new Date()
   await dateStorage.getYearMonthlyHours(date.getFullYear())
 })
 </script>
 
 <template>
-<v-container>
+  <v-container>
     <v-select label="Select Month" v-model="selectedMonth" :items="yearList"></v-select>
-    </v-container>
+  </v-container>
   <v-container>
     <v-sheet>
-      <h4>{{selectedMonth.title}}</h4>
-      <ProgressLinear class="mx-2 my-2" :time="selectedMonth.currentHours" :msTime="selectedMonth.msHours" />
+      <h4>{{ selectedMonth.title }}</h4>
+      <ProgressLinear
+        class="mx-2 my-2"
+        :time="selectedMonth.currentHours"
+        :msTime="selectedMonth.msHours"
+      />
     </v-sheet>
   </v-container>
 </template>

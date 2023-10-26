@@ -6,13 +6,12 @@ const _props = defineProps({
   text: String,
   color: String,
   loadingState: Boolean,
-  variant: String, 
+  variant: String,
   icon: Boolean,
   styles: String
 })
 
 const props = useDefaults(_props, 'PrimaryButton')
-
 </script>
 
 <template>

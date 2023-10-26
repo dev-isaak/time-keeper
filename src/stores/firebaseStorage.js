@@ -6,41 +6,40 @@ import { useAuthStore } from './auth'
 export const useFirebaseStorage = defineStore('firebaseStorage', {
   state: () => {
     return {
-      imageURL: null,
+      imageURL: null
     }
   },
   getters: {
     currentImageURL: (state) => state.imageURL
   },
   actions: {
-    async getProfileImage(){
+    async getProfileImage() {
       const auth = useAuthStore()
       const storageRef = ref(storage, `images/profile_photo_${auth.uid}`)
       await getDownloadURL(storageRef)
-      .then((url) => {
-        this.imageURL = url
-      })
-      .catch((e) => {
-        this.imageURL = null
-        console.error(e)
-      });
+        .then((url) => {
+          this.imageURL = url
+        })
+        .catch((e) => {
+          this.imageURL = null
+          console.error(e)
+        })
     },
     async uploadProfileImage(file) {
       const auth = useAuthStore()
       const storageRef = ref(storage, `images/profile_photo_${auth.uid}`)
       try {
-        await uploadBytes(storageRef, file[0]).then(() => {
-        })
+        await uploadBytes(storageRef, file[0]).then(() => {})
       } catch (e) {
         console.error(e)
       }
     },
-    async deleteProfileImage(){
+    async deleteProfileImage() {
       const auth = useAuthStore()
       const storageRef = ref(storage, `images/profile_photo_${auth.uid}`)
-      try{
+      try {
         await deleteObject(storageRef)
-      } catch(e){
+      } catch (e) {
         console.error(e)
       }
     }

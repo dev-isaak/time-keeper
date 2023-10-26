@@ -25,10 +25,10 @@ onBeforeMount(async () => {
   <v-overlay :model-value="overlay" class="align-center justify-center">
     <v-progress-circular indeterminate size="64"></v-progress-circular>
   </v-overlay>
-    <v-sheet elevation="1" class="d-flex flex-column align-center w-auto pa-4" max-width="400">
-      <v-progress-circular :model-value="monthlyHours" size="100" width="15">{{
-        dateStorage.currentMonthlyHours
-      }}</v-progress-circular>
-      <h4 class="text-center mt-4">Total time this month</h4>
-    </v-sheet>
+  <v-sheet elevation="1" class="d-flex flex-column align-center w-auto pa-4" max-width="400">
+    <v-progress-circular :model-value="monthlyHours" size="100" width="15">{{
+      dateStorage.currentMonthlyHours
+    }}</v-progress-circular>
+    <h4 class="text-center mt-4">Total time this month</h4>
+  </v-sheet>
 </template>

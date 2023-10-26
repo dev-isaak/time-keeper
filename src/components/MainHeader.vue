@@ -1,10 +1,10 @@
 <script setup>
 defineProps({
-  title: String,
+  title: String
 })
 </script>
 
 <template>
-<h1>{{ title }}</h1>
-<v-divider v-if="title"></v-divider>
+  <h1>{{ title }}</h1>
+  <v-divider v-if="title"></v-divider>
 </template>

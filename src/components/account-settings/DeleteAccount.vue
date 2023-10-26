@@ -24,12 +24,12 @@ const handleDeleteAccount = async () => {
     openSnackbar.value = true
     setTimeout(() => {
       openSnackBar.value = false
-    }, 3000);
+    }, 3000)
     dialog.value = true
   }
-  
+
   const dbIsDeleted = await db.deleteUserDB()
-  if (dbIsDeleted){
+  if (dbIsDeleted) {
     await authStore.deleteAccount()
   }
   if (authStore.isAccountDeleted) {
@@ -38,12 +38,12 @@ const handleDeleteAccount = async () => {
   loadingStateDelete.value = false
 }
 const handleReLogIn = (e) => {
-	dialog.value = e
+  dialog.value = e
 }
 </script>
 
 <template>
-  <SnackBar :text="message" :openSnackbar="openSnackbar"/>
+  <SnackBar :text="message" :openSnackbar="openSnackbar" />
   <h3 class="mb-2 mt-10">Danger Zone</h3>
   <v-container class="mb-2 d-flex flex-wrap justify-center justify-md-start align-center border">
     <v-sheet class="pa-4 ma-4">

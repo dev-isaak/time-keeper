@@ -1,7 +1,6 @@
 <script setup>
-  import FullCalendar from '../components/calendar/FullCalendar.vue'
-import MainTemplate from '@/templates/MainTemplate.vue';
-
+import FullCalendar from '../components/calendar/FullCalendar.vue'
+import MainTemplate from '@/templates/MainTemplate.vue'
 </script>
 
 <template>

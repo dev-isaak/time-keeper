@@ -1,15 +1,17 @@
 @import './variables.css';
 
-h1{
+h1 {
   color: var(--secondary-color);
   text-align: center;
-  margin-bottom: .3em;
+  margin-bottom: 0.3em;
 }
-h2, h3, h4{
+h2,
+h3,
+h4 {
   color: var(--primary-color);
 }
-@media(min-width:768px){
-  h1{
-    text-align:start;
+@media (min-width: 768px) {
+  h1 {
+    text-align: start;
   }
 }

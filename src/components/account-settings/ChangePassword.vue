@@ -21,16 +21,16 @@ const openSnackbar = ref(false)
 const errorMessage = ref(false)
 
 const closeDialog = computed(() => {
-	return dialog.value
+  return dialog.value
 })
 
 const handleUpdatePassword = async () => {
   if (password.value === repeatedPassword.value) {
     loadingStatePassword.value = true
-		await authStore.updatePassword(password.value)
+    await authStore.updatePassword(password.value)
     if (authStore.isPasswordUpdated) {
       loadingStatePassword.value = false
-			openSnackbar.value = true
+      openSnackbar.value = true
       message.value = 'Password updated succesfully'
       setTimeout(() => {
         openSnackbar.value = false
@@ -39,11 +39,11 @@ const handleUpdatePassword = async () => {
       repeatedPassword.value = null
     } else {
       //DESDE AQUÍ
-      if (authStore.needReLogIn){
+      if (authStore.needReLogIn) {
         dialog.value = true
       }
       loadingStatePassword.value = false
-			openSnackbar.value = true
+      openSnackbar.value = true
       message.value = authStore.errorMessage || 'Login successful'
       setTimeout(() => {
         openSnackbar.value = false
@@ -51,29 +51,29 @@ const handleUpdatePassword = async () => {
     }
   } else {
     errorMessage.value = true
-		openSnackbar.value = true
+    openSnackbar.value = true
     message.value = 'Passwords must be equals.'
     setTimeout(() => {
-        openSnackbar.value = false
-      }, 3000)
+      openSnackbar.value = false
+    }, 3000)
   }
 }
 
 const handleReLogIn = (e) => {
-	dialog.value = e
+  dialog.value = e
 }
 </script>
 
 <template>
-	<SnackBar :text="message" :openSnackbar="openSnackbar" :error="errorMessage ? true : false"/>
-	<h3 class="mb-2 mt-10">Update Account Password</h3>
+  <SnackBar :text="message" :openSnackbar="openSnackbar" :error="errorMessage ? true : false" />
+  <h3 class="mb-2 mt-10">Update Account Password</h3>
   <v-container class="border d-flex justify-center">
     <v-sheet class="my-2 pa-0 w-100" max-width="500">
       <v-text-field
         :type="!hidePassword ? 'text' : 'password'"
         :label="'Password'"
         v-model="password"
-				variant="underlined"
+        variant="underlined"
       >
         <template v-slot:prepend-inner>
           <LockIcon color="gray" class="mr-2" />
@@ -87,7 +87,7 @@ const handleReLogIn = (e) => {
         :type="!hidePassword2 ? 'text' : 'password'"
         :label="'Repeat password'"
         v-model="repeatedPassword"
-				variant="underlined"
+        variant="underlined"
       >
         <template v-slot:prepend-inner>
           <LockIcon color="gray" class="mr-2" />

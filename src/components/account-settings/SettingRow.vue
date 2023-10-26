@@ -10,7 +10,7 @@ const props = defineProps({
   value: String,
   updateValue: Function,
   closeEditingView: Boolean,
-  loading: Boolean,
+  loading: Boolean
 })
 
 defineEmits(['fieldValue'])
@@ -23,13 +23,13 @@ const handleCloseEditingView = () => {
   isEditing.value = false
 }
 onUpdated(() => {
-  if(props.closeEditingView){
+  if (props.closeEditingView) {
     isEditing.value = false
     valueEntered.value = null
     //Agregar fondo de color verde durante X tiempo
     setTimeout(() => {
       //
-    }, 3000);
+    }, 3000)
   }
 })
 </script>
@@ -37,10 +37,19 @@ onUpdated(() => {
 <template>
   <v-sheet class="my-4 mx-lg-4 pa-4" border width="450">
     <h4 class="mb-2">{{ title }}</h4>
-    <v-sheet  width="400" color="transparent" class="w-100 d-flex align-center justify-space-between ma-0 pa-0 bg-transparent">
+    <v-sheet
+      width="400"
+      color="transparent"
+      class="w-100 d-flex align-center justify-space-between ma-0 pa-0 bg-transparent"
+    >
       <p v-if="isEditing === false">{{ value }}</p>
-      <v-container class=" w-100" v-else>
-        <v-text-field variant="underlined"  label="Value" v-model="valueEntered" @update:modelValue="$emit('fieldValue',valueEntered )"></v-text-field>
+      <v-container class="w-100" v-else>
+        <v-text-field
+          variant="underlined"
+          label="Value"
+          v-model="valueEntered"
+          @update:modelValue="$emit('fieldValue', valueEntered)"
+        ></v-text-field>
       </v-container>
       <PrimaryButton v-if="isEditing === false" variant="plain" @click="isEditing = true" icon>
         <UpdateIcon />
@@ -54,6 +63,6 @@ onUpdated(() => {
         </PrimaryButton>
       </v-container>
     </v-sheet>
-    <v-progress-linear v-if="loading"  color="blue-grey-lighten-2" indeterminate></v-progress-linear>
-    </v-sheet>
+    <v-progress-linear v-if="loading" color="blue-grey-lighten-2" indeterminate></v-progress-linear>
+  </v-sheet>
 </template>

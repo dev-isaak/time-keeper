@@ -6,7 +6,7 @@ import { onMounted } from 'vue'
 
 const authStore = useAuthStore()
 
-onMounted(async() => {
+onMounted(async () => {
   await authStore.userStatus()
 })
 </script>

@@ -6,17 +6,17 @@ import ProjectStatistics from '@/components/statistics/ProjectStatistics.vue'
 </script>
 
 <template>
-<MainTemplate title="Statistics">
-  <v-container>
-    <v-row>
-      <v-col align="center">
-        <WeeklyHours />
-      </v-col>
-      <v-col align="center">
-        <MonthlyHours />
-      </v-col>
-    </v-row>
-  </v-container>
-  <ProjectStatistics />
-</MainTemplate>
+  <MainTemplate title="Statistics">
+    <v-container>
+      <v-row>
+        <v-col align="center">
+          <WeeklyHours />
+        </v-col>
+        <v-col align="center">
+          <MonthlyHours />
+        </v-col>
+      </v-row>
+    </v-container>
+    <ProjectStatistics />
+  </MainTemplate>
 </template>

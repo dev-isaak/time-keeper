@@ -2,7 +2,7 @@
 import LoginForm from '@/components/forms/LoginForm.vue'
 
 const props = defineProps({
-  openDialog: Boolean,
+  openDialog: Boolean
 })
 
 const handleReLogIn = (e) => {
@@ -10,7 +10,6 @@ const handleReLogIn = (e) => {
 }
 
 const emits = defineEmits(['isLogedIn'])
-
 </script>
 
 <template>

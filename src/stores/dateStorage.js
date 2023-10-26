@@ -49,7 +49,7 @@ export const useDateStorage = defineStore('dateStorage', {
       todayProjects: [],
       allProjects: [],
       cronoTime: 0,
-      cronoInterval: 0,
+      cronoInterval: 0
     }
   },
   getters: {
@@ -82,12 +82,12 @@ export const useDateStorage = defineStore('dateStorage', {
     currentAllProjects: (state) => state.allProjects,
     currentCronoTime: (state) => timeConverterSeconds(state.cronoTime),
     currentCronoTimeMs: (state) => state.cronoTime,
-    currentLastTimeStartFormatted: (state) => state.lastTimeStartFormatted,
+    currentLastTimeStartFormatted: (state) => state.lastTimeStartFormatted
   },
   actions: {
     async getDailyHours(year, month, day) {
       const auth = useAuthStore()
-      
+
       try {
         this.dailyHoursList = []
         this.totalTimeToday = 0
@@ -140,9 +140,9 @@ export const useDateStorage = defineStore('dateStorage', {
         const querySnap = await getDoc(docRef)
         let projectDate = new Date(querySnap.data().date.seconds * 1000)
         this.cronoTime = date - projectDate
-          this.cronoInterval = setInterval(() => {
-            this.cronoTime += 1000
-          },1000)
+        this.cronoInterval = setInterval(() => {
+          this.cronoTime += 1000
+        }, 1000)
       } catch (e) {
         console.error(e)
       }
@@ -155,13 +155,11 @@ export const useDateStorage = defineStore('dateStorage', {
       let hours = startingTime.getHours()
       let minutes = startingTime.getMinutes()
       const start = true
-      if (fireStoreDB.currentTimeInterval === '5 minutes'){
+      if (fireStoreDB.currentTimeInterval === '5 minutes') {
         startingHour = fiveMinutesInterval(hours, minutes, start)
-      } 
-      else if (fireStoreDB.currentTimeInterval === '15 minutes'){
+      } else if (fireStoreDB.currentTimeInterval === '15 minutes') {
         //
-      } 
-      else {
+      } else {
         console.log('un minuto intervalo')
         //comprobar que funciona
         startingHour = timeConverter(startingTime)
@@ -194,20 +192,18 @@ export const useDateStorage = defineStore('dateStorage', {
       let minutes = stoppingTime.getMinutes()
       let stoppingHour = ''
 
-      if (fireStoreDB.currentTimeInterval === '5 minutes'){
+      if (fireStoreDB.currentTimeInterval === '5 minutes') {
         stoppingHour = fiveMinutesInterval(hours, minutes)
-      } 
-      else if (fireStoreDB.currentTimeInterval === '15 minutes'){
+      } else if (fireStoreDB.currentTimeInterval === '15 minutes') {
         //
-      } 
-      else {
+      } else {
         //comprobar que funciona
         stoppingHour = timeConverter(stoppingTime)
       }
       const data = doc(db, `dates/${year}/${auth.currentUID}/${this.lastDocId}`)
       try {
         //Si el tiempo de crono es menor de 10 minutos, no se ejecuta la acción
-        if (this.currentCronoTimeMs < 600000){
+        if (this.currentCronoTimeMs < 600000) {
           await updateDoc(data, {
             stopping_time: this.currentLastTimeStartFormatted,
             stopping_ms: this.currentLastTimeStart,
@@ -220,7 +216,7 @@ export const useDateStorage = defineStore('dateStorage', {
           this.isStarted = false
           // NO ACTUALIZA EL CRONO
           console.log('tiempos actualizados')
-        }else {
+        } else {
           await updateDoc(data, {
             stopping_time: `${stoppingHour} h`,
             stopping_ms: +stoppingTime,

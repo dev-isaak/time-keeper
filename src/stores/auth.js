@@ -24,7 +24,7 @@ export const useAuthStore = defineStore('auth', {
       passwordUpdated: false,
       emailUpdated: false,
       accountDeleted: false,
-      reLogIn: false,
+      reLogIn: false
     }
   },
   getters: {
@@ -34,7 +34,7 @@ export const useAuthStore = defineStore('auth', {
     isPasswordUpdated: (state) => state.passwordUpdated,
     isEmailUpdated: (state) => state.emailUpdated,
     isAccountDeleted: (state) => state.accountDeleted,
-    needReLogIn: (state) => state.reLogIn,
+    needReLogIn: (state) => state.reLogIn
   },
   actions: {
     async userLogin(email, password) {
@@ -131,20 +131,17 @@ export const useAuthStore = defineStore('auth', {
           .then(() => {
             this.passwordUpdated = true
             this.reLogIn = false
-            
           })
           .catch((error) => {
-            if (error.code === 'auth/requires-recent-login'){
+            if (error.code === 'auth/requires-recent-login') {
               this.errorMessage = 'Need to re-login again'
               this.reLogIn = true
-            }
-            else if (error.code === 'auth/weak-password'){
+            } else if (error.code === 'auth/weak-password') {
               this.errorMessage = 'Password must be at least 6 characters'
               this.reLogIn = false
             }
             this.passwordUpdated = false
           })
-          
       } else {
         console.log('user session expired')
       }
@@ -156,27 +153,27 @@ export const useAuthStore = defineStore('auth', {
           this.message = 'Email sent.'
         })
         .catch((error) => {
-          if (error.code === 'auth/invalid-email'){
+          if (error.code === 'auth/invalid-email') {
             this.errorMessage = 'Email not found.'
           }
         })
-        return true
+      return true
     },
     async deleteAccount() {
-      if (this.currentUser != null){
+      if (this.currentUser != null) {
         await deleteUser(this.currentUser)
-        .then(() => {
-          this.accountDeleted = true
-          this.reLogIn = false
-        })
-        .catch((error) => {
-          console.log(error)
-          this.accountDeleted = false
-          if (error.code === 'auth/requires-recent-login'){
-            this.reLogIn = true
-          }
-          this.message = error
-        })
+          .then(() => {
+            this.accountDeleted = true
+            this.reLogIn = false
+          })
+          .catch((error) => {
+            console.log(error)
+            this.accountDeleted = false
+            if (error.code === 'auth/requires-recent-login') {
+              this.reLogIn = true
+            }
+            this.message = error
+          })
       }
     }
   },

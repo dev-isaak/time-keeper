@@ -11,18 +11,18 @@ export const useFirestoreDB = defineStore('firestoreDB', {
       userAddress: '',
       userPhone: '',
       userPhoto: '',
-      userBirthDate:'',
+      userBirthDate: '',
       timeInterval: '',
       userNameUpdated: false,
       userLastnameUpdated: false,
       userAddressUpdated: false,
       userPhoneUpdated: false,
-      userBirthDateUpdated: false,
+      userBirthDateUpdated: false
     }
   },
   getters: {
     currentUserName: (state) => {
-     return state.userName.charAt(0).toUpperCase() + state.userName.substring(1)
+      return state.userName.charAt(0).toUpperCase() + state.userName.substring(1)
     },
     currentUserLastname: (state) => {
       return state.userLastname.charAt(0).toUpperCase() + state.userLastname.substring(1)
@@ -45,7 +45,7 @@ export const useFirestoreDB = defineStore('firestoreDB', {
     //https://firebase.google.com/docs/firestore/quickstart#set_up_your_development_environment
     async getUserData() {
       const auth = useAuthStore()
-      
+
       const docRef = doc(db, 'users', auth.currentUID)
       const docSnap = await getDoc(docRef)
       if (docSnap.exists()) {
@@ -80,89 +80,88 @@ export const useFirestoreDB = defineStore('firestoreDB', {
     async updateUserName(userName) {
       const auth = useAuthStore()
       const data = doc(db, 'users', auth.currentUID)
-      try{
+      try {
         await updateDoc(data, {
           user_name: userName
         })
         this.userNameUpdated = true
         this.userName = userName
-      } catch (e){
+      } catch (e) {
         console.error(e)
       }
     },
     async updateUserLastname(lastName) {
       const auth = useAuthStore()
       const data = doc(db, 'users', auth.currentUID)
-      try{
+      try {
         await updateDoc(data, {
           user_lastname: lastName
         })
         this.userLastnameUpdated = true
         this.userLastname = lastName
-      } catch(e){
+      } catch (e) {
         console.error(e)
       }
     },
     async updateUserBirthDate(birthDate) {
       const auth = useAuthStore()
       const data = doc(db, 'users', auth.currentUID)
-      try{
+      try {
         await updateDoc(data, {
           user_birth_date: birthDate
         })
         this.userBirthDateUpdated = true
         this.userBirthDate = birthDate
-      } catch(e){
+      } catch (e) {
         console.error(e)
       }
     },
     async updateUserAddress(address) {
       const auth = useAuthStore()
       const data = doc(db, 'users', auth.currentUID)
-      try{
+      try {
         await updateDoc(data, {
           user_address: address
         })
         this.userAddressUpdated = true
         this.userAddress = address
-      } catch(e){
+      } catch (e) {
         console.error(e)
       }
     },
     async updateUserPhone(phone) {
       const auth = useAuthStore()
       const data = doc(db, 'users', auth.currentUID)
-      try{
+      try {
         await updateDoc(data, {
           user_phone: phone
         })
         this.userPhoneUpdated = true
         this.userPhone = phone
-      } catch(e){
+      } catch (e) {
         console.error(e)
       }
-
     },
-    async updateTimeInterval(selectedInterval){
+    async updateTimeInterval(selectedInterval) {
       const auth = useAuthStore()
       const data = doc(db, 'users', auth.currentUID)
-      try{
+      try {
         await updateDoc(data, {
           time_interval: selectedInterval
         })
         this.timeInterval = selectedInterval
-      } catch(e){
+      } catch (e) {
         console.error(e)
       }
     },
-    async deleteUserDB(){
+    async deleteUserDB() {
       const auth = useAuthStore()
-      try{
+      try {
         const res = await deleteDoc(doc(db, 'users', auth.currentUID))
-        if (res === undefined){
+        if (res === undefined) {
           return true
         }
-      } catch(e){
+      } catch (e) {
         console.error(e)
       }
     }

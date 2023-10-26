@@ -7,15 +7,13 @@ const dateStorage = useDateStorage()
 
 const weeklyHours = ref(0)
 
-onBeforeMount(async() => {
-	const date = new Date()
+onBeforeMount(async () => {
+  const date = new Date()
 
   await dateStorage.getWeeklyHours(date.getFullYear())
-// se calcula el porcentage sobre 40h = 144000000
-	weeklyHours.value = dateStorage.currentWeeklyHoursMs * 100 / 144000000
-
+  // se calcula el porcentage sobre 40h = 144000000
+  weeklyHours.value = (dateStorage.currentWeeklyHoursMs * 100) / 144000000
 })
-
 </script>
 
 <template>

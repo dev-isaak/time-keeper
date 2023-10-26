@@ -3,17 +3,17 @@
 </template>
 
 <script>
-import SvgIcon from '@jamescoyle/vue-icon';
-import { mdiMenu } from '@mdi/js';
+import SvgIcon from '@jamescoyle/vue-icon'
+import { mdiMenu } from '@mdi/js'
 
 export default {
-  name: "my-component",
+  name: 'my-component',
   components: {
     SvgIcon
   },
   data() {
     return {
-       path: mdiMenu,
+      path: mdiMenu
     }
   }
 }
