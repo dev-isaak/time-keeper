@@ -195,7 +195,7 @@ export const useDateStorage = defineStore('dateStorage', {
         stoppingHour = fiveMinutesInterval(hours, minutes)
         isfiveMinutesInterval = true
       } else if (fireStoreDB.currentTimeInterval === '15 minutes') {
-        //
+        //nothing
       } else {
         stoppingHour = oneMinuteInterval(hours, minutes)
       }
