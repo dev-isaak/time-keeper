@@ -15,7 +15,8 @@ import {
 import { db } from '@/main.js'
 import timeConverter from '@/utils/timeConverter.js'
 import timeConverterSeconds from '@/utils/timeConverterSeconds.js'
-import fiveMinutesInterval from '../utils/fiveMinutesInterval'
+import fiveMinutesInterval from '../utils/fiveMinutesInterval.js'
+import oneMinuteInterval from '@/utils/oneMinuteInterval.js'
 
 export const useDateStorage = defineStore('dateStorage', {
   state: () => {
@@ -160,9 +161,7 @@ export const useDateStorage = defineStore('dateStorage', {
       } else if (fireStoreDB.currentTimeInterval === '15 minutes') {
         //
       } else {
-        console.log('un minuto intervalo')
-        //comprobar que funciona
-        startingHour = `${startingTime.getHours()}:${startingTime.getMinutes()}`
+        startingHour = oneMinuteInterval(hours, minutes, start)
       }
 
       const ref = collection(db, 'dates', `/${year}`, auth.currentUID)
@@ -190,19 +189,20 @@ export const useDateStorage = defineStore('dateStorage', {
       let hours = stoppingTime.getHours()
       let minutes = stoppingTime.getMinutes()
       let stoppingHour = ''
+      let fiveMinutesInterval = false
 
       if (fireStoreDB.currentTimeInterval === '5 minutes') {
         stoppingHour = fiveMinutesInterval(hours, minutes)
+        fiveMinutesInterval = true
       } else if (fireStoreDB.currentTimeInterval === '15 minutes') {
         //
       } else {
-        //comprobar que funciona
-        stoppingHour = `${stoppingTime.getHours()}:${stoppingTime.getMinutes()}`
+        stoppingHour = oneMinuteInterval(hours, minutes)
       }
       const data = doc(db, `dates/${year}/${auth.currentUID}/${this.lastDocId}`)
       try {
         //Si el tiempo de crono es menor de 10 minutos, no se ejecuta la acción
-        if (this.currentCronoTimeMs < 600000) {
+        if (this.currentCronoTimeMs < 600000 && fiveMinutesInterval === true) {
           await updateDoc(data, {
             stopping_time: this.currentLastTimeStartFormatted,
             stopping_ms: this.currentLastTimeStart,
@@ -213,6 +213,7 @@ export const useDateStorage = defineStore('dateStorage', {
           clearInterval(this.cronoInterval)
           this.cronoTime = 0
           this.isStarted = false
+          fiveMinutesInterval = false
           // NO ACTUALIZA EL CRONO
           console.log('tiempos actualizados')
         } else {
