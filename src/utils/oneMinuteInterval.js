@@ -1,4 +1,4 @@
-function fiveMinutesInterval(hours, minutes, start) {
+function oneMinuteInterval(hours, minutes, start) {
   let newMinutes = minutes
   let newHours = hours
 
@@ -13,4 +13,4 @@ function fiveMinutesInterval(hours, minutes, start) {
   }
   }
 
-export default fiveMinutesInterval
+export default oneMinuteInterval

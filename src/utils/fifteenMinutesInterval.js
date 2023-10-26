@@ -5,8 +5,8 @@ function fiveMinutesInterval(hours, minutes, start) {
 
   if (start) {
     //When press button start
-    if (newMinutes > 55) {
-      // Si los minutos estan entre 56 y 59 estos se ponen a 0 y se suma 1 hora
+    if (newMinutes > 45) {
+      // Si los minutos estan entre 46 y 59 estos se ponen a 0 y se suma 1 hora
       newHours = newHours + 1
       newMinutes = 0
       if (newMinutes < 10) newMinutes = '0' + newMinutes

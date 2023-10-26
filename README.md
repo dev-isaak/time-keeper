@@ -1,13 +1,3 @@
-# TODOS
-
-FASE 1
-- Tests
-
-FASE 2
-- When a project is started after a stop, the counter does not start from 0
-- Statistics per project
--Tests
-
 # time-keeper
 
 This template should help get you started developing with Vue 3 in Vite.
