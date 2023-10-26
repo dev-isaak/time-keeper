@@ -213,7 +213,7 @@ export const useDateStorage = defineStore('dateStorage', {
           clearInterval(this.cronoInterval)
           this.cronoTime = 0
           this.isStarted = false
-          fiveMinutesInterval = false
+          this.fiveMinutesInterval = false
           // NO ACTUALIZA EL CRONO
           console.log('tiempos actualizados')
         } else {
