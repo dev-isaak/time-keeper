@@ -42,8 +42,8 @@ const handleStart = async () => {
   loadingStart.value = true
   let start = new Date()
   if (projectField.value !== '') {
-    await dateStorage.postDailyHours( projectField.value, notesField.value )
-    
+    await dateStorage.postDailyHours(projectField.value, notesField.value)
+
     await dateStorage.getDailyHours(start.getFullYear(), start.getMonth() + 1, start.getDate())
     loadingStart.value = false
     message.value = 'Journey started.'
@@ -72,11 +72,7 @@ const handleStop = async () => {
   const today = new Date()
 
   await dateStorage.postStoppingTime()
-  await dateStorage.getDailyHours(
-    today.getFullYear(),
-    today.getMonth() + 1,
-    today.getDate()
-  )
+  await dateStorage.getDailyHours(today.getFullYear(), today.getMonth() + 1, today.getDate())
   loadingStop.value = false
   message.value = 'Journey stoped.'
   openSnackbar.value = true
