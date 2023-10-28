@@ -21,6 +21,7 @@ const loadingStop = ref(false)
 const projectField = ref('')
 const notesField = ref('')
 const overlay = ref(false)
+
 const rules = {
   required: (value) => !!value || 'Field is required'
 }
@@ -155,7 +156,10 @@ const handleStop = async () => {
             >
             </v-textarea>
           </div>
-          <h2 v-else class="d-flex justify-center">nombre projecto</h2>
+          <h2 v-else class="d-flex justify-center">
+            {{ 'Project name here' }}
+            <!--Try to display active project name when crono is running-->
+          </h2>
 
           <v-container class="mb-8 pa-0 d-flex justify-center">
             <PrimaryButton
@@ -186,7 +190,8 @@ const handleStop = async () => {
       >
         {{ capitalizedProjectNames }}
         <v-sheet width="150">
-          <h3 class="text-primary">{{ capitalizeLetters(dailyHour.data.project) }}</h3>
+          <!--<h3 class="text-primary">{{ capitalizeLetters(dailyHour.data.project) }}</h3>-->
+          <!--Capitalize letters funcion is throwing error -->
           <p class="text-dark">
             {{ dailyHour.data.starting_time }} - {{ dailyHour.data.stopping_time || 'Running' }}
           </p>
