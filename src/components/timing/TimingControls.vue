@@ -69,12 +69,11 @@ const handleStart = async () => {
 
 const handleStop = async () => {
   loadingStop.value = true
-  let stopTime = new Date()
-  //Get total time in ms
-  const totalTime = stopTime - dateStorage.currentLastTimeStart
+  //const today = new Date()
 
   await dateStorage.postStoppingTime()
-  await dateStorage.getDailyHours(today.getFullYear(), today.getMonth() + 1, today.getDate())
+  await dateStorage.getDailyHours()
+
   loadingStop.value = false
   message.value = 'Journey stoped.'
   openSnackbar.value = true
@@ -166,8 +165,7 @@ const handleStop = async () => {
       >
         {{ capitalizedProjectNames }}
         <v-sheet width="150">
-          <!--<h3 class="text-primary">{{ capitalizeLetters(dailyHour.data.project) }}</h3>-->
-          <!--Capitalize letters funcion is throwing error -->
+          <h3 class="text-primary">{{ capitalizeLetters(dailyHour.data.project) }}</h3>
           <p class="text-dark">
             {{ dailyHour.data.starting_time + ' h' }} -
             {{

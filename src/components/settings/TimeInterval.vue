@@ -4,7 +4,7 @@ import ArrowDown from '../icons/ArrowDown.vue'
 import { ref, onBeforeMount } from 'vue'
 import { useFirestoreDB } from '../../stores/firestoreDB'
 import SnackBar from '../SnackBar.vue'
-import { useDateStorage } from '@/stores/dateStorage.js';
+import { useDateStorage } from '@/stores/dateStorage.js'
 
 const firestoreDB = useFirestoreDB()
 const dateStorage = useDateStorage()
@@ -50,7 +50,12 @@ const handleUpdateInterval = async () => {
       <PrimaryButton text="Update" :loading="loading" @click="handleUpdateInterval" />
     </v-container>
   </form>
-  <p v-if="selectedInterval === '5 minutes'">
-    Projects with less than 10 minutes won't be computed.
-  </p>
+
+  <!-- Display message for each interval selected-->
+
+  <div v-for="interval in intervals" :key="intervals[interval]">
+    <p v-if="interval === selectedInterval">
+      Projects with less than {{ interval }} won't be computed.
+    </p>
+  </div>
 </template>
