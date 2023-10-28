@@ -4,8 +4,11 @@ import ArrowDown from '../icons/ArrowDown.vue'
 import { ref, onBeforeMount } from 'vue'
 import { useFirestoreDB } from '../../stores/firestoreDB'
 import SnackBar from '../SnackBar.vue'
+import { useDateStorage } from '@/stores/dateStorage.js';
 
 const firestoreDB = useFirestoreDB()
+const dateStorage = useDateStorage()
+
 const intervals = ['1 minute', '5 minutes', '15 minutes']
 const selectedInterval = ref('')
 const message = ref('')
@@ -14,6 +17,7 @@ const errorMessage = ref(false)
 
 onBeforeMount(async () => {
   await firestoreDB.getUserData()
+  await dateStorage.getDailyHours()
   selectedInterval.value = firestoreDB.currentTimeInterval
 })
 
@@ -34,7 +38,9 @@ const handleUpdateInterval = async () => {
   <SnackBar :text="message" :openSnackbar="openSnackbar" :error="errorMessage ? true : false" />
   <h3>Select time interval</h3>
   <form class="mt-2">
+    <!-- If time is running, the button will be disabled -->
     <v-select
+      :disabled="dateStorage.timeIsRunning ? true : false"
       label="Select time interval"
       :items="intervals"
       :menu-icon="ArrowDown"

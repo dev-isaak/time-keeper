@@ -13,11 +13,7 @@ import {
   where
 } from 'firebase/firestore'
 import { db } from '@/main.js'
-import timeConverter from '@/utils/timeConverter.js'
 import timeConverterSeconds from '@/utils/timeConverterSeconds.js'
-import fiveMinutesInterval from '../utils/fiveMinutesInterval.js'
-import oneMinuteInterval from '@/utils/oneMinuteInterval.js'
-import totalHours from '@/utils/totalHours.js'
 import { DateConverter } from '@/utils/DateConverter'
 
 export const useDateStorage = defineStore('dateStorage', {
@@ -42,6 +38,7 @@ export const useDateStorage = defineStore('dateStorage', {
       cronoTime: 0,
       cronoInterval: 0,
       isfiveMinutesInterval: false,
+      isFifteenMinutesInterval: false,
     }
   },
   getters: {
@@ -85,7 +82,7 @@ export const useDateStorage = defineStore('dateStorage', {
           )
         )
         querySnap.forEach((doc) => {
-          if (doc.data().total_time_ms !== undefined) {
+          if (doc.data().total_time !== undefined) {
             this.todayProjects.push(doc.data())
             hoursArray.push(doc.data().total_time)
           }
@@ -143,9 +140,9 @@ export const useDateStorage = defineStore('dateStorage', {
       let startingHour = ''
       const startPressed = true
       if (fireStoreDB.currentTimeInterval === '5 minutes') {
-       startingHour = date.getFiveMinutesInterval(startPressed)
+        startingHour = date.getFiveMinutesInterval(startPressed)
       } else if (fireStoreDB.currentTimeInterval === '15 minutes') {
-        //
+        startingHour = date.getFifteenMinutesInterval(startPressed)
       } else {
         startingHour = date.getOneMinuteInterval()
       }
@@ -172,7 +169,7 @@ export const useDateStorage = defineStore('dateStorage', {
       const auth = useAuthStore()
       const fireStoreDB = useFirestoreDB()
       const date = new DateConverter()
-      // Hacemos la resta del start_time obtenido del server y le restamos la hora actual para obtener el total
+      // Do the rest from the start_time obtained from DB and rest the currently hour to obtain total hour
       let stoppingHours = date.currentHour
       let stoppingMinutes = date.currentMinutes
       let totalTime = ''
@@ -183,22 +180,22 @@ export const useDateStorage = defineStore('dateStorage', {
         totalTime = date.getDifferenceBetweenTwoHours(this.currentLastTimeStartFormatted, stoppingHour)
         this.isfiveMinutesInterval = true
       } else if (fireStoreDB.currentTimeInterval === '15 minutes') {
-        //nothing
+        stoppingHour = date.getFifteenMinutesInterval()
+        totalTime = date.getDifferenceBetweenTwoHours(this.currentLastTimeStartFormatted, stoppingHour)
+        this.isFifteenMinutesInterval = true
       } else {
         let stoppingTime = date.getCurrentTime()
         totalTime = date.getDifferenceBetweenTwoHours(this.currentLastTimeStartFormatted, stoppingTime)
-        console.log(totalTime)
         stoppingHour = totalTime
       }
       const data = doc(db, `dates/${date.currentYear}/${auth.currentUID}/${this.lastDocId}`)
       try {
-        //Si el tiempo de crono es menor de 10 minutos, no se ejecuta la acción
-        if (this.currentCronoTimeMs < 600000 && this.isfiveMinutesInterval === true) {
+        // If crono time is less than 10 minutes and the interval is set to 5 minutes, OR, crono time is less than 30 minutes and interval is set to 15 minutes, computed total time will be 0.
+        if ((this.currentCronoTimeMs < 600000 && this.isfiveMinutesInterval) || (this.currentCronoTimeMs < 1800000 && this.isFifteenMinutesInterval)) {
+          console.log('intervalo 15 minutos entra aquí')
           await updateDoc(data, {
             stopping_time: this.currentLastTimeStartFormatted,
-            //stopping_ms: this.currentLastTimeStart,
             total_time: '00:00',
-            total_time_ms: 0,
             is_started: false
           })
           clearInterval(this.cronoInterval)
@@ -206,24 +203,24 @@ export const useDateStorage = defineStore('dateStorage', {
           this.isStarted = false
           this.fiveMinutesInterval = false
         } 
-        else if(this.isfiveMinutesInterval === true){
+        // If interval time is set to 5 minutes and 10 minutes has passed, OR, interval time is set to 15 minutes and 30 minutes has passed
+        else if(this.isfiveMinutesInterval || this.isFifteenMinutesInterval){
           await updateDoc(data, {
             stopping_time: stoppingHour,
-            //stopping_ms: this.currentLastTimeStart,
             total_time: totalTime,
-            total_time_ms: 0,
             is_started: false
           })
           clearInterval(this.cronoInterval)
           this.cronoTime = 0
           this.isStarted = false
           this.fiveMinutesInterval = false
+          this.isFifteenMinutesInterval = false
         }
+        // When interval is set to 1 minute
         else {
           await updateDoc(data, {
             stopping_time: `${stoppingHours}:${stoppingMinutes}`,
             total_time: stoppingHour,
-            total_time_ms: totalTime,
             is_started: false
           })
           clearInterval(this.cronoInterval)
@@ -263,7 +260,7 @@ export const useDateStorage = defineStore('dateStorage', {
       try {
         const querySnap = await getDocs(queryDate)
         querySnap.forEach((doc) => {
-          if (doc.data().total_time_ms !== undefined) {
+          if (doc.data().total_time !== undefined) {
             hoursArray.push(doc.data().total_time)
           }
         })
@@ -287,7 +284,7 @@ export const useDateStorage = defineStore('dateStorage', {
       try {
         const querySnap = await getDocs(q)
         querySnap.forEach((doc) => {
-          if (doc.data().total_time_ms !== undefined) {
+          if (doc.data().total_time !== undefined) {
             hoursArray.push(doc.data().total_time)
           }
         })

@@ -37,25 +37,28 @@ onBeforeMount(async () => {
 
 const handleStart = async () => {
   loadingStart.value = true
-  if (projectField.value !== '') {
+  if (projectField.value !== '') {   
     await dateStorage.postDailyHours( projectField.value, notesField.value )
-    
     await dateStorage.getDailyHours()
+
     loadingStart.value = false
     message.value = 'Journey started.'
     openSnackbar.value = true
     projectField.value = null
     notesField.value = null
+
     setTimeout(() => {
       openSnackbar.value = false
     }, 3000)
 
     await dateStorage.getProjectCurrentTime()
+
   } else {
     errorMessage.value = true
     message.value = 'Select a project'
     openSnackbar.value = true
     projectField.value = ''
+
     setTimeout(() => {
       openSnackbar.value = false
     }, 3000)
@@ -68,14 +71,12 @@ const handleStop = async () => {
   const today = new Date()
 
   await dateStorage.postStoppingTime()
-  await dateStorage.getDailyHours(
-    today.getFullYear(),
-    today.getMonth() + 1,
-    today.getDate()
-  )
+  await dateStorage.getDailyHours()
+
   loadingStop.value = false
   message.value = 'Journey stoped.'
   openSnackbar.value = true
+  
   setTimeout(() => {
     openSnackbar.value = false
   }, 3000)
@@ -144,8 +145,8 @@ const handleStop = async () => {
           </p>
         </v-sheet>
         <v-sheet class="d-flex align-center">
-          <PrimaryButton icon class="mr-4" size="40" variant="plain" color="dark">
-            <MessageIcon v-if="dailyHour.data.notes" />
+          <PrimaryButton  v-if="dailyHour.data.notes" icon class="mr-4" size="40" variant="plain" color="dark">
+            <MessageIcon />
             <v-tooltip activator="parent" location="bottom">
               {{ dailyHour.data.notes }}
             </v-tooltip>

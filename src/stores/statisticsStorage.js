@@ -28,7 +28,7 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
         )
         const querySnap = await getDocs(getProjects)
         querySnap.forEach((doc) => {
-          if (doc.data().total_time_ms != undefined) {
+          if (doc.data().total_time != undefined) {
             hoursArray.push(doc.data().total_time)
           }
         })

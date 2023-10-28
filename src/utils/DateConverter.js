@@ -46,7 +46,7 @@ export class DateConverter{
   }
 
   getTotalHours(obtainedHours){
-    //Recives an array of hours: ['hh:mm', 'hh:mm']
+    //Recives an array of hours: ['hh:mm', 'hh:mm'] and return the total amount of hours
     let hours = []
     let minutes = []
     let sumHours = 0
@@ -76,7 +76,7 @@ export class DateConverter{
   }
 
   getDifferenceBetweenTwoHours(startingTime, stoppingHour){
-    //stopping date y startingTime reciven hh:mm
+    //recives hh:mm starting time and stopping time and return the total amount of time between those two hours
     
     let startHours = startingTime.charAt(0) + startingTime.charAt(1)
     let startMinutes = startingTime.charAt(3) + startingTime.charAt(4)
@@ -97,6 +97,7 @@ export class DateConverter{
   }
 
   getDoubleDigitFormat(minutesOrHour){
+    // If hour or minutes are 1 to 9, return doble digit, like 01, 02 and so on
     if (minutesOrHour < 10){
       return minutesOrHour = '0' + minutesOrHour
     } 
@@ -123,7 +124,7 @@ export class DateConverter{
     if (isButtonStartClicked) {
       //When press button start
       if (currentMinutes > 55) {
-        // Si los minutos estan entre 56 y 59 estos se ponen a 0 y se suma 1 hora
+        // If minutes are between 56 and 59, set minutes to 0 and add 1 hour
         currentHours = currentHours + 1
         currentMinutes = 0
         currentHours = this.getDoubleDigitFormat(currentHours)
@@ -134,20 +135,9 @@ export class DateConverter{
         if (result === 0) {
           return currentHours + ':' + currentMinutes
         } else {
-          switch (result) {
-            case 1:
-              currentMinutes += 4
-              break
-            case 2:
-              currentMinutes += 3
-              break
-            case 3:
-              currentMinutes += 2
-              break
-            case 4:
-              currentMinutes += 1
-              break
-          }
+          // To obtain the next 5 minutes chunk, rest 5 to the result of the rest division, and add the result to currentMinutes
+          currentMinutes = currentMinutes + (5 - result)
+
           currentHours = this.getDoubleDigitFormat(currentHours)
           currentMinutes = this.getDoubleDigitFormat(currentMinutes)
 
@@ -162,24 +152,13 @@ export class DateConverter{
 
         return currentHours + ':' + currentMinutes
       } else {
-        switch (result) {
-          case 1:
-            currentMinutes -= 1
-            break
-          case 2:
-            currentMinutes -= 2
-            break
-          case 3:
-            currentMinutes -= 3
-            break
-          case 4:
-            currentMinutes -= 4
-            break
-        }
-          currentHours = this.getDoubleDigitFormat(currentHours)
-          currentMinutes = this.getDoubleDigitFormat(currentMinutes)
-        
-          return currentHours + ':' + currentMinutes
+        // To obtain the previous 5 minutes chunk, rest the result of the rest division, to currentMinutes
+        currentMinutes = currentMinutes - result
+
+        currentHours = this.getDoubleDigitFormat(currentHours)
+        currentMinutes = this.getDoubleDigitFormat(currentMinutes)
+
+        return currentHours + ':' + currentMinutes
       }
     }
   }
@@ -192,7 +171,7 @@ export class DateConverter{
       if (isButtonStartClicked) {
         //When press button start
         if (currentMinutes > 45) {
-          // Si los minutos estan entre 56 y 59 estos se ponen a 0 y se suma 1 hora
+          // If minutes are between 46 and 59, set minutes to 0 and add 1 hour
           currentHours = currentHours + 1
           currentMinutes = 0
           currentHours = this.getDoubleDigitFormat(currentHours)
@@ -204,12 +183,28 @@ export class DateConverter{
           if (result === 0) {
             return currentHours + ':' + currentMinutes
           } else {
-           // logica para matchear el cuarto
+            // To obtain the next 15 minutes chunk, rest 15 to the result of the rest division, and add the result to currentMinutes
+            currentMinutes = currentMinutes + (15 - result)
             currentHours = this.getDoubleDigitFormat(currentHours)
             currentMinutes = this.getDoubleDigitFormat(currentMinutes)
   
             return currentHours + ':' + currentMinutes
           }
+        }
+      }else {
+        //When press button stop
+        if (result === 0) {
+          currentHours = this.getDoubleDigitFormat(currentHours)
+          currentMinutes = this.getDoubleDigitFormat(currentMinutes)
+  
+          return currentHours + ':' + currentMinutes
+        } else {
+          // To obtain the previous 15 minutes chunk, rest the result of the rest division, to currentMinutes
+          currentMinutes = currentMinutes - result
+          currentHours = this.getDoubleDigitFormat(currentHours)
+          currentMinutes = this.getDoubleDigitFormat(currentMinutes)
+          
+          return currentHours + ':' + currentMinutes
         }
       }
     } 
