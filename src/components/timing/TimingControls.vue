@@ -27,24 +27,20 @@ const rules = {
 
 onBeforeMount(async () => {
   overlay.value = true
-  projectsStorage.getProjects()
-  const currentDate = new Date()
-  await dateStorage.getDailyHours(
-    currentDate.getFullYear(),
-    currentDate.getMonth() + 1,
-    currentDate.getDate()
-  )
+
+  projectsStorage.getProjects()  
+  await dateStorage.getDailyHours()
   await dateStorage.getProjectCurrentTime()
+
   overlay.value = false
 })
 
 const handleStart = async () => {
   loadingStart.value = true
-  let start = new Date()
   if (projectField.value !== '') {
     await dateStorage.postDailyHours( projectField.value, notesField.value )
     
-    await dateStorage.getDailyHours(start.getFullYear(), start.getMonth() + 1, start.getDate())
+    await dateStorage.getDailyHours()
     loadingStart.value = false
     message.value = 'Journey started.'
     openSnackbar.value = true
@@ -144,7 +140,7 @@ const handleStop = async () => {
         <v-sheet width="150">
           <h3 class="text-primary">{{ capitalizeLetters(dailyHour.data.project) }}</h3>
           <p class="text-dark">
-            {{ dailyHour.data.starting_time }} - {{ dailyHour.data.stopping_time || 'Running' }}
+            {{ dailyHour.data.starting_time + ' h' }} - {{ dailyHour.data.stopping_time !== undefined ? dailyHour.data.stopping_time + ' h' : 'Running' }}
           </p>
         </v-sheet>
         <v-sheet class="d-flex align-center">
@@ -156,14 +152,14 @@ const handleStop = async () => {
           </PrimaryButton>
 
           <h4 class="text-end py-1 px-2 border-md rounded-lg text-primary">
-            {{ dailyHour.data.total_time || 'Running' }}
+            {{ dailyHour.data.total_time !== undefined ? dailyHour.data.total_time + ' h' : 'Running' }}
           </h4>
         </v-sheet>
       </v-sheet>
       <div class="d-flex justify-space-between align-center mt-2">
         <h3 class="text-start text-primary w-auto font-weight-black ma-2">Total time today</h3>
         <h4 class="bg-tertiary ma-2 pa-2 text-dark rounded-lg">
-          {{ dateStorage.currentTotalTimeToday }}
+          {{ dateStorage.currentTotalTimeToday }} h
         </h4>
       </div>
     </v-container>

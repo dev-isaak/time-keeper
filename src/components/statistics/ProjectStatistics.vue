@@ -35,7 +35,7 @@ const handleSearchProject = async () => {
     :menu-icon="ArrowDown"
   ></v-select>
   <div class="d-flex align-center">
-    <h3>{{ projectPercent ? `${statisticsStorage.currentTotalProjectsTimeMs}` : '' }}</h3>
+    <h3>{{ `${statisticsStorage.currentTotalProjectsTime}` }} h</h3>
     <v-progress-circular
       v-if="loadingProject"
       indeterminate

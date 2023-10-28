@@ -1,4 +1,5 @@
 const totalHours = (startingTime, stoppingDate) => {
+    console.log(startingTime, stoppingDate)
     //stopping date y startingTime reciven hh:mm
 
     const startHours = startingTime.charAt(0) + startingTime.charAt(1)
@@ -16,7 +17,7 @@ const totalHours = (startingTime, stoppingDate) => {
     if (totalHours < 10) totalHours = '0'+ totalHours
     if (totalMinutes < 10) totalMinutes = '0'+ totalMinutes
   
-    return `${totalHours}:${totalMinutes} h`
+    return `${totalHours}:${totalMinutes}`
 
 }
 
