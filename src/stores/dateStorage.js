@@ -13,11 +13,8 @@ import {
   where
 } from 'firebase/firestore'
 import { db } from '@/main.js'
-import timeConverter from '@/utils/timeConverter.js'
 import timeConverterSeconds from '@/utils/timeConverterSeconds.js'
-import fiveMinutesInterval from '../utils/fiveMinutesInterval.js'
-import oneMinuteInterval from '@/utils/oneMinuteInterval.js'
-import totalHours from '@/utils/totalHours.js'
+import { DateConverter } from '@/utils/DateConverter'
 
 export const useDateStorage = defineStore('dateStorage', {
   state: () => {
@@ -35,24 +32,13 @@ export const useDateStorage = defineStore('dateStorage', {
       lastTimeStartFormatted: '',
       totalTimeToday: 0,
       monthlyHours: 0,
-      januaryHours: 0,
-      februaryHours: 0,
-      marchHours: 0,
-      aprilHours: 0,
-      mayHours: 0,
-      juneHours: 0,
-      julyHours: 0,
-      augustHours: 0,
-      septemberHours: 0,
-      octoberHours: 0,
-      novemberHours: 0,
-      decemberHours: 0,
       weeklyHours: 0,
       todayProjects: [],
       allProjects: [],
       cronoTime: 0,
       cronoInterval: 0,
       isfiveMinutesInterval: false,
+      isFifteenMinutesInterval: false,
     }
   },
   getters: {
@@ -64,22 +50,10 @@ export const useDateStorage = defineStore('dateStorage', {
     currentCounter: (state) => parseInt(state.counter),
     currentDailyHoursList: (state) => state.dailyHoursList,
     currentLastTimeStart: (state) => state.lastTimeStart,
-    currentTotalTimeToday: (state) => timeConverter(state.totalTimeToday),
-    currentMonthlyHours: (state) => timeConverter(state.monthlyHours),
+    currentTotalTimeToday: (state) => state.totalTimeToday,
+    currentMonthlyHours: (state) => state.monthlyHours,
     currentMonthlyHoursMs: (state) => state.monthlyHours,
-    currentJanuaryHours: (state) => timeConverter(state.januaryHours),
-    currentFebruaryHours: (state) => timeConverter(state.februaryHours),
-    currentMarchHours: (state) => timeConverter(state.marchHours),
-    currentAprilHours: (state) => timeConverter(state.aprilHours),
-    currentMayHours: (state) => timeConverter(state.mayHours),
-    currentJuneHours: (state) => timeConverter(state.juneHours),
-    currentJulyHours: (state) => timeConverter(state.julyHours),
-    currentAugustHours: (state) => timeConverter(state.augustHours),
-    currentSeptemberHours: (state) => timeConverter(state.septemberHours),
-    currentOctoberHours: (state) => timeConverter(state.octoberHours),
-    currentNovemberHours: (state) => timeConverter(state.novemberHours),
-    currentDecemberHours: (state) => timeConverter(state.decemberHours),
-    currentWeeklyHours: (state) => timeConverter(state.weeklyHours),
+    currentWeeklyHours: (state) => state.weeklyHours,
     currentWeeklyHoursMs: (state) => state.weeklyHours,
     currentTodayProjects: (state) => state.todayProjects,
     currentAllProjects: (state) => state.allProjects,
@@ -88,9 +62,14 @@ export const useDateStorage = defineStore('dateStorage', {
     currentLastTimeStartFormatted: (state) => state.lastTimeStartFormatted,
   },
   actions: {
-    async getDailyHours(year, month, day) {
+    async getDailyHours() {
       const auth = useAuthStore()
+      const date = new DateConverter()
+      const year = date.currentYear
+      const month = date.currentMonth
+      const day = date.currentDay
 
+      let hoursArray = []
       try {
         this.dailyHoursList = []
         this.totalTimeToday = 0
@@ -103,16 +82,17 @@ export const useDateStorage = defineStore('dateStorage', {
           )
         )
         querySnap.forEach((doc) => {
-          if (doc.data().total_time_ms !== undefined) {
+          if (doc.data().total_time !== undefined) {
             this.todayProjects.push(doc.data())
-            this.totalTimeToday += doc.data().total_time_ms
+            hoursArray.push(doc.data().total_time)
           }
           this.dailyHoursList.push({
             id: doc.id,
             data: doc.data()
           })
         })
-
+        this.totalTimeToday = date.getTotalHours(hoursArray)
+        
         //order dailyHourList by date
         this.dailyHoursList.sort(function (a, b) {
           if (a.data.date > b.data.date) {
@@ -152,22 +132,19 @@ export const useDateStorage = defineStore('dateStorage', {
     },
     async postDailyHours(project, notes) {
       const auth = useAuthStore()
+      const date = new DateConverter()
       const fireStoreDB = useFirestoreDB()
-      const startingDate = new Date()
-      const startYear = startingDate.getFullYear()
-      const startMonth = startingDate.getMonth() +1
-      const startDay = startingDate.getDate()
-      const startHours = startingDate.getHours()
-      const startMinutes = startingDate.getMinutes()
+      const startYear = date.currentYear
+      const startMonth = date.currentMonth
+      const startDay = date.currentDay
       let startingHour = ''
-      //Convert date to hour format
       const startPressed = true
       if (fireStoreDB.currentTimeInterval === '5 minutes') {
-        startingHour = fiveMinutesInterval(startHours, startMinutes, startPressed)
+        startingHour = date.getFiveMinutesInterval(startPressed)
       } else if (fireStoreDB.currentTimeInterval === '15 minutes') {
-        //
+        startingHour = date.getFifteenMinutesInterval(startPressed)
       } else {
-        startingHour = oneMinuteInterval(startHours, startMinutes, startPressed)
+        startingHour = date.getOneMinuteInterval()
       }
 
       const ref = collection(db, 'dates', `/${startYear}`, auth.currentUID)
@@ -191,34 +168,34 @@ export const useDateStorage = defineStore('dateStorage', {
     async postStoppingTime() {
       const auth = useAuthStore()
       const fireStoreDB = useFirestoreDB()
-      const today = new Date()
-      // Hacemos la resta del start_time obtenido del server y le restamos la hora actual para obtener el total
-      let stoppingHours = today.getHours()
-      let stoppingMinutes = today.getMinutes()
+      const date = new DateConverter()
+      // Do the rest from the start_time obtained from DB and rest the currently hour to obtain total hour
+      let stoppingHours = date.currentHour
+      let stoppingMinutes = date.currentMinutes
       let totalTime = ''
       let stoppingHour = ''
 
       if (fireStoreDB.currentTimeInterval === '5 minutes') {
-        stoppingHour = fiveMinutesInterval(stoppingHours, stoppingMinutes)
-        totalTime = totalHours(this.currentLastTimeStartFormatted, stoppingHour)
+        stoppingHour = date.getFiveMinutesInterval()
+        totalTime = date.getDifferenceBetweenTwoHours(this.currentLastTimeStartFormatted, stoppingHour)
         this.isfiveMinutesInterval = true
       } else if (fireStoreDB.currentTimeInterval === '15 minutes') {
-        //nothing
+        stoppingHour = date.getFifteenMinutesInterval()
+        totalTime = date.getDifferenceBetweenTwoHours(this.currentLastTimeStartFormatted, stoppingHour)
+        this.isFifteenMinutesInterval = true
       } else {
-        totalTime = totalHours(this.currentLastTimeStartFormatted, `${today.getHours()}:${today.getMinutes()}`)
+        let stoppingTime = date.getCurrentTime()
+        totalTime = date.getDifferenceBetweenTwoHours(this.currentLastTimeStartFormatted, stoppingTime)
         stoppingHour = totalTime
-        if (stoppingHours < 10) stoppingHours = '0' + stoppingHours
-        if (stoppingMinutes < 10) stoppingMinutes = '0' + stoppingMinutes
       }
-      const data = doc(db, `dates/${today.getFullYear()}/${auth.currentUID}/${this.lastDocId}`)
+      const data = doc(db, `dates/${date.currentYear}/${auth.currentUID}/${this.lastDocId}`)
       try {
-        //Si el tiempo de crono es menor de 10 minutos, no se ejecuta la acción
-        if (this.currentCronoTimeMs < 600000 && this.isfiveMinutesInterval === true) {
+        // If crono time is less than 10 minutes and the interval is set to 5 minutes, OR, crono time is less than 30 minutes and interval is set to 15 minutes, computed total time will be 0.
+        if ((this.currentCronoTimeMs < 600000 && this.isfiveMinutesInterval) || (this.currentCronoTimeMs < 1800000 && this.isFifteenMinutesInterval)) {
+          console.log('intervalo 15 minutos entra aquí')
           await updateDoc(data, {
             stopping_time: this.currentLastTimeStartFormatted,
-            //stopping_ms: this.currentLastTimeStart,
-            total_time: timeConverter(0),
-            total_time_ms: 0,
+            total_time: '00:00',
             is_started: false
           })
           clearInterval(this.cronoInterval)
@@ -226,24 +203,24 @@ export const useDateStorage = defineStore('dateStorage', {
           this.isStarted = false
           this.fiveMinutesInterval = false
         } 
-        else if(this.isfiveMinutesInterval === true){
+        // If interval time is set to 5 minutes and 10 minutes has passed, OR, interval time is set to 15 minutes and 30 minutes has passed
+        else if(this.isfiveMinutesInterval || this.isFifteenMinutesInterval){
           await updateDoc(data, {
             stopping_time: stoppingHour,
-            //stopping_ms: this.currentLastTimeStart,
             total_time: totalTime,
-            total_time_ms: 0,
             is_started: false
           })
           clearInterval(this.cronoInterval)
           this.cronoTime = 0
           this.isStarted = false
           this.fiveMinutesInterval = false
+          this.isFifteenMinutesInterval = false
         }
+        // When interval is set to 1 minute
         else {
           await updateDoc(data, {
             stopping_time: `${stoppingHours}:${stoppingMinutes}`,
             total_time: stoppingHour,
-            total_time_ms: totalTime,
             is_started: false
           })
           clearInterval(this.cronoInterval)
@@ -254,55 +231,51 @@ export const useDateStorage = defineStore('dateStorage', {
         console.error(e)
       }
     },
-    async getWeeklyHours(year) {
+    async getWeeklyHours() {
       const auth = useAuthStore()
+      const date = new DateConverter()
+      const weekDay = date.getWeekStatistics()[0]
+      const dayCounter = date.getWeekStatistics()[1]
+      let hoursArray = []
+
       this.weeklyHours = 0
-      // obtengo número de la semana
-      let date = new Date()
-      let today = date.getDate()
-      let weekDate = date.getDay()
-      let restWeekDate = weekDate
       let queryDate = ''
-      let dayCounter = 0
-      // si date es 0 (domingo) lo cambiamos a 7
-      if (weekDate === 0) {
-        weekDate = 7
-      }
-      // el número obtenido lo resto hasta que sea cero. Por cada resta, sumo uno a un contador
-      // para obtener el número de días que tengo que obtener
-      while (restWeekDate > 1) {
-        restWeekDate -= 1
-        dayCounter += 1
-      }
-      // Si es lunes solo hacemos una query con el día de hoy
-      if (weekDate === 1) {
+      
+      // If it's Monday, only query for the current day
+      if (weekDay === 1) {
         queryDate = query(
-          collection(db, `dates/${year}/${auth.currentUID}`),
-          where('day', '==', today)
+          collection(db, `dates/${date.currentYear}/${auth.currentUID}`),
+          where('day', '==', date.currentDay)
         )
       }
-      // Si es otro día de la semana hacemos la query entre dos días
+      // If it is not Monday, query between two days
       else {
-        let sinceDay = today - dayCounter
+        let sinceDay = date.currentDay - dayCounter
         queryDate = query(
-          collection(db, `dates/${year}/${auth.currentUID}`),
+          collection(db, `dates/${date.currentYear}/${auth.currentUID}`),
           where('day', '>=', sinceDay),
-          where('day', '<=', today)
+          where('day', '<=', date.currentDay)
         )
       }
       try {
         const querySnap = await getDocs(queryDate)
         querySnap.forEach((doc) => {
-          if (doc.data().total_time_ms !== undefined) {
-            this.weeklyHours += doc.data().total_time_ms
+          if (doc.data().total_time !== undefined) {
+            hoursArray.push(doc.data().total_time)
           }
         })
+        this.weeklyHours = date.getTotalHours(hoursArray)
       } catch (e) {
         console.error(e)
       }
     },
-    async getCurrentMonthlyHours(year, month) {
+    async getCurrentMonthHours() {
       const auth = useAuthStore()
+      const date = new DateConverter()
+      const year = date.currentYear
+      const month = date.currentMonth
+      let hoursArray = []
+
       const q = query(
         collection(db, `dates/${year}/${auth.currentUID}`),
         where('month', '==', month)
@@ -311,47 +284,11 @@ export const useDateStorage = defineStore('dateStorage', {
       try {
         const querySnap = await getDocs(q)
         querySnap.forEach((doc) => {
-          if (doc.data().total_time_ms !== undefined) {
-            this.monthlyHours += doc.data().total_time_ms
+          if (doc.data().total_time !== undefined) {
+            hoursArray.push(doc.data().total_time)
           }
         })
-      } catch (e) {
-        console.error(e)
-      }
-    },
-    async getYearMonthlyHours(year) {
-      const auth = useAuthStore()
-      const q = collection(db, `dates/${year}/${auth.currentUID}`)
-
-      try {
-        const querySnap = await getDocs(q)
-        querySnap.forEach((doc) => {
-          if (doc.data().month === 1) {
-            this.januaryHours += doc.data().total_time_ms
-          } else if (doc.data().month === 2) {
-            this.februaryHours += doc.data().total_time_ms
-          } else if (doc.data().month === 3) {
-            this.marchHoursHours += doc.data().total_time_ms
-          } else if (doc.data().month === 4) {
-            this.aprilHours += doc.data().total_time_ms
-          } else if (doc.data().month === 5) {
-            this.mayHours += doc.data().total_time_ms
-          } else if (doc.data().month === 6) {
-            this.juneHours += doc.data().total_time_ms
-          } else if (doc.data().month === 7) {
-            this.julyHours += doc.data().total_time_ms
-          } else if (doc.data().month === 8) {
-            this.augustHours += doc.data().total_time_ms
-          } else if (doc.data().month === 9) {
-            this.septemberHours += doc.data().total_time_ms
-          } else if (doc.data().month === 10) {
-            this.octoberHours += doc.data().total_time_ms
-          } else if (doc.data().month === 11) {
-            this.novemberHours += doc.data().total_time_ms
-          } else if (doc.data().month === 12) {
-            this.decemberHours += doc.data().total_time_ms
-          }
-        })
+        this.monthlyHours = date.getTotalHours(hoursArray)
       } catch (e) {
         console.error(e)
       }
