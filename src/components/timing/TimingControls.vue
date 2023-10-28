@@ -112,7 +112,7 @@ const handleStop = async () => {
       <v-container class="w-100 pa-0 d-flex flex-column align-center">
         <v-sheet class="w-100 d-flex flex-column justify-space-around ma-0" max-width="400">
           <div v-if="!dateStorage.timeIsRunning">
-            <h3 class="text-h5 mb-5">Project</h3>
+            <h3 class="mb-5">Project</h3>
             <div class="d-flex">
               <v-select
                 v-if="projectsStorage.currentCustomerProjects.length >= 1"
@@ -134,16 +134,13 @@ const handleStop = async () => {
                 Add new Project</v-btn
               >
               <!--This button only appears when there are projects in existence-->
-              <v-btn
+              <PrimaryButton
                 v-if="projectsStorage.currentCustomerProjects.length != 0"
                 size="x-small"
+                text="+"
                 class="mb-8 ml-5 mt-5"
-                color="primary"
-                variant="outlined"
                 :to="{ name: 'projects' }"
-              >
-                New
-              </v-btn>
+              />
             </div>
 
             <h3>Notes</h3>
@@ -156,10 +153,6 @@ const handleStop = async () => {
             >
             </v-textarea>
           </div>
-          <h2 v-else class="d-flex justify-center">
-            {{ 'Project name here' }}
-            <!--Try to display active project name when crono is running-->
-          </h2>
 
           <v-container class="mb-8 pa-0 d-flex justify-center">
             <PrimaryButton
