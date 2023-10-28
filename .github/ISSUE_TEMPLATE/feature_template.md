@@ -1,7 +1,7 @@
 ---
 name: New Feature
 about: New Feature
-title: '[New Feature] <title>
+title: '[New Feature] <title>'
 assignees: ''
 
 ---
