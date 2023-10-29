@@ -117,7 +117,7 @@ const handleStop = async () => {
               v-if="!dateStorage.timeIsRunning"
               text="Start"
               @click="handleStart"
-              class="w-50 rounded-xl"
+              class="w-100 rounded-xl"
               :loading="loadingStart"
               color="success"
             >
@@ -127,7 +127,7 @@ const handleStop = async () => {
               <span class="pa-2 mb-6 text-blue-grey-darken-1 text-h4 font-weight-black">{{
                 dateStorage.currentCronoTime
               }}</span>
-              <PrimaryButton text="Stop" @click="handleStop" class="w-50 rounded-xl" :loading="loadingStop" color="error">
+              <PrimaryButton text="Stop" @click="handleStop" class="w-100 rounded-xl" :loading="loadingStop" color="error">
                 <StopIcon />
               </PrimaryButton>
             </v-sheet>
@@ -170,7 +170,7 @@ const handleStop = async () => {
       </v-sheet>
       <div class="d-flex justify-space-between align-center mt-2">
         <h3 class="text-start text-primary w-auto font-weight-black ma-2">Total time today</h3>
-        <h4 class="ma-2 pa-2 border rounded-sm text-dark rounded-lg">
+        <h4 class="ma-2 pa-2 rounded-sm text-white bg-primary rounded-lg">
           {{ dateStorage.currentTotalTimeToday }} h
         </h4>
       </div>
