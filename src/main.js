@@ -45,6 +45,12 @@ const vuetify = createVuetify({
     },
     VList: {
       color: 'primary'
+    },
+    WeeklyHoursChart: {
+      backgroundColor: '#718696'
+    },
+    ProjectHoursChart: {
+      backgroundColor: '#718696'
     }
   }
 })
