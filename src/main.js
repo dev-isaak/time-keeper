@@ -26,8 +26,8 @@ const vuetify = createVuetify({
           secondary: '#718696',
           tertiary: '#EBB463',
           dark: '#333333',
-          success: '#C1EB63',
-          error: '#EB5550'
+          success: '#82DD55',
+          error: '#E23636'
         }
       }
     }

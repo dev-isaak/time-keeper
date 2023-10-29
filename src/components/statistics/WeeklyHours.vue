@@ -12,6 +12,7 @@ onBeforeMount(async () => {
   await dateStorage.getWeeklyHours()
   // se calcula el porcentage sobre 40h = 144000000
   // hay que recalcular esto puesto que ahora recivimos hh:mm
+  // convertir hh a milisegundos y mm a milisegundos, después sumarlo para obtener el valor total de ms
   weeklyHours.value = (dateStorage.currentWeeklyHoursMs * 100) / 144000000
 })
 </script>

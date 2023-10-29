@@ -33,15 +33,17 @@ export class DateConverter{
     let counterWeekDay = this.currentWeekDay
     let weekDate = this.currentWeekDay
     let dayCounter = 0
-    // If date is equal to 0 (Sunday) change it to 7. (Mon = 1, Tue = 2, Thu = 3....)
+    // If date is equal to 0 (Sunday) change it to 7. (Mon = 1, Tue = 2, Thu = 3...., Sun = 7)
     if (weekDate === 0) {
       weekDate = 7
+      counterWeekDay = 7
     }
     // rest currentWeekDay until is equal to 0. For each rest, sum 1 to dayCounter to obtain the total number that we'll need to obtain from DB
     while (counterWeekDay > 1) {
       counterWeekDay -= 1
       dayCounter += 1
     }
+    
     return [weekDate, dayCounter]
   }
 
