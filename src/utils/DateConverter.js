@@ -209,5 +209,16 @@ export class DateConverter{
           return currentHours + ':' + currentMinutes
         }
       }
-    } 
+    }
+    
+    getMilliseconds(hour){
+      //Recives an hh:mm and converts it to ms
+      let hours = hour.charAt(0) + hour.charAt(1)
+      let minutes = hour.charAt(3) + hour.charAt(4)
+
+      const hoursInMs = hours * 3600000
+      const minutesInMs = minutes * 60000
+      
+      return hoursInMs + minutesInMs
+    }
 }

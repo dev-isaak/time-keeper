@@ -239,7 +239,6 @@ export const useDateStorage = defineStore('dateStorage', {
       let hoursArray = []
       let sinceDay = 0
 
-      console.log(weekDay, dayCounter)
       this.weeklyHours = 0
       let queryDate = ''
       
@@ -253,7 +252,6 @@ export const useDateStorage = defineStore('dateStorage', {
       // If it is not Monday, query between two days
       else {
         sinceDay = date.currentDay - dayCounter
-        console.log(sinceDay) // OK
         queryDate = query(
           collection(db, `dates/${date.currentYear}/${auth.currentUID}`),
           where('day', '>=', sinceDay),
