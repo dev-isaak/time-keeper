@@ -1,4 +1,4 @@
-export class DateConverter{
+export class DateConverter {
 
   currentDay;
   currentMonth;
@@ -17,6 +17,13 @@ export class DateConverter{
     this.currentHour = date.getHours()
     this.currentMinutes = date.getMinutes()
 
+  }
+
+  getWeekDay(){
+    if (this.currentWeekDay === 0) {
+      return this.currentWeekDay = 7
+    }
+    return this.currentWeekDay
   }
 
   getCurrentDate(){

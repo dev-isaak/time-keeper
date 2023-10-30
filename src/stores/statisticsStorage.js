@@ -57,7 +57,9 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
           if (doc.data().total_time != undefined) {
             this.projectList.push({
               project_name: doc.data().project,
-              total_time: doc.data().total_time
+              total_time: doc.data().total_time,
+              day: doc.data().day,
+              month: doc.data().month
             })
           }
         })
@@ -84,6 +86,20 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
             })
           }
         })
+      } catch(e){
+        console.error(e)
+      }
+    },
+    async getHoursPerWeekDay(){
+      try{
+        // obtener el día de la semana actual
+        const dateConvert = new DateConverter()
+        console.log(dateConvert.getWeekDay())
+        console.log(dateConvert.currentDay)
+        // En el array de projectos, buscar todos los projectos:
+        // si es lunes, solo buscar el mismo día
+        // si es otro día de la semana, buscar todos los días que comprenden entre el currentDay - weekDay
+        console.log(this.projectList)
       } catch(e){
         console.error(e)
       }
