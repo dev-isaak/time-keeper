@@ -1,11 +1,10 @@
 <template>
   <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
-  {{ statisticsStorage.currentProjectTotalTimeList }}
 </template>
 
 <script setup>
 import { Bar } from 'vue-chartjs'
-import { onBeforeMount, computed } from 'vue'
+import { onMounted, computed } from 'vue';
 import { useDefaults } from 'vuetify'
 import { useStatisticsStorage } from '@/stores/statisticsStorage.js'
 import { useDateStorage } from '@/stores/dateStorage.js'
@@ -21,39 +20,36 @@ import {
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-const statisticsStorage = useStatisticsStorage()
-const dateStorage = useDateStorage()
+const statisticsStorage = useStatisticsStorage(),
+      dateStorage = useDateStorage(),
+      _props = defineProps({
+                backgroundColor: String,
+              }),
+      props = useDefaults(_props, 'ProjectHoursChart')
 
-const _props = defineProps({
-  backgroundColor: String,
+const chartData = computed(() => {
+  const data = statisticsStorage.projectTotalTimeList
+
+  const datasets = [{
+    label: 'hours',
+    backgroundColor: props.backgroundColor, 
+    data: data.map(item => item.total_hours), // Get an array of total hours
+  }]
+
+  return {
+    labels: data.map(item => item.project_name), // Get an array of names
+    datasets,
+  }
 })
 
-let projectsHoursList = [20, 40, 10]
-
-const props = useDefaults(_props, 'ProjectHoursChart')
-
-
-const chartData = computed( () => {
-  return {
-    // --------------------------------- ?????????????????????
-    // https://www.chartjs.org/docs/latest/general/data-structures.html
-    datasets: [
-      { 
-        data: [{
-          'statisticsStorage.currentProjectTotalTimeList.project_name': statisticsStorage.currentProjectTotalTimeList.total_time,
-        }],
-        backgroundColor: props.backgroundColor
-      },
-    ]
-  }
-}
-)
 const chartOptions = {
   responsive: true,
+  // maintainAspectRatio: false,
+  aspectRatio: 1,
   // indexAxis: 'y',
 }
 
-onBeforeMount(async() => {
-  await statisticsStorage.getAllProjectsTotalHours(dateStorage.currentAllProjects)
+onMounted(async() => {
+  await statisticsStorage.getAllProjectsTotalHours()
 })
 </script>

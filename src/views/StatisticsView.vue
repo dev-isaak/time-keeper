@@ -3,7 +3,7 @@ import MainTemplate from '@/templates/MainTemplate.vue'
 import MonthlyHours from '@/components/statistics/MonthlyHours.vue'
 import WeeklyHours from '@/components/statistics/WeeklyHours.vue'
 import ProjectStatistics from '@/components/statistics/ProjectStatistics.vue'
-import WeeklyHoursChart from '@/components/statistics/charts/WeeklyHoursChart.vue'
+// import WeeklyHoursChart from '@/components/statistics/charts/WeeklyHoursChart.vue'
 import ProjectHoursChart from '@/components/statistics/charts/ProjectHoursChart.vue'
 </script>
 
@@ -19,9 +19,10 @@ import ProjectHoursChart from '@/components/statistics/charts/ProjectHoursChart.
         </v-col>
       </v-row>
     </v-container>
-    <v-container>
+    <!-- <v-container>
       <WeeklyHoursChart />
-    </v-container>
+    </v-container> -->
+    <h2>Total hours per project</h2>
     <v-container>
       <ProjectHoursChart />
     </v-container>

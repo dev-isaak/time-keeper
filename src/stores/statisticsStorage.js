@@ -21,16 +21,17 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
   },
   actions: {
     async getHoursPerProject(project) {
-      const dateConvert = new DateConverter()
+      const auth = useAuthStore(),
+            dateConvert = new DateConverter()
       this.totalProjectsTime = 0
       let hoursArray = []
-      const auth = useAuthStore()
+
       try {
         const getProjects = query(
-          collection(db, `dates/2023/${auth.currentUID}`),
-          where('project', '==', project.toUpperCase())
-        )
+          collection(db, `dates/2023/${auth.currentUID}`), 
+          where('project', '==', project.toUpperCase()))
         const querySnap = await getDocs(getProjects)
+
         querySnap.forEach((doc) => {
           if (doc.data().total_time != undefined) {
             hoursArray.push(doc.data().total_time)
@@ -44,13 +45,14 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
       }
     },
     async getAllProjectsTotalHours(){
-      const auth = useAuthStore()
-      const dateConvert = new DateConverter()
-      const projectsListTest = [ 'WEB DEVELOPMENT', 'TEST',]
-      let lista = []
+      const auth = useAuthStore(),
+            dateConvert = new DateConverter()
+      let projectNames = []
+      
       try{
-        const getProjects = query(collection(db, `dates/2023/${auth.currentUID}`))
-        const querySnap = await getDocs(getProjects)
+        const getProjects = query(collection(db, `dates/2023/${auth.currentUID}`)),
+              querySnap = await getDocs(getProjects)
+
         querySnap.forEach((doc) => {
           if (doc.data().total_time != undefined) {
             this.projectList.push({
@@ -59,37 +61,29 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
             })
           }
         })
-
-        // --------------------------------------
-
-        //Por cada projecto del array, crear un nuevo array con nombre de ese proyecto y horas totales
-        
-        projectsListTest.map(item => {
-          
-          this.currentProjectList.reduce((accumulator, current) => {
-            // coger el total time parseado en ms del current y añadirlo en accumulator
-            if (current.project_name === item){
-              // El acumulador equivale a lo que contiene mas el valor actual
-              const hourToMs = dateConvert.getMilliseconds(current.total_time)
-              return  parseInt(accumulator) + parseInt(hourToMs)
-            }
-  
-            if (lista.project_name != current.project_name){
-              lista.push({
-                project_name: current.project_name,
-                total_hours: accumulator
-              })
-            }
-            
-            return accumulator
-          }, 0)
-
+        // Get a new array of project names        
+        this.projectList.map(project => {
+          if (!projectNames.includes(project.project_name)){
+            projectNames.push(project.project_name)
+          }
         })
-          
+        // Get a new array of each project total times in float format hours
+        projectNames.forEach(item => {
+          const totalHours = this.currentProjectList.reduce((accumulator, current) => {
+            if (current.project_name === item) {
+              const toDecimalHours = dateConvert.getMilliseconds(current.total_time) / 3600000
+              return accumulator + toDecimalHours
+            }
+            return accumulator;
+          }, 0)
         
-        console.log(lista)
-        
-        // --------------------------------------
+          if (totalHours > 0) {
+            this.projectTotalTimeList.push({
+              project_name: item,
+              total_hours: totalHours
+            })
+          }
+        })
       } catch(e){
         console.error(e)
       }
