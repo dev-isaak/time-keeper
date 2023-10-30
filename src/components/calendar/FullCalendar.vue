@@ -34,6 +34,7 @@ onBeforeMount(async () => {
     })
   })
   overlay.value = false
+  //console.log(dateStorage.currentAllProjects)
 })
 const handleEventClick = (info) => {
   eventOverlay.value = true
@@ -43,9 +44,24 @@ const handleEventClick = (info) => {
   eventTotal.value = info.event.extendedProps.total_time
   eventNotes.value = info.event.extendedProps.notes
 }
+
+const handleDayClick = (info) => {
+  alert(info.dateStr)
+}
+
+const handleSelect = (info) => {
+  alert(`${info.startStr} to ${info.endStr}`)
+}
+
 const calendarOptions = {
   plugins: [dayGridPlugin, interactionPlugin],
   initialView: 'dayGridMonth',
+  headerToolbar: {
+    left: 'prev,next',
+    center: 'title',
+    right: 'dayGridWeek,dayGridMonth' // user can switch between the two
+  },
+  selectable: true,
   firstDay: 1,
   dayMaxEventRows: true,
   views: {
@@ -55,8 +71,11 @@ const calendarOptions = {
   },
   //weekNumbers: true,
   eventClick: handleEventClick,
-  events: calendarEvents.value
+  events: calendarEvents.value,
+  // dateClick: handleDayClick,
+  select: handleSelect
 }
+
 </script>
 <template>
   <v-overlay :model-value="overlay" class="align-center justify-center">
@@ -93,6 +112,9 @@ const calendarOptions = {
           <p>{{ eventNotes }}</p>
         </v-sheet>
       </div>
+      <div class="mt-2">
+        <h4>Add Km</h4>
+      </div>
       <div class="text-center mt-4">
         <PrimaryButton text="Close" @click="eventOverlay = !eventOverlay" />
       </div>
@@ -105,7 +127,7 @@ const calendarOptions = {
   --fc-border-color: rgba(69, 90, 100, 0.3);
   --fc-neutral-text-color: #808080;
   --fc-today-bg-color: #cfd8dc;
-  --fc-highlight-color: red;
+  --fc-highlight-color: #cfd8dc;
 }
 .fc-theme-standard,
 .fc-scrollgrid {
