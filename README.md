@@ -15,7 +15,7 @@ As of now, Time Keeper is in a web version with plans to create a mobile version
 If you like this project, you are welcome to contribute!
 
 
-## Coding styles
+## Coding style guide
 https://github.com/rwaldron/idiomatic.js/tree/master/translations/es_ES
 
 
