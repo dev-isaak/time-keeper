@@ -6,11 +6,9 @@ import SnackBar from '../SnackBar.vue'
 import { ref, onBeforeMount } from 'vue'
 import { useDateStorage } from '@/stores/dateStorage.js'
 import MessageIcon from '@/components/icons/MessageIcon.vue'
-import { useProjectsStorage } from '@/stores/projectsStorage'
+import { useProjectsStorage } from '../../stores/projectsStorage'
 import capitalizeLetters from '@/utils/capitalizeLetters.js'
-import ArrowDown from '@/components/icons/ArrowDown.vue'
-import RayEndArrow from '@/components/icons/RayEndArrow.vue'
-import RayStartArrow from '@/components/icons/RayStartArrow.vue'
+import ArrowDown from '../icons/ArrowDown.vue'
 
 const dateStorage = useDateStorage()
 const projectsStorage = useProjectsStorage()
@@ -23,6 +21,7 @@ const loadingStop = ref(false)
 const projectField = ref('')
 const notesField = ref('')
 const overlay = ref(false)
+
 const rules = {
   required: (value) => !!value || 'Field is required'
 }
@@ -41,13 +40,8 @@ const handleStart = async () => {
   loadingStart.value = true
   if (projectField.value !== '') {
     await dateStorage.postDailyHours(projectField.value, notesField.value)
-    await dateStorage.getDailyHours()
 
-    loadingStart.value = false
-    message.value = 'Journey started.'
-    openSnackbar.value = true
-    projectField.value = null
-    notesField.value = null
+    await dateStorage.getDailyHours()
 
     setTimeout(() => {
       openSnackbar.value = false
@@ -91,9 +85,9 @@ const handleStop = async () => {
   <div v-if="overlay === false">
     <v-container>
       <v-container class="w-100 pa-0 d-flex flex-column align-center">
-        <v-sheet class="w-100 d-flex flex-column justify-space-around ma-0" max-width="400">
-          <div v-if="!dateStorage.timeIsRunning">
-            <h3>Project</h3>
+        <v-sheet class="w-100 ma-0" max-width="400">
+          <div class="d-flex flex-column" v-if="!dateStorage.timeIsRunning">
+            <h3 class="mb-5">Project</h3>
             <v-select
               v-if="projectsStorage.currentCustomerProjects.length >= 1"
               label="Select Project"
@@ -102,22 +96,41 @@ const handleStop = async () => {
               :menu-icon="ArrowDown"
               :rules="[rules.required]"
             ></v-select>
-            <p v-else>
-              <v-btn class="ma-0 pa-0" variant="plain" color="black" :to="{ name: 'projects' }"
-                >Add a new project</v-btn
-              >
-            </p>
+
+            <!--Button appears when no projects exist-->
+            <PrimaryButton
+              v-else
+              class="mb-5 w-50"
+              color="tertiary"
+              text="Add new Project"
+              :to="{ name: 'projects' }"
+            ></PrimaryButton>
+            <!--This button only appears when there are projects in existence-->
+            <PrimaryButton
+              v-if="projectsStorage.currentCustomerProjects.length != 0"
+              text="new project"
+              class="mb-5 w-50"
+              :to="{ name: 'projects' }"
+            />
+
             <h3>Notes</h3>
-            <v-textarea label="Write some notes" class="w-100" v-model="notesField"></v-textarea>
+            <v-textarea
+              rows="2"
+              auto-grow="true"
+              label="Write some notes"
+              class="w-100"
+              v-model="notesField"
+            >
+            </v-textarea>
           </div>
+
           <v-container class="mb-8 pa-0 d-flex justify-center">
             <PrimaryButton
               v-if="!dateStorage.timeIsRunning"
               text="Start"
               @click="handleStart"
-              class="w-100 rounded-xl"
+              class="w-50"
               :loading="loadingStart"
-              color="success"
             >
               <StartIcon />
             </PrimaryButton>
@@ -125,13 +138,7 @@ const handleStop = async () => {
               <span class="pa-2 mb-6 text-blue-grey-darken-1 text-h4 font-weight-black">{{
                 dateStorage.currentCronoTime
               }}</span>
-              <PrimaryButton
-                text="Stop"
-                @click="handleStop"
-                class="w-100 rounded-xl"
-                :loading="loadingStop"
-                color="error"
-              >
+              <PrimaryButton text="Stop" @click="handleStop" class="w-50" :loading="loadingStop">
                 <StopIcon />
               </PrimaryButton>
             </v-sheet>
@@ -142,56 +149,45 @@ const handleStop = async () => {
         v-if="dateStorage.currentDailyHoursList.length >= 1"
         v-for="dailyHour in dateStorage.currentDailyHoursList"
         :key="dailyHour.id"
-        class="d-flex flex-column w-100 border-b pa-2"
+        class="d-flex align-center justify-space-between w-100 border-b pa-2"
       >
         {{ capitalizedProjectNames }}
-        <v-sheet>
+        <v-sheet width="150">
           <h3 class="text-primary">{{ capitalizeLetters(dailyHour.data.project) }}</h3>
+          <p class="text-dark">
+            {{ dailyHour.data.starting_time + ' h' }} -
+            {{
+              dailyHour.data.stopping_time !== undefined
+                ? dailyHour.data.stopping_time + ' h'
+                : 'Running'
+            }}
+          </p>
         </v-sheet>
-        <v-sheet class="d-flex justify-space-between align-center">
-          <div>
-            <div class="d-flex align-center">
-              <RayStartArrow class="text-success" />
-              <p class="text-dark ml-4">{{ dailyHour.data.starting_time + ' h' }}</p>
-            </div>
-            <div class="d-flex align-center">
-              <RayEndArrow class="text-error" />
-              <p class="text-dark ml-4">
-                {{
-                  dailyHour.data.stopping_time !== undefined
-                    ? dailyHour.data.stopping_time + ' h'
-                    : 'Running'
-                }}
-              </p>
-            </div>
-          </div>
-          <div class="d-flex">
-            <PrimaryButton
-              v-if="dailyHour.data.notes"
-              icon
-              class="mr-4"
-              size="40"
-              variant="plain"
-              color="dark"
-            >
-              <MessageIcon />
-              <v-tooltip activator="parent" location="bottom">
-                {{ dailyHour.data.notes }}
-              </v-tooltip>
-            </PrimaryButton>
-            <h4 class="text-end py-1 px-2 text-primary">
-              {{
-                dailyHour.data.total_time !== undefined
-                  ? dailyHour.data.total_time + ' h'
-                  : 'Running'
-              }}
-            </h4>
-          </div>
+        <v-sheet class="d-flex align-center">
+          <PrimaryButton
+            v-if="dailyHour.data.notes"
+            icon
+            class="mr-4"
+            size="40"
+            variant="plain"
+            color="dark"
+          >
+            <MessageIcon />
+            <v-tooltip activator="parent" location="bottom">
+              {{ dailyHour.data.notes }}
+            </v-tooltip>
+          </PrimaryButton>
+
+          <h4 class="text-end py-1 px-2 border-md rounded-lg text-primary">
+            {{
+              dailyHour.data.total_time !== undefined ? dailyHour.data.total_time + ' h' : 'Running'
+            }}
+          </h4>
         </v-sheet>
       </v-sheet>
       <div class="d-flex justify-space-between align-center mt-2">
         <h3 class="text-start text-primary w-auto font-weight-black ma-2">Total time today</h3>
-        <h4 class="ma-2 pa-2 rounded-sm text-white bg-primary rounded-lg">
+        <h4 class="bg-tertiary ma-2 pa-2 text-dark rounded-lg">
           {{ dateStorage.currentTotalTimeToday }} h
         </h4>
       </div>
