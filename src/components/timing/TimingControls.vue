@@ -100,7 +100,7 @@ const handleStop = async () => {
             <!--Button appears when no projects exist-->
             <PrimaryButton
               v-else
-              class="mb-5 w-50"
+              class="mb-5 w-50 align-self-center"
               color="tertiary"
               text="Add new Project"
               :to="{ name: 'projects' }"
@@ -109,7 +109,7 @@ const handleStop = async () => {
             <PrimaryButton
               v-if="projectsStorage.currentCustomerProjects.length != 0"
               text="new project"
-              class="mb-5 w-50"
+              class="mb-5 w-50 align-self-center"
               :to="{ name: 'projects' }"
             />
 
