@@ -10,7 +10,7 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
       projectList: [],
       totalProjectsTime: 0,
       totalProjectsTimeMs: 0,
-      projectTotalTimeList: []
+      projectTotalTimeList: [],
     }
   },
   getters: {
@@ -45,8 +45,9 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
     },
     async getAllProjectsTotalHours(){
       const auth = useAuthStore()
-      // projectTotalTimeList = []
-
+      const dateConvert = new DateConverter()
+      const projectsListTest = [ 'WEB DEVELOPMENT', 'TEST',]
+      let lista = []
       try{
         const getProjects = query(collection(db, `dates/2023/${auth.currentUID}`))
         const querySnap = await getDocs(getProjects)
@@ -60,28 +61,34 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
         })
 
         // --------------------------------------
+
+        //Por cada projecto del array, crear un nuevo array con nombre de ese proyecto y horas totales
         
-        const result = this.projectList.reduce((acc, current) => {
-          const existingProject = acc.find(item => item.project_name === current.project_name)
+        projectsListTest.map(item => {
+          
+          this.currentProjectList.reduce((accumulator, current) => {
+            // coger el total time parseado en ms del current y añadirlo en accumulator
+            if (current.project_name === item){
+              // El acumulador equivale a lo que contiene mas el valor actual
+              const hourToMs = dateConvert.getMilliseconds(current.total_time)
+              return  parseInt(accumulator) + parseInt(hourToMs)
+            }
+  
+            if (lista.project_name != current.project_name){
+              lista.push({
+                project_name: current.project_name,
+                total_hours: accumulator
+              })
+            }
+            
+            return accumulator
+          }, 0)
+
+        })
+          
         
-          if (existingProject) {
-            existingProject.total_time = addTimes(existingProject.total_time, current.total_time)
-          } else {
-            acc.push({ "project_name": current.project_name, "total_time": current.total_time })
-          }
+        console.log(lista)
         
-          return acc
-        }, [])
-        
-        function addTimes(time1, time2) {
-          const [hours1, minutes1] = time1.split(":").map(Number)
-          const [hours2, minutes2] = time2.split(":").map(Number)
-          let totalHours = hours1 + hours2
-          let totalMinutes = minutes1 + minutes2
-        
-          return `${String(totalHours).padStart(2, "0")}:${String(totalMinutes).padStart(2, "0")}`
-        }
-        this.projectTotalTimeList = result
         // --------------------------------------
       } catch(e){
         console.error(e)

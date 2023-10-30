@@ -5,11 +5,10 @@
 
 <script setup>
 import { Bar } from 'vue-chartjs'
-import { useProjectsStorage } from '@/stores/projectsStorage'
-import { onBeforeMount, computed, ref } from 'vue'
+import { onBeforeMount, computed } from 'vue'
 import { useDefaults } from 'vuetify'
 import { useStatisticsStorage } from '@/stores/statisticsStorage.js'
-import {DateConverter} from '@/utils/DateConverter.js'
+import { useDateStorage } from '@/stores/dateStorage.js'
 import {
   Chart as ChartJS,
   Title,
@@ -22,8 +21,8 @@ import {
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-const projectsStorage = useProjectsStorage()
 const statisticsStorage = useStatisticsStorage()
+const dateStorage = useDateStorage()
 
 const _props = defineProps({
   backgroundColor: String,
@@ -55,6 +54,6 @@ const chartOptions = {
 }
 
 onBeforeMount(async() => {
-  await statisticsStorage.getAllProjectsTotalHours()
+  await statisticsStorage.getAllProjectsTotalHours(dateStorage.currentAllProjects)
 })
 </script>

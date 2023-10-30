@@ -70,7 +70,6 @@ const handleStart = async () => {
 
 const handleStop = async () => {
   loadingStop.value = true
-  const today = new Date()
 
   await dateStorage.postStoppingTime()
   await dateStorage.getDailyHours()
