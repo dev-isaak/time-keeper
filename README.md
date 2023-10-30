@@ -1,58 +1,21 @@
-# time-keeper
-- test protection main 2
+# Time Keeper
 
-This template should help get you started developing with Vue 3 in Vite.
+## What is Time Keeper?
+Time Keeper aims to be an application suitable for both personal and business use.
 
-## Recommended IDE Setup
+On one hand, users with a personal account can clock in the hours worked on a specific project and generate reports that detail the total hours worked on each project, per month, per week, overtime hours, and more.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+On the other hand, users with a business account can perform the same actions as those with personal accounts, with the added ability to interact with their company to request vacations, days off, submit justifications, and so on.
 
-## Customize configuration
+The company's admin user can view all their employees, monitor their clock-ins for the day, track the hours they work, and interact with them for tasks such as approving vacation requests, among other things.
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+So far, Time Keeper is builded in a web version with plans to create a mobile version in the future.
 
-## Project Setup
+## Do you want to contribute?
+If you like this project, you are welcome to contribute!
 
-```sh
-npm install
-```
 
-### Compile and Hot-Reload for Development
+## Coding style guide
+https://github.com/rwaldron/idiomatic.js/tree/master/translations/es_ES
 
-```sh
-npm run dev
-```
 
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Headed Component Tests with [Cypress Component Testing](https://on.cypress.io/component)
-
-```sh
-npm run test:unit:dev # or `npm run test:unit` for headless testing
-```
-
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-
-```sh
-npm run test:e2e:dev
-```
-
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
-
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
-npm run build
-npm run test:e2e
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
