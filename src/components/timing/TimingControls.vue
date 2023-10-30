@@ -38,16 +38,10 @@ onBeforeMount(async () => {
 
 const handleStart = async () => {
   loadingStart.value = true
-  let start = new Date()
   if (projectField.value !== '') {
     await dateStorage.postDailyHours(projectField.value, notesField.value)
 
-    await dateStorage.getDailyHours(start.getFullYear(), start.getMonth() + 1, start.getDate())
-    loadingStart.value = false
-    message.value = 'Journey started.'
-    openSnackbar.value = true
-    projectField.value = null
-    notesField.value = null
+    await dateStorage.getDailyHours()
 
     setTimeout(() => {
       openSnackbar.value = false
@@ -69,7 +63,6 @@ const handleStart = async () => {
 
 const handleStop = async () => {
   loadingStop.value = true
-  //const today = new Date()
 
   await dateStorage.postStoppingTime()
   await dateStorage.getDailyHours()
@@ -92,38 +85,33 @@ const handleStop = async () => {
   <div v-if="overlay === false">
     <v-container>
       <v-container class="w-100 pa-0 d-flex flex-column align-center">
-        <v-sheet class="w-100 d-flex flex-column justify-space-around ma-0" max-width="400">
-          <div v-if="!dateStorage.timeIsRunning">
+        <v-sheet class="w-100 ma-0" max-width="400">
+          <div class="d-flex flex-column" v-if="!dateStorage.timeIsRunning">
             <h3 class="mb-5">Project</h3>
-            <div class="d-flex">
-              <v-select
-                v-if="projectsStorage.currentCustomerProjects.length >= 1"
-                label="Select Project"
-                :items="projectsStorage.currentCustomerProjects"
-                v-model="projectField"
-                :menu-icon="ArrowDown"
-                :rules="[rules.required]"
-              ></v-select>
+            <v-select
+              v-if="projectsStorage.currentCustomerProjects.length >= 1"
+              label="Select Project"
+              :items="projectsStorage.currentCustomerProjects"
+              v-model="projectField"
+              :menu-icon="ArrowDown"
+              :rules="[rules.required]"
+            ></v-select>
 
-              <!--Button appears when no projects exist-->
-              <v-btn
-                v-else
-                class="mb-5"
-                color="primary"
-                variant="outlined"
-                :to="{ name: 'projects' }"
-              >
-                Add new Project</v-btn
-              >
-              <!--This button only appears when there are projects in existence-->
-              <PrimaryButton
-                v-if="projectsStorage.currentCustomerProjects.length != 0"
-                size="x-small"
-                text="+"
-                class="mb-8 ml-5 mt-5"
-                :to="{ name: 'projects' }"
-              />
-            </div>
+            <!--Button appears when no projects exist-->
+            <PrimaryButton
+              v-else
+              class="mb-5 w-50 align-self-center"
+              color="tertiary"
+              text="Add new Project"
+              :to="{ name: 'projects' }"
+            ></PrimaryButton>
+            <!--This button only appears when there are projects in existence-->
+            <PrimaryButton
+              v-if="projectsStorage.currentCustomerProjects.length != 0"
+              text="new project"
+              class="mb-5 w-50 align-self-center"
+              :to="{ name: 'projects' }"
+            />
 
             <h3>Notes</h3>
             <v-textarea
