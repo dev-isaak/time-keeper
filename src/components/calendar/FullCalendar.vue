@@ -50,7 +50,7 @@ const calendarOptions = {
   dayMaxEventRows: true,
   views: {
     timeGrid: {
-      dayMaxEventRows: 3
+      dayMaxEventRows: 2
     }
   },
   //weekNumbers: true,

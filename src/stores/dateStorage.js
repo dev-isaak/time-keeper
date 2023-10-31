@@ -39,6 +39,13 @@ export const useDateStorage = defineStore('dateStorage', {
       cronoInterval: 0,
       isfiveMinutesInterval: false,
       isFifteenMinutesInterval: false,
+      mondayTotalHours: 0,
+      tuesdayTotalHours: 0,
+      wednesdayTotalHours: 0,
+      thursdayTotalHours: 0,
+      fridayTotalHours: 0,      
+      saturdayTotalHours: 0,
+      sundayTotalHours: 0,
     }
   },
   getters: {
@@ -60,6 +67,13 @@ export const useDateStorage = defineStore('dateStorage', {
     currentCronoTime: (state) => timeConverterSeconds(state.cronoTime),
     currentCronoTimeMs: (state) => state.cronoTime,
     currentLastTimeStartFormatted: (state) => state.lastTimeStartFormatted,
+    currentMondayTotalHours: (state) => state.mondayTotalHours,
+    currentTuesdayTotalHours: (state) => state.tuesdayTotalHours,
+    currentWednesdayTotalHours: (state) => state.wednesdayTotalHours,
+    currentThursdayTotalHours: (state) => state.thursdayTotalHours,
+    currentFridayTotalHours: (state) => state.fridayTotalHours,
+    currentSaturdayTotalHours: (state) => state.saturdayTotalHours,
+    currentSundayTotalHours: (state) => state.sundayTotalHours
   },
   actions: {
     async getDailyHours() {
@@ -237,6 +251,7 @@ export const useDateStorage = defineStore('dateStorage', {
       const weekDay = date.getWeekStatistics()[0]
       const dayCounter = date.getWeekStatistics()[1]
       let hoursArray = []
+      let sinceDay = 0
 
       this.weeklyHours = 0
       let queryDate = ''
@@ -250,7 +265,7 @@ export const useDateStorage = defineStore('dateStorage', {
       }
       // If it is not Monday, query between two days
       else {
-        let sinceDay = date.currentDay - dayCounter
+        sinceDay = date.currentDay - dayCounter
         queryDate = query(
           collection(db, `dates/${date.currentYear}/${auth.currentUID}`),
           where('day', '>=', sinceDay),
@@ -261,7 +276,9 @@ export const useDateStorage = defineStore('dateStorage', {
         const querySnap = await getDocs(queryDate)
         querySnap.forEach((doc) => {
           if (doc.data().total_time !== undefined) {
+            //Obtain week total hours
             hoursArray.push(doc.data().total_time)
+            //Obtain week day total hours
           }
         })
         this.weeklyHours = date.getTotalHours(hoursArray)

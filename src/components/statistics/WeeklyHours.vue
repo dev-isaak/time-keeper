@@ -2,17 +2,18 @@
 import { ref } from 'vue'
 import { onBeforeMount } from 'vue'
 import { useDateStorage } from '@/stores/dateStorage.js'
-
+import {DateConverter} from '@/utils/DateConverter.js'
 const dateStorage = useDateStorage()
 
 const weeklyHours = ref(0)
 
 onBeforeMount(async () => {
-
+  const dateConvert = new DateConverter()
   await dateStorage.getWeeklyHours()
-  // se calcula el porcentage sobre 40h = 144000000
-  // hay que recalcular esto puesto que ahora recivimos hh:mm
-  weeklyHours.value = (dateStorage.currentWeeklyHoursMs * 100) / 144000000
+  // Get hour in ms
+  const hourInMs = dateConvert.getMilliseconds(dateStorage.currentWeeklyHours)
+  // Then do the percentatge to 40h
+  weeklyHours.value = hourInMs / 144000000 * 100
 })
 </script>
 

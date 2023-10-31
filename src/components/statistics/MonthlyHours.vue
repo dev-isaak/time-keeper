@@ -1,6 +1,7 @@
 <script setup>
 import { onBeforeMount } from 'vue'
 import { useDateStorage } from '@/stores/dateStorage.js'
+import {DateConverter} from '@/utils/DateConverter.js'
 import { ref } from 'vue'
 
 const dateStorage = useDateStorage()
@@ -10,12 +11,12 @@ const monthlyHours = ref(0)
 
 onBeforeMount(async () => {
   overlay.value = true
-  const date = new Date()
+  const dateConvert = new DateConverter()
 
   await dateStorage.getCurrentMonthHours()
-
+  const hoursInMs =  dateConvert.getMilliseconds(dateStorage.currentMonthlyHoursMs)
   // se calcula el porcentage sobre 160h = 576000000
-  monthlyHours.value = (dateStorage.currentMonthlyHoursMs * 100) / 576000000
+  monthlyHours.value = hoursInMs / 576000000 * 100
 
   overlay.value = false
 })
