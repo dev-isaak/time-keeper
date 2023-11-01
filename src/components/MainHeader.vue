@@ -5,6 +5,6 @@ defineProps({
 </script>
 
 <template>
-  <h1>{{ title }}</h1>
+  <h1 class="text-primary">{{ title }}</h1>
   <v-divider v-if="title"></v-divider>
 </template>

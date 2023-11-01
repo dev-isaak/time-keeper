@@ -8,14 +8,15 @@ const _props = defineProps({
   loadingState: Boolean,
   variant: String,
   icon: Boolean,
-  styles: String
+  styles: String,
+  elevation: String,
 })
 
 const props = useDefaults(_props, 'PrimaryButton')
 </script>
 
 <template>
-  <v-btn :style="props.styles" :variant="variant" :color="props.color" :loading="loadingState">
+  <v-btn :style="props.styles" :variant="variant" :color="props.color" :loading="loadingState" :elevation='props.elevation'>
     {{ text }}
     <v-icon v-if="icon">
       <slot></slot>

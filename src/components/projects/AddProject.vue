@@ -65,13 +65,12 @@ const handleDeleteProject = async (projectName) => {
       </form>
     </v-sheet>
   </v-container>
-  <v-container class="d-flex flex-column align-center">
+  <v-container class="d-flex flex-column mt-2 px-2 py-0 align-center bg-gray">
     <v-sheet
       v-for="(project, index) in projectStorage.currentCustomerProjects"
       :key="index"
       class="d-flex align-center justify-space-between px-2 py-1 my-2 w-100"
-      max-width="350"
-      elevation="1"
+      elevation="0"
     >
       <h3 class="ml-4">{{ capitalizeLetters(project) }}</h3>
       <PrimaryButton variant="text" color="error" icon>

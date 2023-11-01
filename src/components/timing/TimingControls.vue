@@ -89,7 +89,7 @@ const handleStop = async () => {
       <v-container class="w-100 pa-0 d-flex flex-column align-center">
         <v-sheet class="w-100 ma-0" max-width="400">
           <div class="d-flex flex-column" v-if="!dateStorage.timeIsRunning">
-            <h3 class="mb-5">Project</h3>
+            <h3 class="mb-2">Project</h3>
             <div
               :class="
                 !projectsStorage.currentCustomerProjects.length
@@ -106,7 +106,7 @@ const handleStop = async () => {
                 :rules="[rules.required]"
               ></v-select>
 
-              <!--Button appears when no projects exist-->
+              <!-- Button appears when no projects exist -->
               <PrimaryButton
                 v-else
                 class="mb-5 w-50 align-self-center"
@@ -114,18 +114,17 @@ const handleStop = async () => {
                 text="Add new Project"
                 :to="{ name: 'projects' }"
               ></PrimaryButton>
-              <!--This button only appears when there are projects in existence-->
+              <!-- This button only appears when there are projects in existence -->
               <PrimaryButton
                 v-if="projectsStorage.currentCustomerProjects.length !== 0"
                 text="+"
                 size="x-small"
-                color="secondary"
                 class="ml-4 mt-5"
                 :to="{ name: 'projects' }"
               />
             </div>
 
-            <h3>Notes</h3>
+            <h3 class="mb-2">Notes</h3>
             <v-textarea
               rows="2"
               auto-grow="true"
@@ -141,7 +140,7 @@ const handleStop = async () => {
               v-if="!dateStorage.timeIsRunning"
               text="Start"
               @click="handleStart"
-              class="w-100 rounded-xl"
+              class="w-100 rounded-xl p-0 mt-2"
               :loading="loadingStart"
               color="success"
             >
@@ -168,13 +167,13 @@ const handleStop = async () => {
         v-if="dateStorage.currentDailyHoursList.length >= 1"
         v-for="dailyHour in dateStorage.currentDailyHoursList"
         :key="dailyHour.id"
-        class="d-flex flex-column w-100 border-b pa-2"
+        class="d-flex flex-column w-100 border-b pa-2 bg-gray"
       >
         {{ capitalizedProjectNames }}
-        <v-sheet>
+        <v-sheet class="bg-transparent">
           <h3 class="text-primary">{{ capitalizeLetters(dailyHour.data.project) }}</h3>
         </v-sheet>
-        <v-sheet class="d-flex justify-space-between align-center">
+        <v-sheet class="d-flex justify-space-between align-center ml-2 bg-transparent">
           <div>
             <div class="d-flex align-center">
               <RayStartArrow class="text-success" />
@@ -205,7 +204,7 @@ const handleStop = async () => {
                 {{ dailyHour.data.notes }}
               </v-tooltip>
             </PrimaryButton>
-            <h4 class="text-end py-1 px-2 text-primary">
+            <h4 class="align-self-center text-end py-1 px-2 text-primary">
               {{
                 dailyHour.data.total_time !== undefined
                   ? dailyHour.data.total_time + ' h'
@@ -216,7 +215,7 @@ const handleStop = async () => {
         </v-sheet>
       </v-sheet>
       <div class="d-flex justify-space-between align-center mt-2">
-        <h3 class="text-start text-primary w-auto font-weight-black ma-2">Total time today</h3>
+        <h3 class="text-start text-primary w-auto  ma-2">Total time today</h3>
         <h4 class="ma-2 pa-2 rounded-sm text-white bg-primary rounded-lg">
           {{ dateStorage.currentTotalTimeToday }} h
         </h4>

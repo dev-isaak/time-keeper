@@ -11,6 +11,7 @@ import EmailIcon from '@/components/icons/EmailIcon.vue'
 import LockIcon from '@/components/icons/LockIcon.vue'
 import { useFirestoreDB } from '@/stores/firestoreDB.js'
 import SnackBar from '../SnackBar.vue'
+import MainHeader from '@/components/MainHeader.vue';
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -69,8 +70,8 @@ const handleRegister = async () => {
   <SnackBar :text="message" :openSnackbar="openSnackbar" :error="errorMessage ? true : false" />
   <MainTemplate>
     <v-container class="w-100 d-flex flex-column">
-      <h1>Register</h1>
-      <v-card class="my-6 pa-6">
+      <MainHeader title="Register"/>
+      <v-sheet class="my-6 pa-0">
         <form>
           <v-text-field class="mx-2" label="Email" v-model="email" :rules="[rules.required]">
             <template v-slot:prepend-inner>
@@ -125,7 +126,7 @@ const handleRegister = async () => {
             <PrimaryButton text="Register" @click="handleRegister" :loading="isLoading" />
           </v-container>
         </form>
-      </v-card>
+      </v-sheet>
     </v-container>
   </MainTemplate>
 </template>
