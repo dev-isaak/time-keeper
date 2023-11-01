@@ -90,30 +90,40 @@ const handleStop = async () => {
         <v-sheet class="w-100 ma-0" max-width="400">
           <div class="d-flex flex-column" v-if="!dateStorage.timeIsRunning">
             <h3 class="mb-5">Project</h3>
-            <v-select
-              v-if="projectsStorage.currentCustomerProjects.length >= 1"
-              label="Select Project"
-              :items="projectsStorage.currentCustomerProjects"
-              v-model="projectField"
-              :menu-icon="ArrowDown"
-              :rules="[rules.required]"
-            ></v-select>
+            <div
+              :class="
+                !projectsStorage.currentCustomerProjects.length
+                  ? 'd-flex flex-column'
+                  : 'd-flex flex-row '
+              "
+            >
+              <v-select
+                v-if="projectsStorage.currentCustomerProjects.length >= 1"
+                label="Select Project"
+                :items="projectsStorage.currentCustomerProjects"
+                v-model="projectField"
+                :menu-icon="ArrowDown"
+                :rules="[rules.required]"
+              ></v-select>
 
-            <!--Button appears when no projects exist-->
-            <PrimaryButton
-              v-else
-              class="mb-5 w-50 align-self-center"
-              color="tertiary"
-              text="Add new Project"
-              :to="{ name: 'projects' }"
-            ></PrimaryButton>
-            <!--This button only appears when there are projects in existence-->
-            <PrimaryButton
-              v-if="projectsStorage.currentCustomerProjects.length != 0"
-              text="new project"
-              class="mb-5 w-50 align-self-center"
-              :to="{ name: 'projects' }"
-            />
+              <!--Button appears when no projects exist-->
+              <PrimaryButton
+                v-else
+                class="mb-5 w-50 align-self-center"
+                color="secondary"
+                text="Add new Project"
+                :to="{ name: 'projects' }"
+              ></PrimaryButton>
+              <!--This button only appears when there are projects in existence-->
+              <PrimaryButton
+                v-if="projectsStorage.currentCustomerProjects.length !== 0"
+                text="+"
+                size="x-small"
+                color="secondary"
+                class="ml-4 mt-5"
+                :to="{ name: 'projects' }"
+              />
+            </div>
 
             <h3>Notes</h3>
             <v-textarea

@@ -128,12 +128,7 @@ const calendarOptions = {
   display: flex;
   justify-content: end;
 }
-/**if screen with is less than 600px add margin to motht title */
-@media (max-width: 600px) {
-  .fc-toolbar-title {
-    margin-right: 0.5em !important;
-  }
-}
+
 .fc-view-harness {
   max-width: 100%;
   height: 430px !important;
