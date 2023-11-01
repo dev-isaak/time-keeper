@@ -74,8 +74,8 @@ const handleDeleteProject = async (projectName) => {
       elevation="1"
     >
       <h3 class="ml-4">{{ capitalizeLetters(project) }}</h3>
-      <PrimaryButton variant="plain" icon>
-        <DeleteButton @click="() => handleDeleteProject(project)" />
+      <PrimaryButton variant="text" color="error" icon>
+        <DeleteButton color="error" @click="() => handleDeleteProject(project)" />
       </PrimaryButton>
     </v-sheet>
   </v-container>
