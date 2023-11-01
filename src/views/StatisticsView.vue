@@ -4,7 +4,6 @@ import MonthlyHours from '@/components/statistics/MonthlyHours.vue'
 import WeeklyHours from '@/components/statistics/WeeklyHours.vue'
 import WeeklyHoursChart from '@/components/statistics/charts/WeeklyHoursChart.vue'
 import ProjectHoursChart from '@/components/statistics/charts/ProjectHoursChart.vue'
-// import { useDisplay } from 'vuetify'
 </script>
 
 <template>

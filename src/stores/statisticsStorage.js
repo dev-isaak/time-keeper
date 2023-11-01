@@ -11,13 +11,15 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
       totalProjectsTime: 0,
       totalProjectsTimeMs: 0,
       projectTotalTimeList: [],
+      projectsFilteredByWeekDay: [],
     }
   },
   getters: {
     currentProjectList: (state) => state.projectList,
     currentTotalProjectsTime: (state) => state.totalProjectsTime,
     currentTotalProjectsTimeMs: (state) => state.totalProjectsTimeMs,
-    currentProjectTotalTimeList: (state) => state.projectTotalTimeList
+    currentProjectTotalTimeList: (state) => state.projectTotalTimeList,
+    currentProjectsFilteredByWeekDay: (state) => state.projectsFilteredByWeekDay,
   },
   actions: {
     async getHoursPerProject(project) {
@@ -63,6 +65,7 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
             })
           }
         })
+        
         // Get a new array of project names        
         this.projectList.map(project => {
           if (!projectNames.includes(project.project_name)){
@@ -76,7 +79,7 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
               const toDecimalHours = dateConvert.getMilliseconds(current.total_time) / 3600000
               return accumulator + toDecimalHours
             }
-            return accumulator;
+            return accumulator
           }, 0)
         
           if (totalHours > 0) {
@@ -91,15 +94,44 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
       }
     },
     async getHoursPerWeekDay(){
+      let projects = []
+      let test = []
+      const dateConvert = new DateConverter(),
+            auth = useAuthStore(),
+            getProjects = query(collection(db, `dates/2023/${auth.currentUID}`)),
+
+      querySnap = await getDocs(getProjects)
+      querySnap.forEach((doc) => {
+        projects.push(doc.data())
+      })
+
+      console.log(dateConvert.currentDay)
+      console.log(dateConvert.getWeekDay())
       try{
-        // obtener el día de la semana actual
-        const dateConvert = new DateConverter()
-        console.log(dateConvert.getWeekDay())
-        console.log(dateConvert.currentDay)
-        // En el array de projectos, buscar todos los projectos:
-        // si es lunes, solo buscar el mismo día
-        // si es otro día de la semana, buscar todos los días que comprenden entre el currentDay - weekDay
-        console.log(this.projectList)
+        
+        if (dateConvert === 1) {
+          // si es lunes, solo buscar el mismo día
+          this.projectsFilteredByWeekDay = this.projectList.map(project => {
+            if (project.day === dateConvert.currentDay) return project
+          })
+        } else{
+          // si es otro día de la semana, buscar todos los días que comprenden entre el currentDay - weekDay
+          const sinceDay = dateConvert.currentDay - dateConvert.getWeekDay()
+
+          //
+          //-----------------------------------------------------------------
+ 
+          test = projects.map((project) => {
+
+            if (project.date > sinceDay && project.date <= dateConvert.currentDay){
+              return project
+            }
+            
+          })
+
+          //-----------------------------------------------------------------
+        }
+        console.log(test)
       } catch(e){
         console.error(e)
       }

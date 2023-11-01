@@ -5,7 +5,7 @@
 <script setup>
 import { Bar } from 'vue-chartjs'
 import { useDefaults } from 'vuetify'
-import { onBeforeMount, computed } from 'vue'
+import { onMounted, computed } from 'vue';
 import { useStatisticsStorage } from '@/stores/statisticsStorage.js'
 import {
   Chart as ChartJS,
@@ -52,7 +52,7 @@ const chartOptions = {
   }
 }
 
-onBeforeMount(async() => {
+onMounted(async() => {
   await statisticsStorage.getHoursPerWeekDay()
 })
 </script>
