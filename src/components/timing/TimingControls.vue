@@ -23,6 +23,7 @@ const loadingStop = ref(false)
 const projectField = ref('')
 const notesField = ref('')
 const overlay = ref(false)
+
 const rules = {
   required: (value) => !!value || 'Field is required'
 }
@@ -30,7 +31,7 @@ const rules = {
 onBeforeMount(async () => {
   overlay.value = true
 
-  projectsStorage.getProjects()  
+  projectsStorage.getProjects()
   await dateStorage.getDailyHours()
   await dateStorage.getProjectCurrentTime()
 
@@ -39,22 +40,16 @@ onBeforeMount(async () => {
 
 const handleStart = async () => {
   loadingStart.value = true
-  if (projectField.value !== '') {   
-    await dateStorage.postDailyHours( projectField.value, notesField.value )
-    await dateStorage.getDailyHours()
+  if (projectField.value !== '') {
+    await dateStorage.postDailyHours(projectField.value, notesField.value)
 
-    loadingStart.value = false
-    message.value = 'Journey started.'
-    openSnackbar.value = true
-    projectField.value = null
-    notesField.value = null
+    await dateStorage.getDailyHours()
 
     setTimeout(() => {
       openSnackbar.value = false
     }, 3000)
 
     await dateStorage.getProjectCurrentTime()
-
   } else {
     errorMessage.value = true
     message.value = 'Select a project'
@@ -77,7 +72,7 @@ const handleStop = async () => {
   loadingStop.value = false
   message.value = 'Journey stoped.'
   openSnackbar.value = true
-  
+
   setTimeout(() => {
     openSnackbar.value = false
   }, 3000)
@@ -92,31 +87,60 @@ const handleStop = async () => {
   <div v-if="overlay === false">
     <v-container>
       <v-container class="w-100 pa-0 d-flex flex-column align-center">
-        <v-sheet class="w-100 d-flex flex-column justify-space-around ma-0" max-width="400">
-          <div v-if="!dateStorage.timeIsRunning">
-            <h3>Project</h3>
-            <v-select
-              v-if="projectsStorage.currentCustomerProjects.length >= 1"
-              label="Select Project"
-              :items="projectsStorage.currentCustomerProjects"
-              v-model="projectField"
-              :menu-icon="ArrowDown"
-              :rules="[rules.required]"
-            ></v-select>
-            <p v-else>
-              <v-btn class="ma-0 pa-0" variant="plain" color="black" :to="{ name: 'projects' }"
-                >Add a new project</v-btn
-              >
-            </p>
-            <h3>Notes</h3>
-            <v-textarea label="Write some notes" class="w-100" v-model="notesField"></v-textarea>
+        <v-sheet class="w-100 ma-0" max-width="400">
+          <div class="d-flex flex-column" v-if="!dateStorage.timeIsRunning">
+            <h3 class="mb-2">Project</h3>
+            <div
+              :class="
+                !projectsStorage.currentCustomerProjects.length
+                  ? 'd-flex flex-column'
+                  : 'd-flex flex-row '
+              "
+            >
+              <v-select
+                v-if="projectsStorage.currentCustomerProjects.length >= 1"
+                label="Select Project"
+                :items="projectsStorage.currentCustomerProjects"
+                v-model="projectField"
+                :menu-icon="ArrowDown"
+                :rules="[rules.required]"
+              ></v-select>
+
+              <!-- Button appears when no projects exist -->
+              <PrimaryButton
+                v-else
+                class="mb-5 w-50 align-self-center"
+                color="secondary"
+                text="Add new Project"
+                :to="{ name: 'projects' }"
+              ></PrimaryButton>
+              <!-- This button only appears when there are projects in existence -->
+              <PrimaryButton
+                v-if="projectsStorage.currentCustomerProjects.length !== 0"
+                text="+"
+                size="x-small"
+                class="ml-4 mt-5"
+                :to="{ name: 'projects' }"
+              />
+            </div>
+
+            <h3 class="mb-2">Notes</h3>
+            <v-textarea
+              rows="2"
+              auto-grow="true"
+              label="Write some notes"
+              class="w-100"
+              v-model="notesField"
+            >
+            </v-textarea>
           </div>
+
           <v-container class="mb-8 pa-0 d-flex justify-center">
             <PrimaryButton
               v-if="!dateStorage.timeIsRunning"
               text="Start"
               @click="handleStart"
-              class="w-100 rounded-xl"
+              class="w-100 rounded-xl p-0 mt-2"
               :loading="loadingStart"
               color="success"
             >
@@ -126,7 +150,13 @@ const handleStop = async () => {
               <span class="pa-2 mb-6 text-blue-grey-darken-1 text-h4 font-weight-black">{{
                 dateStorage.currentCronoTime
               }}</span>
-              <PrimaryButton text="Stop" @click="handleStop" class="w-100 rounded-xl" :loading="loadingStop" color="error">
+              <PrimaryButton
+                text="Stop"
+                @click="handleStop"
+                class="w-100 rounded-xl"
+                :loading="loadingStop"
+                color="error"
+              >
                 <StopIcon />
               </PrimaryButton>
             </v-sheet>
@@ -137,38 +167,55 @@ const handleStop = async () => {
         v-if="dateStorage.currentDailyHoursList.length >= 1"
         v-for="dailyHour in dateStorage.currentDailyHoursList"
         :key="dailyHour.id"
-        class="d-flex flex-column w-100 border-b pa-2"
+        class="d-flex flex-column w-100 border-b pa-2 bg-gray"
       >
         {{ capitalizedProjectNames }}
-        <v-sheet >
+        <v-sheet class="bg-transparent">
           <h3 class="text-primary">{{ capitalizeLetters(dailyHour.data.project) }}</h3>
         </v-sheet>
-        <v-sheet class="d-flex justify-space-between align-center">
+        <v-sheet class="d-flex justify-space-between align-center ml-2 bg-transparent">
           <div>
             <div class="d-flex align-center">
-              <RayStartArrow class="text-success"/>
+              <RayStartArrow class="text-success" />
               <p class="text-dark ml-4">{{ dailyHour.data.starting_time + ' h' }}</p>
             </div>
             <div class="d-flex align-center">
-              <RayEndArrow class="text-error"/>
-              <p class="text-dark ml-4">{{ dailyHour.data.stopping_time !== undefined ? dailyHour.data.stopping_time + ' h' : 'Running' }}</p>
+              <RayEndArrow class="text-error" />
+              <p class="text-dark ml-4">
+                {{
+                  dailyHour.data.stopping_time !== undefined
+                    ? dailyHour.data.stopping_time + ' h'
+                    : 'Running'
+                }}
+              </p>
             </div>
           </div>
           <div class="d-flex">
-            <PrimaryButton  v-if="dailyHour.data.notes" icon class="mr-4" size="40" variant="plain" color="dark">
+            <PrimaryButton
+              v-if="dailyHour.data.notes"
+              icon
+              class="mr-4"
+              size="40"
+              variant="plain"
+              color="dark"
+            >
               <MessageIcon />
               <v-tooltip activator="parent" location="bottom">
                 {{ dailyHour.data.notes }}
               </v-tooltip>
             </PrimaryButton>
-            <h4 class="text-end py-1 px-2 text-primary">
-              {{ dailyHour.data.total_time !== undefined ? dailyHour.data.total_time + ' h' : 'Running' }}
+            <h4 class="align-self-center text-end py-1 px-2 text-primary">
+              {{
+                dailyHour.data.total_time !== undefined
+                  ? dailyHour.data.total_time + ' h'
+                  : 'Running'
+              }}
             </h4>
           </div>
         </v-sheet>
       </v-sheet>
       <div class="d-flex justify-space-between align-center mt-2">
-        <h3 class="text-start text-primary w-auto font-weight-black ma-2">Total time today</h3>
+        <h3 class="text-start text-primary w-auto  ma-2">Total time today</h3>
         <h4 class="ma-2 pa-2 rounded-sm text-white bg-primary rounded-lg">
           {{ dateStorage.currentTotalTimeToday }} h
         </h4>

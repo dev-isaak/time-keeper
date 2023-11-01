@@ -8,6 +8,7 @@ import EyeOffIcon from '@/components/icons/EyeOffIcon.vue'
 import EmailIcon from '@/components/icons/EmailIcon.vue'
 import SnackBar from '../SnackBar.vue'
 import { useAuthStore } from '@/stores/auth.js'
+import MainHeader from '@/components/MainHeader.vue'
 
 const props = defineProps({
   preventDefault: Boolean
@@ -63,7 +64,7 @@ const handleLogin = async () => {
 <template>
   <SnackBar :text="message" :openSnackbar="openSnackbar" :error="errorMessage ? true : false" />
   <v-container class="w-100 d-flex flex-column">
-    <h1>Login</h1>
+    <MainHeader title="Login" />
     <v-card class="py-6" variant="text">
       <form>
         <v-text-field label="Email" type="email" v-model="email">

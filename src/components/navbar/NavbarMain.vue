@@ -23,8 +23,8 @@ const isLogedIn = computed(() => {
         <v-toolbar-title> Time Keeper </v-toolbar-title>
         <v-spacer> </v-spacer>
         <ProfileAvatar v-if="isLogedIn !== null" size="50" class="mr-4" menu />
-        <div v-else class="mr-4">
-          <PrimaryButton text="Log In" :to="{ name: 'login' }" />
+        <div v-else class="mr-2">
+          <PrimaryButton text="Log In" variant="text" :to="{ name: 'login' }" />
           <PrimaryButton text="Sign Up" variant="text" :to="{ name: 'register' }" />
         </div>
       </v-app-bar>

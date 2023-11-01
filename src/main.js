@@ -26,6 +26,7 @@ const vuetify = createVuetify({
           secondary: '#718696',
           tertiary: '#EBB463',
           dark: '#333333',
+          gray: '#f5f5f5',
           success: '#82DD55',
           error: '#E23636'
         }
@@ -34,8 +35,9 @@ const vuetify = createVuetify({
   },
   defaults: {
     PrimaryButton: {
-      color: 'tertiary',
-      style: 'color:white;'
+      color: 'secondary',
+      style: 'color:white;',
+      elevation: '0',
     },
     VProgressCircular: {
       color: 'secondary'
