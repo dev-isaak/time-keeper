@@ -1,0 +1,20 @@
+[
+  {
+    "id":1,
+    "title": "Register",
+    "description": "Register your company in less than 1 minute.",
+    "image": ""
+  },
+  {
+    "id":2,
+    "title": "Start registering your users",
+    "description": "",
+    "image": ""
+  },
+  {
+    "id":3,
+    "title": "Get all the reports in 1 click",
+    "description": "",
+    "image": ""
+  }
+]

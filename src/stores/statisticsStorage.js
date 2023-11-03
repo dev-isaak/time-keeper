@@ -111,7 +111,7 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
         
         if (dateConvert === 1) {
           // si es lunes, solo buscar el mismo día
-          this.projectsFilteredByWeekDay = this.projectList.map(project => {
+          this.projectsFilteredByWeekDay = projects.map(project => {
             if (project.day === dateConvert.currentDay) return project
           })
         } else{
@@ -120,7 +120,7 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
 
           //
           //-----------------------------------------------------------------
- 
+          console.log(this.projectsFilteredByWeekDay)
           test = projects.map((project) => {
 
             if (project.date > sinceDay && project.date <= dateConvert.currentDay){

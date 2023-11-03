@@ -5,8 +5,16 @@ defineProps({
 })
 </script>
 <template>
-  <v-container class="mt-16 px-2 px-0">
+  <v-container class="mt-16 px-0">
     <MainHeader :title="title" />
     <slot> </slot>
   </v-container>
 </template>
+
+<style>
+@media (min-width: 960px){
+  .v-container{
+    max-width: 100% !important;
+  }
+}
+</style>
