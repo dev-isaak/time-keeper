@@ -4,10 +4,12 @@ import MonthlyHours from '@/components/statistics/MonthlyHours.vue'
 import WeeklyHours from '@/components/statistics/WeeklyHours.vue'
 import WeeklyHoursChart from '@/components/statistics/charts/WeeklyHoursChart.vue'
 import ProjectHoursChart from '@/components/statistics/charts/ProjectHoursChart.vue'
+import WeekTimeChart from '@/components/statistics/charts/WeekTimeChart.vue'
 </script>
 
 <template>
   <MainTemplate title="Statistics">
+    <WeekTimeChart />
     <v-container>
       <v-row>
         <v-col align="center">

@@ -56,3 +56,4 @@ onMounted(async() => {
   await statisticsStorage.getHoursPerWeekDay()
 })
 </script>
+>
