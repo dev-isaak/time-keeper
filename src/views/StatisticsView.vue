@@ -19,10 +19,10 @@ import ProjectHoursChart from '@/components/statistics/charts/ProjectHoursChart.
       </v-row>
     </v-container>
     <v-container class="d-flex flex-column flex-md-row justify-md-space-around">
-      <div>
+      <!-- <div>
         <h2>Total hours per day</h2>
         <WeeklyHoursChart />
-      </div>
+      </div> -->
       <div>
         <h2>Total hours per project</h2>
         <ProjectHoursChart />
