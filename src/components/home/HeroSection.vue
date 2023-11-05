@@ -1,7 +1,7 @@
 <script setup>
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import { useDisplay } from 'vuetify'
-import svgTest from '@/assets/img/timings.svg'
+import svgHero from '@/assets/img/timings.svg'
 
 const { mdAndUp } = useDisplay()
 
@@ -21,7 +21,7 @@ const { mdAndUp } = useDisplay()
         </div>
       </v-col>
       <v-col align="center" class="align-self-center">
-        <v-img :width="mdAndUp ? 400 : 300" :src="svgTest" ></v-img>
+        <v-img :width="mdAndUp ? 400 : 300" :src="svgHero" ></v-img>
       </v-col>
     </v-row>
   </v-container>

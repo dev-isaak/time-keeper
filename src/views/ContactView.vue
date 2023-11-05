@@ -2,6 +2,7 @@
 import MainTemplate from '@/templates/MainTemplate.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import { useDisplay } from 'vuetify'
+import contactSvg from '@/assets/img/contact.svg'
 
 const { mdAndUp } = useDisplay()
 
@@ -15,7 +16,7 @@ const { mdAndUp } = useDisplay()
         <v-column>
           <v-row>
             <v-col v-if="mdAndUp" class="d-flex align-center">
-              <v-img src="src/assets/img/contact.svg" ></v-img>
+              <v-img :src="contactSvg" ></v-img>
             </v-col>
             <v-col>
               <form>

@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/auth.js'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import ProfileAvatar from '@/components/ProfileAvatar.vue'
 import { useDisplay } from 'vuetify'
+import logo from '@/assets/img/logo_timekeeper.svg'
 
 const authStore = useAuthStore()
 const { mdAndUp } = useDisplay()
@@ -38,7 +39,7 @@ onMounted(() => {
           </v-app-bar-nav-icon>
         </div>
         <div v-else class="d-flex align-center ml-6">
-          <a href="/"><v-img src="src/assets/img/logo_timekeeper.svg" width="55" class="mr-6" /></a>
+          <a href="/"><v-img :src="logo" width="55" class="mr-6" /></a>
           <PrimaryButton v-if="isLogedIn !== null" :to="{ name: 'userMain' }" text="Home"/>
           <PrimaryButton v-else to="/" text="Home"/>
           <div v-if="isLogedIn !== null">
@@ -48,7 +49,7 @@ onMounted(() => {
           </div>
         </div>
         <div v-if="!mdAndUp" class="d-flex w-100 justify-center">
-            <a href="/"><v-img src="src/assets/img/logo_timekeeper.svg" max-width="55" /></a>
+          <a href="/"><v-img :src="logo" width="45" /></a>
           </div>
         <v-spacer> </v-spacer>
         <ProfileAvatar v-if="isLogedIn !== null" size="50" class="mr-6" menu />

@@ -10,10 +10,8 @@ import PrimaryButton from '@/components/PrimaryButton.vue'
       <v-row class="d-flex justify-space-between">
         <v-col class="d-flex flex-column align-center">
           <h3>Company</h3>
-          <a :to="{name: 'contact'}">Contact us</a>
-          <v-link :to="{name: 'contact'}">Contact</v-link>
-          <PrimaryButton text="Contact Us" variant="text" :to="{name: 'contact'}"/>
-          <PrimaryButton text="About Us" variant="text" :to="{name: 'about'}"/>
+          <PrimaryButton text="Contact Us" variant="plain" color="black" :to="{name: 'contact'}"/>
+          <PrimaryButton text="About Us" variant="plain" color="black" :to="{name: 'about'}"/>
         </v-col>
       </v-row>
     </v-column>
