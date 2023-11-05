@@ -4,7 +4,7 @@
 
 <script setup>
 import { Bar } from 'vue-chartjs'
-import { onMounted, computed } from 'vue';
+import { onBeforeMount, computed } from 'vue';
 import { useDefaults } from 'vuetify'
 import { useStatisticsStorage } from '@/stores/statisticsStorage.js'
 import { useDateStorage } from '@/stores/dateStorage.js'
@@ -49,7 +49,7 @@ const chartOptions = {
   // indexAxis: 'y',
 }
 
-onMounted(async() => {
+onBeforeMount(async() => {
   await statisticsStorage.getAllProjectsTotalHours()
 })
 </script>

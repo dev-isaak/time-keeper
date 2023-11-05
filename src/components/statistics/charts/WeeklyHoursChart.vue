@@ -5,8 +5,8 @@
 <script setup>
 import { Bar } from 'vue-chartjs'
 import { useDefaults } from 'vuetify'
-import { onBeforeMount } from 'vue'
-import { useDateStorage } from '@/stores/dateStorage.js'
+import { onMounted, computed } from 'vue';
+import { useStatisticsStorage } from '@/stores/statisticsStorage.js'
 import {
   Chart as ChartJS,
   Title,
@@ -19,7 +19,7 @@ import {
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-const dateStorage = useDateStorage()
+const statisticsStorage = useStatisticsStorage()
 
 const _props = defineProps({
   backgroundColor: String,
@@ -27,35 +27,32 @@ const _props = defineProps({
 
 const props = useDefaults(_props, 'WeeklyHoursChart')
 
-const chartData = {
-  label: 'Hours',
-  labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-  datasets: [
-    { 
-      data: [
-        dateStorage.currentMondayTotalHours, 
-        dateStorage.currentTuesdayTotalHours,
-        dateStorage.currentWednesdayTotalHours,
-        dateStorage.currentThursdayTotalHours,
-        dateStorage.currentFridayTotalHours,
-        dateStorage.currentSaturdayTotalHours,
-        dateStorage.currentSundayTotalHours,
-      ],
-      backgroundColor: props.backgroundColor,
-    },
-  ],
-}
+const data = [8, 7, 8, 9, 3, 0, 0 ] // array con los datos
+const chartData = computed(() => {
+  const datasets = [{
+    label: 'hours',
+    data: data.map(item => item), // Get an array of total hours
+  }]
+
+  return {
+    labels: ['M', 'T', 'W', 'Th', 'F', 'S', 'Sn'],
+    datasets,
+  }
+})
 const chartOptions = {
   responsive: true,
-  plugins: {
-    title: {
-      display:true,
-      text: 'Weekly Hours'
+  indexAxis: 'y',
+  aspectRatio: 1,
+  elements: {
+    bar: {
+      backgroundColor: props.backgroundColor,
+      borderRadius: '3',
+      borderSkipped: 'start'
     }
-  },
+  }
 }
 
-onBeforeMount(async() => {
-  await dateStorage.getWeeklyHours()
+onMounted(async() => {
+  await statisticsStorage.getHoursPerWeekDay()
 })
 </script>

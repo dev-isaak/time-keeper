@@ -150,6 +150,7 @@ const calendarOptions = {
   display: flex;
   justify-content: end;
 }
+
 .fc-view-harness {
   max-width: 100%;
   height: 430px !important;

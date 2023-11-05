@@ -1,4 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 @import './variables.css';
+
+body{
+  font-family: 'Montserrat';
+}
 
 h1 {
   color: var(--secondary-color);
