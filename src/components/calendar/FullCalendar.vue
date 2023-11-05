@@ -46,16 +46,17 @@ const handleEventClick = (info) => {
 }
 
 const handleDayClick = (info) => {
-  alert(info.dateStr)
+  // alert(info.dateStr)
 }
 
 const handleSelect = (info) => {
-  alert(`${info.startStr} to ${info.endStr}`)
+  // alert(`${info.startStr} to ${info.endStr}`)
 }
 
 const calendarOptions = {
   plugins: [dayGridPlugin, interactionPlugin],
   initialView: 'dayGridMonth',
+  contentHeight: 1000,
   headerToolbar: {
     left: 'prev,next',
     center: 'title',
@@ -65,8 +66,8 @@ const calendarOptions = {
   firstDay: 1,
   dayMaxEventRows: true,
   views: {
-    timeGrid: {
-      dayMaxEventRows: 2
+    dayGrid: {
+      dayMaxEventRows: 2,  
     }
   },
   //weekNumbers: true,
@@ -122,12 +123,16 @@ const calendarOptions = {
   </v-overlay>
 </template>
 
-<style>
+<style scope>
 :root {
   --fc-border-color: rgba(69, 90, 100, 0.3);
   --fc-neutral-text-color: #808080;
   --fc-today-bg-color: #cfd8dc;
   --fc-highlight-color: #cfd8dc;
+}
+.fc-toolbar-title{
+  font-size: 1em !important;
+  text-align: center;
 }
 .fc-theme-standard,
 .fc-scrollgrid {
@@ -181,5 +186,8 @@ const calendarOptions = {
 }
 .fc-daygrid-more-link:hover {
   color: var(--primary-color);
+}
+.fc-event-main{
+  overflow: hidden;
 }
 </style>
