@@ -6,24 +6,24 @@ const dateStorage = useDateStorage()
 import * as echarts from 'echarts'
 
 const chartRef = ref(null)
-const weeklyHours = ref(0)
-const weekHoursFormated = ref('')
+const monthlyHours = ref(0)
+const monthHoursFormated = ref('')
 
 onMounted(async() => {
   const myChart = echarts.init(chartRef.value)
   const dateConvert = new DateConverter()
-  await dateStorage.getWeeklyHours()
-  weekHoursFormated.value = dateStorage.currentWeeklyHours
+  await dateStorage.getCurrentMonthHours()
+  monthHoursFormated.value = dateStorage.currentMonthlyHours
   // Get hour in ms
-  const hourInMs = dateConvert.getMilliseconds(dateStorage.currentWeeklyHours)
+  const hourInMs = dateConvert.getMilliseconds(dateStorage.currentMonthlyHoursMs)
   // Then do the percentatge to 40h
-  weeklyHours.value = hourInMs / 144000000 * 100 
+  monthlyHours.value = hourInMs / 144000000 * 100 
   
   var option
 
   option = {
   title: {
-    text: 'Total time this week',
+    text: 'Total time this month',
     left: 'center',
     top: 'center'
   },
@@ -32,11 +32,11 @@ onMounted(async() => {
       type: 'pie',
       data: [
         {
-          value: weeklyHours.value, 
-          name: `${weekHoursFormated.value} h` 
+          value: monthlyHours.value, 
+          name: `${monthHoursFormated.value} h` 
         },
         {
-          value: 40, // total weekly hours
+          value: 160, // total month hours
           name: 'Total'
         }
       ],
