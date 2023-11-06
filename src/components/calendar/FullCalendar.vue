@@ -6,6 +6,7 @@ import { useDateStorage } from '@/stores/dateStorage.js'
 import { onBeforeMount, ref } from 'vue'
 import StartIcon from '@/components/icons/StartIcon.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
+import { DateConverter } from '@/utils/DateConverter'
 
 const dateStorage = useDateStorage()
 const calendarEvents = ref([])
@@ -20,13 +21,15 @@ const eventNotes = ref('')
 onBeforeMount(async () => {
   overlay.value = true
   const date = new Date()
+  const dateConvert = new DateConverter()
   await dateStorage.getDailyHours(date.getFullYear(), date.getMonth() + 1, date.getDate())
   await dateStorage.getAllEvents(date.getFullYear())
+
   dateStorage.currentAllProjects.forEach((project) => {
     calendarEvents.value.push({
       title: project.project,
-      start: `${project.year}-${project.month}-${project.day}`,
-      end: `${project.year}-${project.month}-${project.day}`,
+      start: `${project.year}-${dateConvert.getDoubleDigitFormat(project.month)}-${dateConvert.getDoubleDigitFormat(project.day)}`,
+      end: `${project.year}-${dateConvert.getDoubleDigitFormat(project.month)}-${dateConvert.getDoubleDigitFormat(project.day)}`,
       notes: `${project.notes}`,
       start_time: `${project.starting_time}`,
       stopping_time: `${project.stopping_time}`,
@@ -34,7 +37,6 @@ onBeforeMount(async () => {
     })
   })
   overlay.value = false
-  //console.log(dateStorage.currentAllProjects)
 })
 const handleEventClick = (info) => {
   eventOverlay.value = true
@@ -45,13 +47,13 @@ const handleEventClick = (info) => {
   eventNotes.value = info.event.extendedProps.notes
 }
 
-const handleDayClick = (info) => {
-  // alert(info.dateStr)
-}
+// const handleDayClick = (info) => {
+//   // alert(info.dateStr)
+// }
 
-const handleSelect = (info) => {
-  // alert(`${info.startStr} to ${info.endStr}`)
-}
+// const handleSelect = (info) => {
+//   // alert(`${info.startStr} to ${info.endStr}`)
+// }
 
 const calendarOptions = {
   plugins: [dayGridPlugin, interactionPlugin],
@@ -74,7 +76,7 @@ const calendarOptions = {
   eventClick: handleEventClick,
   events: calendarEvents.value,
   // dateClick: handleDayClick,
-  select: handleSelect
+  // select: handleSelect
 }
 
 </script>
@@ -189,5 +191,11 @@ const calendarOptions = {
 }
 .fc-event-main{
   overflow: hidden;
+}
+
+@media(min-width:600px){
+  .fc-toolbar-title{
+    font-size: 2em !important;
+  }
 }
 </style>

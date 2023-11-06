@@ -153,6 +153,7 @@ export const useDateStorage = defineStore('dateStorage', {
       const startDay = date.currentDay
       let startingHour = ''
       const startPressed = true
+
       if (fireStoreDB.currentTimeInterval === '5 minutes') {
         startingHour = date.getFiveMinutesInterval(startPressed)
       } else if (fireStoreDB.currentTimeInterval === '15 minutes') {
@@ -167,7 +168,7 @@ export const useDateStorage = defineStore('dateStorage', {
           date: serverTimestamp(),
           year: startYear,
           month: startMonth,
-          day: startDay,
+          day:startDay,
           starting_time: startingHour,
           //starting_time_ms: +startingDate,
           is_started: true,
