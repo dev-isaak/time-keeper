@@ -1,24 +1,33 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useStatisticsStorage } from '@/stores/statisticsStorage.js'
 import * as echarts from 'echarts'
 
-
 const statisticsStorage = useStatisticsStorage()
-const chartRef = ref(null)
 
+const chartRef = ref(null)
+const test = ref()
+const data = ref()
+
+const names = computed(() => {
+  return statisticsStorage.currentProjectListName
+})
+
+// ASYNC DATA
+// https://apache.github.io/echarts-handbook/en/how-to/data/dynamic-data/#dynamic-update
 
 onMounted(async() => {
   const myChart = echarts.init(chartRef.value)
-  const data = await statisticsStorage.currentProjectTotalTimeList
-  console.log(data)
-  const test = await data.map(item => item.project_name )
-  console.log(test)
+  statisticsStorage.getAllProjectsTotalHours()
+  console.log(names.value)
+
   var option
 
   option = {
   xAxis: {
-    data: data
+    dataset: {
+      source: ['test', 'test2']
+    }
   },
   yAxis: {},
   series: [
@@ -34,5 +43,5 @@ onMounted(async() => {
 </script>
 
 <template>
-  <div ref="chartRef" style="width: 600px; height: 400px"></div>
+  <div ref="chartRef" style="width: 300px; height: 400px"></div>
 </template>

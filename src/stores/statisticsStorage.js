@@ -20,6 +20,7 @@ export const useStatisticsStorage = defineStore('statisticsStorage', {
     currentTotalProjectsTimeMs: (state) => state.totalProjectsTimeMs,
     currentProjectTotalTimeList: (state) => state.projectTotalTimeList,
     currentProjectsFilteredByWeekDay: (state) => state.projectsFilteredByWeekDay,
+    currentProjectListName: (state) => state.projectTotalTimeList.map(item => item.project_name)
   },
   actions: {
     async getHoursPerProject(project) {

@@ -20,8 +20,8 @@ import ProjectTimingsChart from '@/components/statistics/charts/ProjectTimingsCh
       </div> -->
       <div>
         <h2>Total hours per project</h2>
-        <!-- <ProjectTimingsChart /> -->
-        <ProjectHoursChart />
+        <ProjectTimingsChart />
+        <!-- <ProjectHoursChart /> -->
       </div>
     </v-container>
   </MainTemplate>

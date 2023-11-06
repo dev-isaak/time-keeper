@@ -16,8 +16,8 @@ onMounted(async() => {
   monthHoursFormated.value = dateStorage.currentMonthlyHours
   // Get hour in ms
   const hourInMs = dateConvert.getMilliseconds(dateStorage.currentMonthlyHoursMs)
-  // Then do the percentatge to 40h
-  monthlyHours.value = hourInMs / 144000000 * 100 
+  // Then do the percentatge to 160h
+  monthlyHours.value = hourInMs / 576000000 * 100 
   
   var option
 
