@@ -14,7 +14,7 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
-const vuetify = createVuetify({
+export const Vuetify = createVuetify({
   components,
   directives,
   theme: {
@@ -37,7 +37,7 @@ const vuetify = createVuetify({
     PrimaryButton: {
       color: 'secondary',
       style: 'color:white;',
-      elevation: '0',
+      elevation: '0'
     },
     VProgressCircular: {
       color: 'secondary'
@@ -81,5 +81,5 @@ pinia.use(piniaPluginPersistedstate)
 app.use(firebase)
 app.use(pinia)
 app.use(router)
-app.use(vuetify)
+app.use(Vuetify)
 app.mount('#app')

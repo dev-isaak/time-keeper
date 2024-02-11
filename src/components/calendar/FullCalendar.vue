@@ -4,7 +4,6 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { useDateStorage } from '@/stores/dateStorage.js'
 import { onBeforeMount, ref } from 'vue'
-import StartIcon from '@/components/icons/StartIcon.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import { DateConverter } from '@/utils/DateConverter'
 
@@ -28,8 +27,12 @@ onBeforeMount(async () => {
   dateStorage.currentAllProjects.forEach((project) => {
     calendarEvents.value.push({
       title: project.project,
-      start: `${project.year}-${dateConvert.getDoubleDigitFormat(project.month)}-${dateConvert.getDoubleDigitFormat(project.day)}`,
-      end: `${project.year}-${dateConvert.getDoubleDigitFormat(project.month)}-${dateConvert.getDoubleDigitFormat(project.day)}`,
+      start: `${project.year}-${dateConvert.getDoubleDigitFormat(
+        project.month
+      )}-${dateConvert.getDoubleDigitFormat(project.day)}`,
+      end: `${project.year}-${dateConvert.getDoubleDigitFormat(
+        project.month
+      )}-${dateConvert.getDoubleDigitFormat(project.day)}`,
       notes: `${project.notes}`,
       start_time: `${project.starting_time}`,
       stopping_time: `${project.stopping_time}`,
@@ -69,16 +72,15 @@ const calendarOptions = {
   dayMaxEventRows: true,
   views: {
     dayGrid: {
-      dayMaxEventRows: 2,  
+      dayMaxEventRows: 2
     }
   },
   //weekNumbers: true,
   eventClick: handleEventClick,
-  events: calendarEvents.value,
+  events: calendarEvents.value
   // dateClick: handleDayClick,
   // select: handleSelect
 }
-
 </script>
 <template>
   <v-overlay :model-value="overlay" class="align-center justify-center">
@@ -132,7 +134,7 @@ const calendarOptions = {
   --fc-today-bg-color: #cfd8dc;
   --fc-highlight-color: #cfd8dc;
 }
-.fc-toolbar-title{
+.fc-toolbar-title {
   font-size: 1em !important;
   text-align: center;
 }
@@ -189,12 +191,12 @@ const calendarOptions = {
 .fc-daygrid-more-link:hover {
   color: var(--primary-color);
 }
-.fc-event-main{
+.fc-event-main {
   overflow: hidden;
 }
 
-@media(min-width:600px){
-  .fc-toolbar-title{
+@media (min-width: 600px) {
+  .fc-toolbar-title {
     font-size: 2em !important;
   }
 }
