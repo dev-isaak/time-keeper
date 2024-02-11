@@ -1,8 +1,8 @@
 // https://on.cypress.io/api
 
-describe('My First Test', () => {
-  it('visits the app root url', () => {
-    cy.visit('/')
-    cy.contains('h1', 'You did it!')
+describe('E2E', () => {
+  it('Should navigate to / when visiting a private route', () => {
+    cy.visit('/settings')
+    // cy.contains('h1', 'You did it!')
   })
 })

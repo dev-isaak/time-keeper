@@ -18,15 +18,13 @@ const isLogedIn = computed(() => {
 
 onMounted(() => {
   window.addEventListener('scroll', () => {
-    if(document.body.scrollTop > 20 || document.documentElement.scrollTop > 20){
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
       navbarMoved.value = true
-    } else{
+    } else {
       navbarMoved.value = false
     }
   })
-
 })
-
 </script>
 
 <template>
@@ -35,22 +33,22 @@ onMounted(() => {
       <v-app-bar color="primary" :elevation="navbarMoved ? '5' : '0'">
         <div v-if="!mdAndUp">
           <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer">
-            <MenuIcon />
+            <MenuIcon data-cy="menu-button" />
           </v-app-bar-nav-icon>
         </div>
         <div v-else class="d-flex align-center ml-6">
-          <a href="/"><v-img :src="logo" width="55" class="mr-6" /></a>
-          <PrimaryButton v-if="isLogedIn !== null" :to="{ name: 'userMain' }" text="Home"/>
-          <PrimaryButton v-else to="/" text="Home"/>
+          <a href="/"><v-img alt="logo-timekeeper" :src="logo" width="55" class="mr-6"></v-img></a>
+          <PrimaryButton v-if="isLogedIn !== null" :to="{ name: 'userMain' }" text="Home" />
+          <PrimaryButton v-else to="/" text="Home" />
           <div v-if="isLogedIn !== null">
-              <PrimaryButton text="Projects" :to="{ name: 'projects' }" />
-              <PrimaryButton text="Calendar" :to="{ name: 'calendar' }" />
-              <PrimaryButton text="Statistics" :to="{ name: 'statistics' }" />
+            <PrimaryButton text="Projects" :to="{ name: 'projects' }" />
+            <PrimaryButton text="Calendar" :to="{ name: 'calendar' }" />
+            <PrimaryButton text="Statistics" :to="{ name: 'statistics' }" />
           </div>
         </div>
         <div v-if="!mdAndUp" class="d-flex w-100 justify-center">
-          <a href="/"><v-img :src="logo" width="45" /></a>
-          </div>
+          <a href="/"><v-img alt="logo-timekeeper" :src="logo" width="45" /></a>
+        </div>
         <v-spacer> </v-spacer>
         <ProfileAvatar v-if="isLogedIn !== null" size="50" class="mr-6" menu />
         <div v-else class="mr-2">
@@ -58,7 +56,7 @@ onMounted(() => {
           <PrimaryButton text="Sign Up" variant="text" :to="{ name: 'register' }" />
         </div>
       </v-app-bar>
-      <v-navigation-drawer location="left" v-model="drawer" temporary>
+      <v-navigation-drawer data-cy="menu-container" location="left" v-model="drawer" temporary>
         <v-list class="d-flex flex-column mt-6">
           <v-list-item variant="text" link v-if="isLogedIn !== null" :to="{ name: 'userMain' }">
             Daily hours
@@ -77,7 +75,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.v-btn{
-  color:white !important;
+.v-btn {
+  color: white !important;
 }
 </style>
