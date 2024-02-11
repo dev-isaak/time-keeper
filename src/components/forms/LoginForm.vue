@@ -67,12 +67,13 @@ const handleLogin = async () => {
     <MainHeader title="Login" />
     <v-card class="py-6" variant="text">
       <form>
-        <v-text-field label="Email" type="email" v-model="email">
+        <v-text-field data-cy="email-field" label="Email" type="email" v-model="email">
           <template v-slot:prepend-inner>
             <EmailIcon color="gray" class="mr-2" />
           </template>
         </v-text-field>
         <v-text-field
+          data-cy="password-field"
           label="Password"
           :type="!hidePassword ? 'text' : 'password'"
           :rules="[rules.required]"
@@ -87,7 +88,12 @@ const handleLogin = async () => {
           </template>
         </v-text-field>
         <v-column class="d-flex flex-column align-center mt-6">
-          <PrimaryButton text="Login" @click="handleLogin" :loading="loading" />
+          <PrimaryButton
+            data-cy="login-button"
+            text="Login"
+            @click="handleLogin"
+            :loading="loading"
+          />
         </v-column>
       </form>
     </v-card>
